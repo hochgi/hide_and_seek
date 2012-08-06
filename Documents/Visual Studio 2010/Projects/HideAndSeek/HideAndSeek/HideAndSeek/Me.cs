@@ -17,12 +17,18 @@ namespace HideAndSeek
     /// </summary>
     public class Me : Microsoft.Xna.Framework.GameComponent
     {
-        private Vector3 location;
+        private World world;
 
-        public Me(Game game)
+        KinectMe myInput;
+
+        public Vector3 location;
+        private int walkRate;
+
+        public Me(Game game, World world)
             : base(game)
         {
             // TODO: Construct any child components here
+            this.world = world;
         }
 
         /// <summary>
@@ -35,6 +41,8 @@ namespace HideAndSeek
 
             base.Initialize();
 
+            myInput = new KinectMe();
+
             location = new Vector3(0, 0, 0);
         }
 
@@ -45,7 +53,15 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-
+            if (world.gameType == GameType.HidePractice) //or other situations! 
+            {
+                if (myInput.isWalking())
+                    location.Z += walkRate;
+                else if (myInput.isWalkingRight())
+                    location.X += walkRate;
+                else if (myInput.isWalkingLeft())
+                    location.X -= walkRate;
+            }
             base.Update(gameTime);
         }
     }

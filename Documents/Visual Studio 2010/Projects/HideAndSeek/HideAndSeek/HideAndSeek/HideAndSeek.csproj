@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="Hider.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="KinectMe.cs" />
     <Compile Include="Me.cs" />
     <Compile Include="Seeker.cs" />
     <Compile Include="VirtualPlayer.cs" />

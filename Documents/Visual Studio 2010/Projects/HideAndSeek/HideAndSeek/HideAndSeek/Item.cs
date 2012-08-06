@@ -17,13 +17,18 @@ namespace HideAndSeek
     /// </summary>
     public class Item : Microsoft.Xna.Framework.GameComponent
     {
-        private Vector3 location;
-        private Vector3 size;
+        World world;
 
-        public Item(Game game, Vector3 loc, Vector3 size, int type)
+        public Vector3 location;
+        public Vector3 size; //X = W, Y = H, Z = D
+        //add item type for drawing reasons!!
+
+        public Item(Game game, Vector3 loc, Vector3 size, int type, World world)
             : base(game)
         {
             // TODO: Construct any child components here
+
+            this.world = world;
 
             this.location = loc;
             this.size = size;

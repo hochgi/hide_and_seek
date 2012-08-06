@@ -17,10 +17,13 @@ namespace HideAndSeek
     /// </summary>
     public class Seeker : Microsoft.Xna.Framework.GameComponent
     {
-        public Seeker(Game game)
+        private World world;
+
+        public Seeker(Game game, World world)
             : base(game)
         {
             // TODO: Construct any child components here
+            this.world = world;
         }
 
         /// <summary>
@@ -41,6 +44,9 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            if (world.gamePhase == GamePhase.Çounting)
+                //stay still with face to tree
+                Console.WriteLine("staying still");
 
             base.Update(gameTime);
         }

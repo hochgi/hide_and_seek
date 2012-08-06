@@ -12,15 +12,21 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+
+    enum HiderPhase { Looking, Hiding, Running, Done };
+
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public class Hider : VirtualPlayer
     {
-        public Hider(Game game)
+        private World world;
+
+        public Hider(Game game, World world)
             : base(game)
         {
             // TODO: Construct any child components here
+            this.world = world;
         }
 
         /// <summary>
