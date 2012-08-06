@@ -28,6 +28,7 @@ namespace HideAndSeek
         int numOfHiders = 5;
         int numOfItems = 10;
 
+        World world;
         Item[] items;
         Hider[] hiders;
         Seeker seeker;
@@ -49,6 +50,8 @@ namespace HideAndSeek
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            world = new World(this);
 
             items = new Item[numOfItems];
             for (int i = 0; i < numOfItems; i++)

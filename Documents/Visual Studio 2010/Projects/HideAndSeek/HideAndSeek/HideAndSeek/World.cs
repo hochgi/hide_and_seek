@@ -52,5 +52,10 @@ namespace HideAndSeek
 
             base.Update(gameTime);
         }
+
+        public DrawableGameComponent GetDrawable()
+        {
+            return null;
+        }
     }
 }
