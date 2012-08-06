@@ -111,6 +111,7 @@
     <Compile Include="Item.cs" />
     <Compile Include="KinectMe.cs" />
     <Compile Include="Me.cs" />
+    <Compile Include="MyDrawable.cs" />
     <Compile Include="Seeker.cs" />
     <Compile Include="VirtualPlayer.cs" />
     <Compile Include="World.cs" />
