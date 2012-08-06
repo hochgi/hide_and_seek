@@ -34,6 +34,8 @@ namespace HideAndSeek
             // TODO: Add your initialization code here
 
             base.Initialize();
+
+            location = new Vector3(0, 0, 0);
         }
 
         /// <summary>

@@ -18,6 +18,8 @@ namespace HideAndSeek
     public class VirtualPlayer : Microsoft.Xna.Framework.GameComponent
     {
         Vector3 location;
+        int runSpeed = 10;
+        int walkSpeed = 5;
 
         public VirtualPlayer(Game game)
             : base(game)
@@ -34,6 +36,8 @@ namespace HideAndSeek
             // TODO: Add your initialization code here
 
             base.Initialize();
+
+            location = new Vector3(0, 0, 0);
         }
 
         /// <summary>

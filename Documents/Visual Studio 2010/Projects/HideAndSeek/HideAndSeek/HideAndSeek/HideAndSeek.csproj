@@ -107,8 +107,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Object.cs" />
+    <Compile Include="Hider.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Me.cs" />
+    <Compile Include="Seeker.cs" />
     <Compile Include="VirtualPlayer.cs" />
     <Compile Include="World.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -34,6 +34,12 @@ namespace HideAndSeek
             // TODO: Add your initialization code here
 
             base.Initialize();
+
+            borders = new Vector3[4];
+            borders[0] = new Vector3(20, 0, 0);
+            borders[1] = new Vector3(-20, 0, 0);
+            borders[2] = new Vector3(20, 0, -2000);
+            borders[3] = new Vector3(-20, 0, -2000);
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 namespace HideAndSeek
 {
     enum GameType {HidePractice, SeekPractice, Hide, Seek};
-    enum GameStage { Çounting, Looking, Running};
+    enum GamePhase { Çounting, Looking, Running};
 
     /// <summary>
     /// This is the main type for your game
@@ -22,8 +22,15 @@ namespace HideAndSeek
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        GameType gameType;
-        GameStage gameStage;
+        GameType gameType = GameType.HidePractice;
+        GamePhase gamePhase;
+        int countNum = 20;
+        int numOfHiders = 5;
+        int numOfItems = 10;
+
+        Item[] items;
+        Hider[] hiders;
+        Seeker seeker;
 
         public Game1()
         {
@@ -42,6 +49,16 @@ namespace HideAndSeek
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            items = new Item[numOfItems];
+            for (int i = 0; i < numOfItems; i++)
+                items[i] = new Item(this, new Vector3(0, 0, -10*i), new Vector3(1, 1, 1), 0);
+
+            hiders = new Hider[numOfHiders];
+            for (int i = 0; i < numOfHiders; i++)
+                hiders[i] = new Hider(this);
+
+            seeker = new Seeker(this);
         }
 
         /// <summary>
