@@ -20,6 +20,8 @@ namespace HideAndSeek
         Vector3 location;
         int runSpeed = 10;
         int walkSpeed = 5;
+        MyDrawable myDrawable = new MyDrawable();
+
 
         public VirtualPlayer(Game game)
             : base(game)
@@ -49,11 +51,6 @@ namespace HideAndSeek
             // TODO: Add your update code here
 
             base.Update(gameTime);
-        }
-
-        public DrawableGameComponent GetDrawable()
-        {
-            return null;
         }
     }
 }
