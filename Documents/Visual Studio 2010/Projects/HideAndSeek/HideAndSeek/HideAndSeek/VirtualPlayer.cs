@@ -17,9 +17,9 @@ namespace HideAndSeek
     /// </summary>
     public class VirtualPlayer : Microsoft.Xna.Framework.GameComponent
     {
-        Vector3 location;
-        int runSpeed = 10;
-        int walkSpeed = 5;
+        public Vector3 location;
+        protected int runSpeed = 10;
+        protected int walkSpeed = 5;
         MyDrawable myDrawable = new MyDrawable();
 
 
@@ -51,6 +51,11 @@ namespace HideAndSeek
             // TODO: Add your update code here
 
             base.Update(gameTime);
+        }
+
+        public void Win()
+        {
+            //victory dance and whatever
         }
     }
 }

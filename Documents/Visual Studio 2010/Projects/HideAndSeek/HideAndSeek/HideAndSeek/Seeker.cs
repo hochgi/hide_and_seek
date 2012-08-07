@@ -12,18 +12,31 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    enum SeekerPhase { Counting, Looking, Running, Done };
+
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Seeker : Microsoft.Xna.Framework.GameComponent
+    public class Seeker : VirtualPlayer
     {
         private World world;
 
-        public Seeker(Game game, World world)
+        SeekerPhase phase;
+
+        private Item nextItem;
+        private int seenItems;
+
+        private int countNum;
+        private int count;
+
+        Hider opponent;
+
+        public Seeker(Game game, World world, int countNum)
             : base(game)
         {
             // TODO: Construct any child components here
             this.world = world;
+            this.countNum = countNum;
         }
 
         /// <summary>
@@ -33,7 +46,10 @@ namespace HideAndSeek
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
+            phase = SeekerPhase.Counting;
+            nextItem = null;
+            seenItems = 0;
+            count = 0;
             base.Initialize();
         }
 
@@ -44,10 +60,62 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            if (world.gamePhase == GamePhase.Çounting)
-                //stay still with face to tree
-                Console.WriteLine("staying still");
-
+            if (phase == SeekerPhase.Counting)
+            {
+                count++;
+                if (count >= countNum / Game.TargetElapsedTime.Seconds)
+                    phase = SeekerPhase.Looking;
+            }
+            else if (phase == SeekerPhase.Looking)
+            {
+                if (nextItem == null)
+                {
+                    if (seenItems < world.numOfItems)
+                        nextItem = world.items[seenItems];
+                    else
+                        phase = SeekerPhase.Done;
+                }
+                else
+                {
+                    if (location.Z > nextItem.location.Z)
+                        location.Z -= walkSpeed;
+                    else
+                    {
+                        if (location.X > nextItem.location.X)
+                            location.X -= walkSpeed;
+                        else if (location.X < nextItem.location.X)
+                            location.X += walkSpeed;
+                        else
+                        {
+                            if (nextItem.taken == true)
+                            {
+                                // say i found you!
+                                opponent = nextItem.hider;
+                                opponent.Found();
+                                phase = SeekerPhase.Running;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (phase == SeekerPhase.Running)
+            {
+                if (location.Z < 0)
+                {
+                    if (opponent.location.Z >= 0)
+                    {
+                        opponent.Win();
+                        phase = SeekerPhase.Looking;
+                    }
+                    else
+                        location.Z += runSpeed;
+                }
+                else
+                {
+                    Win();
+                    phase = SeekerPhase.Looking;
+                }
+            }
             base.Update(gameTime);
         }
     }

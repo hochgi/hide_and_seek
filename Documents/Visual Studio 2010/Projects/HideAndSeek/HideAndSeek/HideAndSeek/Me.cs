@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //phase enum!!!
+
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>

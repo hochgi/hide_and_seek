@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 namespace HideAndSeek
 {
 
-    enum HiderPhase { Looking, Hiding, Running, Done };
+    enum HiderPhase { Looking, GoingToSpot, Hiding, Running, Done };
 
     /// <summary>
     /// This is a game component that implements IUpdateable.
@@ -21,6 +21,9 @@ namespace HideAndSeek
     public class Hider : VirtualPlayer
     {
         private World world;
+        HiderPhase phase;
+
+        Item spot;
 
         public Hider(Game game, World world)
             : base(game)
@@ -36,7 +39,7 @@ namespace HideAndSeek
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
+            phase = HiderPhase.Looking;
             base.Initialize();
         }
 
@@ -47,8 +50,47 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            if (world.gameType == GameType.Hide || world.gameType == GameType.Seek)
+            {
+                if (phase == HiderPhase.Looking)
+                {
+                    Random rand = new Random();
+                    spot = world.items[rand.Next(world.numOfItems)];
+                    while (spot.taken == true)
+                        spot = world.items[rand.Next(world.numOfItems)];
+                    spot.taken = true;
+                    phase = HiderPhase.GoingToSpot;
+                }
+                else if (phase == HiderPhase.GoingToSpot)
+                {
+                    if (location.Z > spot.location.Z)
+                        location.Z -= walkSpeed;
+                    else
+                    {
+                        if (location.X > spot.location.X)
+                            location.X -= walkSpeed;
+                        else if (location.X < spot.location.X)
+                            location.X += walkSpeed;
+                        else
+                            // go behind hiding spot and bend down
+                            phase = HiderPhase.Hiding;
+                    }
+                }
+                else if (phase == HiderPhase.Running)
+                {
+                    if (location.Z < 0)
+                        location.Z += runSpeed;
+                    else
+                        phase = HiderPhase.Done;
+                }
+            }
 
             base.Update(gameTime);
+        }
+
+        internal void Found()
+        {
+            phase = HiderPhase.Running;
         }
     }
 }

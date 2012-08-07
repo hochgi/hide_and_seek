@@ -14,7 +14,7 @@ namespace HideAndSeek
 {
 
     enum GameType { HidePractice, SeekPractice, Hide, Seek };
-    enum GamePhase { Çounting, Looking, Running, Done };
+    enum GamePhase { Counting, Looking }; //still relevant??
 
     /// <summary>
     /// This is a game component that implements IUpdateable.
@@ -25,16 +25,14 @@ namespace HideAndSeek
         public GamePhase gamePhase;
         int countNum = 20;
         int numOfHiders = 5;
-        int numOfItems = 10;
+        public int numOfItems = 10;
 
-        Item[] items;
+        public Item[] items;
         Hider[] hiders;
         Seeker seeker;
         Me me;
 
         Vector3[] borders;
-
-        int count = 0;
 
         public World(Game game)
             : base(game)
@@ -58,13 +56,14 @@ namespace HideAndSeek
             {
 
                 items = new Item[numOfItems];
+                //order items by z
                 for (int i = 0; i < numOfItems; i++)
                     items[i] = new Item(Game, new Vector3(0, 0, -10 * i), new Vector3(1, 1, 1), 0, this);
 
                 hiders = new Hider[numOfHiders];
                 for (int i = 0; i < numOfHiders; i++)
                     hiders[i] = new Hider(Game, this);
-                gamePhase = GamePhase.Çounting;
+                gamePhase = GamePhase.Counting;
             }
 
             else if (gameType == GameType.HidePractice)
@@ -84,7 +83,7 @@ namespace HideAndSeek
             }
 
             if (gameType == GameType.Hide)
-                seeker = new Seeker(Game, this);
+                seeker = new Seeker(Game, this, countNum);
             else
                 seeker = null;
 
@@ -104,29 +103,20 @@ namespace HideAndSeek
             // TODO: Add your update code here
             if (gameType == GameType.HidePractice)
             {
-                if (gamePhase == GamePhase.Çounting)
+                if (gamePhase == GamePhase.Counting)
                     if (me.location.Z <= items[0].location.Z && me.location.X >= items[0].location.X - items[0].size.X 
                         && me.location.X <= items[0].location.X + items[0].size.X)
                         gamePhase = GamePhase.Looking;
                 else if (gamePhase == GamePhase.Looking)
                         if (me.location.Z <= items[0].location.Z)
                         {
-                            gamePhase = GamePhase.Done;
+                            //gamePhase = GamePhase.Done;
                             Console.WriteLine("YAYYYYY!!!");
                         }
             }
             if (gameType == GameType.Hide)
             {
-                if (gamePhase == GamePhase.Çounting)
-                {
-                    count++;
-                    if (count >= countNum / Game.TargetElapsedTime.Seconds)
-                        gamePhase = GamePhase.Looking;
-                }
-                else if (gamePhase == GamePhase.Looking)
-                {
-
-                }
+                
             }
             base.Update(gameTime);
         }

@@ -23,13 +23,15 @@ namespace HideAndSeek
         public Vector3 size; //X = W, Y = H, Z = D
         //add item type for drawing reasons!!
 
+        public bool taken;
+        public Hider hider;
+
         public Item(Game game, Vector3 loc, Vector3 size, int type, World world)
             : base(game)
         {
             // TODO: Construct any child components here
 
             this.world = world;
-
             this.location = loc;
             this.size = size;
         }
@@ -41,7 +43,8 @@ namespace HideAndSeek
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-
+            taken = false;
+            hider = null;
             base.Initialize();
         }
 
