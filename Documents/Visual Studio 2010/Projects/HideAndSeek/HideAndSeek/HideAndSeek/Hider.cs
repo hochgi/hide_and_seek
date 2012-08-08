@@ -18,12 +18,14 @@ namespace HideAndSeek
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Hider : VirtualPlayer
+    public class Hider : Player
     {
         private World world;
         HiderPhase phase;
 
         Item spot;
+
+        public Vector3[] limbs;
 
         public Hider(Game game, World world)
             : base(game)
@@ -41,6 +43,8 @@ namespace HideAndSeek
             // TODO: Add your initialization code here
             phase = HiderPhase.Looking;
             base.Initialize();
+            limbs = new Vector3[5];
+            //initialize limbs!!
         }
 
         /// <summary>
@@ -72,8 +76,11 @@ namespace HideAndSeek
                         else if (location.X < spot.location.X)
                             location.X += walkSpeed;
                         else
+                        {
                             // go behind hiding spot and bend down
+                            spot.hider = this;
                             phase = HiderPhase.Hiding;
+                        }
                     }
                 }
                 else if (phase == HiderPhase.Running)

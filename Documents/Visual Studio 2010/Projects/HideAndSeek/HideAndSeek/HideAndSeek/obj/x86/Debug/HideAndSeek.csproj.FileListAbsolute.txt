@@ -3,3 +3,4 @@ C:\Users\Tamar\Documents\Visual Studio 2010\Projects\HideAndSeek\HideAndSeek\Hid
 C:\Users\Tamar\Documents\Visual Studio 2010\Projects\HideAndSeek\HideAndSeek\HideAndSeek\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Tamar\Documents\Visual Studio 2010\Projects\HideAndSeek\HideAndSeek\HideAndSeek\obj\x86\Debug\HideAndSeek.exe
 C:\Users\Tamar\Documents\Visual Studio 2010\Projects\HideAndSeek\HideAndSeek\HideAndSeek\obj\x86\Debug\HideAndSeek.pdb
+C:\Users\Tamar\Documents\Visual Studio 2010\Projects\HideAndSeek\HideAndSeek\HideAndSeek\obj\x86\Debug\HideAndSeek.csprojResolveAssemblyReference.cache

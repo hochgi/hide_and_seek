@@ -17,7 +17,7 @@ namespace HideAndSeek
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Seeker : VirtualPlayer
+    public class Seeker : Player
     {
         private World world;
 
@@ -29,7 +29,7 @@ namespace HideAndSeek
         private int countNum;
         private int count;
 
-        Hider opponent;
+        Player opponent;
 
         public Seeker(Game game, World world, int countNum)
             : base(game)
@@ -117,6 +117,19 @@ namespace HideAndSeek
                 }
             }
             base.Update(gameTime);
+        }
+
+        private bool CanSee(Hider hider)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                //create line
+                for (int j = 0; j < world.numOfItems; j++)
+                {
+                    //if line passes through item[j], break.  else, return true.  not really.////
+                }
+            }
+            return false;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace HideAndSeek
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Me : Microsoft.Xna.Framework.GameComponent
+    public class Me : Player
     {
         private World world;
 

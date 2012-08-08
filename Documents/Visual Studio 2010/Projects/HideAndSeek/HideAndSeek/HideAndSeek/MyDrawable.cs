@@ -13,7 +13,7 @@ namespace HideAndSeek
 {
     class MyDrawable : DrawableGameComponent
     {
-        public enum Direction {Forward, Backward, Left, Right, LF, LB, RF, RB, Up, Down};
+        public enum Direction { Forward, Backward, Left, Right, LF, LB, RF, RB, Up, Down };
 
         BasicEffect m_effect;
         public VertexPositionColor[] m_vertices;
@@ -40,8 +40,9 @@ namespace HideAndSeek
 
         public void move(Direction dir)
         {
-            Vector3 movement = new Vector3(0,0,0);
-            switch((Direction) dir){
+            Vector3 movement = new Vector3(0, 0, 0);
+            switch ((Direction)dir)
+            {
                 case Direction.Forward:
                     movement.Z = -1;
                     break;
@@ -78,7 +79,7 @@ namespace HideAndSeek
                     break;
             }
 
-            for (int i=0; i<m_vertices.Length; ++i)
+            for (int i = 0; i < m_vertices.Length; ++i)
             {
                 m_vertices[i].Position += movement;
             }
@@ -96,6 +97,6 @@ namespace HideAndSeek
             }
             base.Draw(gameTime);
         }
-        
+
     }
 }

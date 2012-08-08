@@ -13,15 +13,15 @@ using Microsoft.Xna.Framework.Media;
 namespace HideAndSeek
 {
 
-    enum GameType { HidePractice, SeekPractice, Hide, Seek };
-    enum GamePhase { Counting, Looking }; //still relevant??
+    public enum GameType { HidePractice, SeekPractice, Hide, Seek };
+    public enum GamePhase { Counting, Looking }; //still relevant??
 
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public class World : Microsoft.Xna.Framework.GameComponent
     {
-        public GameType gameType;
+        public GameType gameType = GameType.Hide;
         public GamePhase gamePhase;
         int countNum = 20;
         int numOfHiders = 5;

@@ -24,7 +24,7 @@ namespace HideAndSeek
         //add item type for drawing reasons!!
 
         public bool taken;
-        public Hider hider;
+        public Player hider;
 
         public Item(Game game, Vector3 loc, Vector3 size, int type, World world)
             : base(game)
