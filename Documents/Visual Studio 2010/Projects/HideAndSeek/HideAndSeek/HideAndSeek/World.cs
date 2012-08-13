@@ -30,7 +30,8 @@ namespace HideAndSeek
         public Item[] items;
         Hider[] hiders;
         Seeker seeker;
-        Me me;
+        MeHider meHider;
+        MeSeeker meSeeker;
 
         Vector3[] borders;
 
@@ -49,8 +50,6 @@ namespace HideAndSeek
             // TODO: Add your initialization code here
 
             base.Initialize();
-
-            me = new Me(Game, this);
 
             if (gameType == GameType.Hide || gameType == GameType.Seek)
             {
@@ -87,6 +86,17 @@ namespace HideAndSeek
             else
                 seeker = null;
 
+            if (gameType == GameType.Hide || gameType == GameType.HidePractice)
+            {
+                meHider = new MeHider(Game, this);
+                meSeeker = null;
+            }
+            else
+            {
+                meSeeker = new MeSeeker(Game, this, countNum);
+                meHider = null;
+            }
+
             borders = new Vector3[4];
             borders[0] = new Vector3(20, 0, 0);
             borders[1] = new Vector3(-20, 0, 0);
@@ -103,16 +113,16 @@ namespace HideAndSeek
             // TODO: Add your update code here
             if (gameType == GameType.HidePractice)
             {
-                if (gamePhase == GamePhase.Counting)
-                    if (me.location.Z <= items[0].location.Z && me.location.X >= items[0].location.X - items[0].size.X 
-                        && me.location.X <= items[0].location.X + items[0].size.X)
-                        gamePhase = GamePhase.Looking;
-                else if (gamePhase == GamePhase.Looking)
-                        if (me.location.Z <= items[0].location.Z)
-                        {
-                            //gamePhase = GamePhase.Done;
-                            Console.WriteLine("YAYYYYY!!!");
-                        }
+                //if (gamePhase == GamePhase.Counting)
+                //    if (me.location.Z <= items[0].location.Z && me.location.X >= items[0].location.X - items[0].size.X 
+                //        && me.location.X <= items[0].location.X + items[0].size.X)
+                //        gamePhase = GamePhase.Looking;
+                //else if (gamePhase == GamePhase.Looking)
+                //        if (me.location.Z <= items[0].location.Z)
+                //        {
+                //            //gamePhase = GamePhase.Done;
+                //            Console.WriteLine("YAYYYYY!!!");
+                //        }
             }
             if (gameType == GameType.Hide)
             {

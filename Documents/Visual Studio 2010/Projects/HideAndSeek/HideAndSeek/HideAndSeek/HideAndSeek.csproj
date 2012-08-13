@@ -110,7 +110,8 @@
     <Compile Include="Hider.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="KinectMe.cs" />
-    <Compile Include="Me.cs" />
+    <Compile Include="MeHider.cs" />
+    <Compile Include="MeSeeker.cs" />
     <Compile Include="MyDrawable.cs" />
     <Compile Include="Seeker.cs" />
     <Compile Include="Player.cs" />

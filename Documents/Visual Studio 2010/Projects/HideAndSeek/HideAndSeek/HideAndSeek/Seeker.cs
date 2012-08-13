@@ -29,7 +29,7 @@ namespace HideAndSeek
         private int countNum;
         private int count;
 
-        Player opponent;
+        Hider opponent;
 
         public Seeker(Game game, World world, int countNum)
             : base(game)
@@ -123,11 +123,18 @@ namespace HideAndSeek
         {
             for (int i = 0; i < 5; i++)
             {
+                bool visible = true;
                 //create line
                 for (int j = 0; j < world.numOfItems; j++)
                 {
-                    //if line passes through item[j], break.  else, return true.  not really.////
+                    if (true)//if line passes through item[j]
+                    {
+                        visible = false;
+                        break;
+                    }
                 }
+                if (visible)
+                    return true;
             }
             return false;
         }

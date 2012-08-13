@@ -15,25 +15,12 @@ namespace HideAndSeek
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Item : Microsoft.Xna.Framework.GameComponent
+    public class MeSeeker : Seeker
     {
-        World world;
-
-        public Vector3 location;
-        public Vector3 size; //X = W, Y = H, Z = D
-        //add item type for drawing reasons!!
-
-        public bool taken;
-        public Hider hider;
-
-        public Item(Game game, Vector3 loc, Vector3 size, int type, World world)
-            : base(game)
+        public MeSeeker(Game game, World world, int countNum)//is countnum necessary??
+            : base(game, world, countNum)
         {
             // TODO: Construct any child components here
-
-            this.world = world;
-            this.location = loc;
-            this.size = size;
         }
 
         /// <summary>
@@ -43,8 +30,7 @@ namespace HideAndSeek
         public override void Initialize()
         {
             // TODO: Add your initialization code here
-            taken = false;
-            hider = null;
+
             base.Initialize();
         }
 
@@ -57,11 +43,6 @@ namespace HideAndSeek
             // TODO: Add your update code here
 
             base.Update(gameTime);
-        }
-
-        public DrawableGameComponent GetDrawable()
-        {
-            return null;
         }
     }
 }

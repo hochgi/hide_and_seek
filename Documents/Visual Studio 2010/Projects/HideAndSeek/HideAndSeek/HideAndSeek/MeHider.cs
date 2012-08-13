@@ -17,17 +17,17 @@ namespace HideAndSeek
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class Me : Player
+    public class MeHider : Hider
     {
-        private World world;
+        private World world;//necessary???
 
         KinectMe myInput;
 
         public Vector3 location;
         private int walkRate;
 
-        public Me(Game game, World world)
-            : base(game)
+        public MeHider(Game game, World world)
+            : base(game, world)
         {
             // TODO: Construct any child components here
             this.world = world;

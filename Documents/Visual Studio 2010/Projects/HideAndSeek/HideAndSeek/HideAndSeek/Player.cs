@@ -58,10 +58,5 @@ namespace HideAndSeek
         {
             //victory dance and whatever
         }
-
-        internal void Found()/// not relevant, need to override it in me!
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -25,7 +25,7 @@ namespace HideAndSeek
 
         Item spot;
 
-        public Vector3[] limbs;
+        public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
 
         public Hider(Game game, World world)
             : base(game)
