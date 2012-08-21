@@ -22,11 +22,12 @@ namespace HideAndSeek
         protected int runSpeed = 10;
         protected int walkSpeed = 5;
 
-        MyDrawable myDrawable = new MyDrawable();
+        MyDrawable myDrawable = null;
 
         public Player(Game game)
             : base(game)
         {
+            myDrawable = new MyDrawable(game);
             // TODO: Construct any child components here;
         }
 

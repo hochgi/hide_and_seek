@@ -15,6 +15,8 @@ namespace HideAndSeek
     {
         public enum Direction { Forward, Backward, Left, Right, LF, LB, RF, RB, Up, Down };
 
+        public MyDrawable(Game game) : base(game) {}
+
         BasicEffect m_effect;
         public VertexPositionColor[] m_vertices;
         public int m_startIdx
