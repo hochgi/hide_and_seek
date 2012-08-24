@@ -59,9 +59,16 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
+        //drawing code
         public DrawableGameComponent GetDrawable()
         {
             return null;
+        }
+
+        //checks whether item is blocking seeker from seeing hider
+        public bool IsBlocking(Seeker seeker, Hider hider)
+        {
+            return false;
         }
     }
 }

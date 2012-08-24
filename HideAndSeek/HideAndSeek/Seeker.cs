@@ -62,12 +62,14 @@ namespace HideAndSeek
             // TODO: Add your update code here
             if (phase == SeekerPhase.Counting)
             {
+                //count to whatever number was given
                 count++;
                 if (count >= countNum / Game.TargetElapsedTime.Seconds)
                     phase = SeekerPhase.Looking;
             }
             else if (phase == SeekerPhase.Looking)
             {
+                //choose item and go to it and see if there is a person behind it.  all of this code needs to be rewritten
                 if (nextItem == null)
                 {
                     if (seenItems < world.numOfItems)
@@ -102,14 +104,17 @@ namespace HideAndSeek
             {
                 if (location.Z < 0)
                 {
+                    //if opponent has reached tree before seeker, then they won and seeker looks for more people
                     if (opponent.location.Z >= 0)
                     {
                         opponent.Win();
                         phase = SeekerPhase.Looking;
                     }
+                    //keep moving.  also needs to be rewritten
                     else
                         location.Z += runSpeed;
                 }
+                //seeker won but needs to keep looking for more people
                 else
                 {
                     Win();
@@ -119,12 +124,14 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
+        //checks whether seeker can see given hider (will be relevant also for practice levels)
+        //should be rewritten to call IsBlocking function in Item
         private bool CanSee(Hider hider)
         {
             for (int i = 0; i < 5; i++)
             {
                 bool visible = true;
-                //create line
+                //create line of sight from seeker's eyes to limbs[i] in hider. i.e., can seeker see limb #i?
                 for (int j = 0; j < world.numOfItems; j++)
                 {
                     if (true)//if line passes through item[j]

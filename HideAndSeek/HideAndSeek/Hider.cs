@@ -24,8 +24,6 @@ namespace HideAndSeek
 
         Item spot;
 
-        public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
-
         public Hider(Game game, World world)
             : base(game)
         {
@@ -43,7 +41,6 @@ namespace HideAndSeek
             phase = HiderPhase.Looking;
             base.Initialize();
             limbs = new Vector3[5];
-            //initialize limbs!!
         }
 
         /// <summary>
@@ -57,6 +54,7 @@ namespace HideAndSeek
             {
                 if (phase == HiderPhase.Looking)
                 {
+                    //choose random spot which is not taken
                     Random rand = new Random();
                     spot = world.items[rand.Next(world.numOfItems)];
                     while (spot.taken == true)
@@ -64,6 +62,7 @@ namespace HideAndSeek
                     spot.taken = true;
                     phase = HiderPhase.GoingToSpot;
                 }
+                //walking and running code need to be rewritten!!!
                 else if (phase == HiderPhase.GoingToSpot)
                 {
                     if (location.Z > spot.location.Z)
@@ -76,14 +75,21 @@ namespace HideAndSeek
                             location.X += walkSpeed;
                         else
                         {
-                            // go behind hiding spot and bend down
-                            spot.hider = this;
-                            phase = HiderPhase.Hiding;
+                            //spot may be taken if human player got there first
+                            if (spot.taken)
+                                phase = HiderPhase.Looking;
+                            else
+                            {
+                                // go behind hiding spot and bend down
+                                spot.hider = this;
+                                phase = HiderPhase.Hiding;
+                            }
                         }
                     }
                 }
                 else if (phase == HiderPhase.Running)
                 {
+                    //move towards zero, if reached zero wait by tree
                     if (location.Z < 0)
                         location.Z += runSpeed;
                     else
@@ -94,6 +100,7 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
+        //hider was found, start running back toward tree
         internal void Found()
         {
             phase = HiderPhase.Running;

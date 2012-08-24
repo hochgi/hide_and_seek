@@ -17,6 +17,7 @@ namespace HideAndSeek
     /// </summary>
     public class Player : Microsoft.Xna.Framework.GameComponent
     {
+        public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
         public Vector3 location;
 
         protected int runSpeed = 10;
@@ -38,10 +39,9 @@ namespace HideAndSeek
         public override void Initialize()
         {
             // TODO: Add your initialization code here
+            //initialize limbs!!
 
             base.Initialize();
-
-            location = new Vector3(0, 0, 0);
         }
 
         /// <summary>
