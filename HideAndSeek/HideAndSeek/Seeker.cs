@@ -128,22 +128,15 @@ namespace HideAndSeek
         //should be rewritten to call IsBlocking function in Item
         private bool CanSee(Hider hider)
         {
-            for (int i = 0; i < 5; i++)
+            //create line of sight from seeker's eyes to limbs[i] in hider. i.e., can seeker see limb #i?
+            for (int j = 0; j < world.numOfItems; j++)
             {
-                bool visible = true;
-                //create line of sight from seeker's eyes to limbs[i] in hider. i.e., can seeker see limb #i?
-                for (int j = 0; j < world.numOfItems; j++)
+                if (world.items[j].IsBlocking(this, hider))//if seeker can't see hider
                 {
-                    if (true)//if line passes through item[j]
-                    {
-                        visible = false;
-                        break;
-                    }
+                    return false;
                 }
-                if (visible)
-                    return true;
             }
-            return false;
+            return true;
         }
     }
 }
