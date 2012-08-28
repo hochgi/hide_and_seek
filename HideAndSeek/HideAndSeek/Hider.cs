@@ -105,5 +105,11 @@ namespace HideAndSeek
         {
             phase = HiderPhase.Running;
         }
+
+        // return a list of locations for every organ (2 hands, 2 legs, body, head, or whatever...)
+        public List<Vector3> getPartsPositions()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

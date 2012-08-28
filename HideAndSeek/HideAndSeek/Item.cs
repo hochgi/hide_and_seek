@@ -14,8 +14,10 @@ namespace HideAndSeek
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
+    /// all subclasses of item should define a calculateble primitive,
+    /// or a collection of such primitives that "cage" the visible obstacle.
     /// </summary>
-    public class Item : Microsoft.Xna.Framework.GameComponent
+    public abstract class Item : Microsoft.Xna.Framework.GameComponent
     {
         World world;
 
@@ -68,7 +70,18 @@ namespace HideAndSeek
         //checks whether item is blocking seeker from seeing hider
         public bool IsBlocking(Seeker seeker, Hider hider)
         {
-            return false;
+            bool rv = false;
+
+            foreach(PrimitiveShape p in getCageShapes())
+            {
+                foreach (Vector3 v in hider.getPartsPositions())
+                {
+                    rv = rv || p.isBlockingLineOfSight(seeker.getEyesPosition(), v);
+                }
+            }
+            return rv;
         }
+
+        abstract protected List<PrimitiveShape> getCageShapes();
     }
 }

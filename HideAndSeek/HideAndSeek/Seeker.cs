@@ -138,5 +138,10 @@ namespace HideAndSeek
             }
             return true;
         }
+
+        public Vector3 getEyesPosition() 
+        {
+            throw new NotImplementedException();
+        }
     }
 }
