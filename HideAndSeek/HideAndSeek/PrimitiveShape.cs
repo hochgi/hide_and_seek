@@ -13,4 +13,26 @@ namespace HideAndSeek
         abstract public bool isBlockingLineOfSight(Vector3 a, Vector3 b);
         abstract public Vector3 getPosition();
     }
+
+    class Sphere : PrimitiveShape
+    {
+        float rad;
+        Vector3 pos;
+
+        public Sphere(float radius, Vector3 position) 
+        {
+            this.pos = position;
+            this.rad = radius;
+        }
+
+        public Vector3 getPosition() { return pos; }
+
+        public bool isBlockingLineOfSight(Vector3 a, Vector3 b) 
+        {
+            throw new NotImplementedException();
+            //Vector3 plumbPoint = the closest point on the line from "a"-"b" to the center of the sphere (pos)
+            //float length = new Vector3(plumbPoint.X - pos.X, plumbPoint.Y - pos.Y, plumbPoint.Z - pos.Z).Length();
+            //return length < rad;
+        }
+    }
 }
