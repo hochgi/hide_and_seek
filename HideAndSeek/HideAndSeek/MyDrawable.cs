@@ -11,9 +11,11 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //i moved this enum to outside the class because I wanted to use it somewhere else (tamar)
+    public enum Direction { Forward, Backward, Left, Right, LF, LB, RF, RB, Up, Down };
+
     class MyDrawable : DrawableGameComponent
     {
-        public enum Direction { Forward, Backward, Left, Right, LF, LB, RF, RB, Up, Down };
 
         public MyDrawable(Game game) : base(game) {}
 

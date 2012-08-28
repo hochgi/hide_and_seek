@@ -25,6 +25,9 @@ namespace HideAndSeek
 
         MyDrawable myDrawable = null;
 
+        Item goal;
+        LinkedList<Direction> path;
+
         public Player(Game game)
             : base(game)
         {

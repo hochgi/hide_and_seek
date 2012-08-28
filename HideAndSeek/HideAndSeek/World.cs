@@ -35,6 +35,9 @@ namespace HideAndSeek
 
         Vector3[] borders;
 
+        int squareSize = 10;
+        FieldMap map;
+
         public World(Game game)
             : base(game)
         {
@@ -47,17 +50,25 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
+            borders = new Vector3[4];
+            borders[0] = new Vector3(20, 0, 0);
+            borders[1] = new Vector3(-20, 0, 0);
+            borders[2] = new Vector3(20, 0, -2000);
+            borders[3] = new Vector3(-20, 0, -2000);
 
-            base.Initialize();
+            map = new FieldMap((int)(Math.Abs(borders[0].X - borders[3].X) / squareSize), (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
 
             if (gameType == GameType.Hide || gameType == GameType.Seek)
             {
-
                 items = new Item[numOfItems];
                 //order items by z
                 for (int i = 0; i < numOfItems; i++)
+                {
                     items[i] = new Item(Game, new Vector3(0, 0, -10 * i), new Vector3(1, 1, 1), 0, this);
+                    //tell map that this place is off-limits
+                    map.addBlock((int)items[i].location.X / squareSize, (int)-items[i].location.Z / squareSize);
+                    //depending on item size may need to block 2 or more squares?
+                }
 
                 hiders = new Hider[numOfHiders];
                 for (int i = 0; i < numOfHiders; i++)
@@ -97,11 +108,7 @@ namespace HideAndSeek
                 meHider = null;
             }
 
-            borders = new Vector3[4];
-            borders[0] = new Vector3(20, 0, 0);
-            borders[1] = new Vector3(-20, 0, 0);
-            borders[2] = new Vector3(20, 0, -2000);
-            borders[3] = new Vector3(-20, 0, -2000);
+            base.Initialize();
         }
 
         /// <summary>
