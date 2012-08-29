@@ -8,13 +8,13 @@ namespace HideAndSeek
 {
     // inheriting classes should be simple calculateable shapes
     // such as sphere, vertical/horizontal cylinder, cube, etc'...
-    abstract class PrimitiveShape
+    public abstract class PrimitiveShape
     {
         abstract public bool isBlockingLineOfSight(Vector3 a, Vector3 b);
         abstract public Vector3 getPosition();
     }
 
-    class Sphere : PrimitiveShape
+    public class Sphere : PrimitiveShape
     {
         float rad;
         Vector3 pos;
@@ -25,9 +25,9 @@ namespace HideAndSeek
             this.rad = radius;
         }
 
-        public Vector3 getPosition() { return pos; }
+        public override Vector3 getPosition() { return pos; }
 
-        public bool isBlockingLineOfSight(Vector3 a, Vector3 b) 
+        public override bool isBlockingLineOfSight(Vector3 a, Vector3 b) 
         {
             throw new NotImplementedException();
             //Vector3 plumbPoint = the closest point on the line from "a"-"b" to the center of the sphere (pos)

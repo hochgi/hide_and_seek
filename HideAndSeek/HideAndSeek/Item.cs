@@ -84,4 +84,18 @@ namespace HideAndSeek
 
         abstract protected List<PrimitiveShape> getCageShapes();
     }
+
+    public class Rock : Item
+    {
+        public Rock(Game Game, Vector3 vector3, Vector3 vector3_2, int p, World world)
+            : base (Game, vector3, vector3_2, p, world)
+        {
+            // TODO: Complete member initialization
+        }
+
+        protected override List<PrimitiveShape> getCageShapes()
+        {
+            return null;
+        }
+    }
 }

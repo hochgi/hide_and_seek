@@ -64,7 +64,7 @@ namespace HideAndSeek
                 //order items by z
                 for (int i = 0; i < numOfItems; i++)
                 {
-                    items[i] = new Item(Game, new Vector3(0, 0, -10 * i), new Vector3(1, 1, 1), 0, this);
+                    items[i] = new Rock(Game, new Vector3(0, 0, -10 * i), new Vector3(1, 1, 1), 0, this);
                     //tell map that this place is off-limits
                     map.addBlock((int)items[i].location.X / squareSize, (int)-items[i].location.Z / squareSize);
                     //depending on item size may need to block 2 or more squares?
@@ -80,7 +80,7 @@ namespace HideAndSeek
             {
                 hiders = null;
                 items = new Item[1];
-                items[0] = new Item(Game, new Vector3(0, 0, -10), new Vector3(1, 1, 1), 0, this);
+                items[0] = new Rock(Game, new Vector3(0, 0, -10), new Vector3(1, 1, 1), 0, this);
             }
 
             else // gameType == SeekPractice
@@ -88,8 +88,8 @@ namespace HideAndSeek
                 hiders = new Hider[1];
                 hiders[0] = new Hider(Game, this);
                 items = new Item[2];
-                items[0] = new Item(Game, new Vector3(5, 0, -10), new Vector3(1, 1, 1), 0, this);
-                items[1] = new Item(Game, new Vector3(-5, 0, -10), new Vector3(1, 1, 1), 0, this);
+                items[0] = new Rock(Game, new Vector3(5, 0, -10), new Vector3(1, 1, 1), 0, this);
+                items[1] = new Rock(Game, new Vector3(-5, 0, -10), new Vector3(1, 1, 1), 0, this);
             }
 
             if (gameType == GameType.Hide)
