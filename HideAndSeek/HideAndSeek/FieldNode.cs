@@ -20,5 +20,10 @@ namespace HideAndSeek
             this.father = father;
         }
 
+        public override bool Equals(FieldNode other)
+        {
+            return (x == other.x && y == other.y);
+        }
+
     }
 }

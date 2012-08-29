@@ -43,7 +43,8 @@ namespace HideAndSeek
         {
             // TODO: Add your initialization code here
             //initialize limbs!!
-
+            goal = null;
+            path = null;
             base.Initialize();
         }
 
