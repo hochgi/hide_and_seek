@@ -27,12 +27,13 @@ namespace HideAndSeek
 
         public override Vector3 getPosition() { return pos; }
 
+        // the idea of the implementation can be found here:
+        // http://paulbourke.net/geometry/pointline/
         public override bool isBlockingLineOfSight(Vector3 a, Vector3 b) 
         {
-            throw new NotImplementedException();
-            //Vector3 plumbPoint = the closest point on the line from "a"-"b" to the center of the sphere (pos)
-            //float length = new Vector3(plumbPoint.X - pos.X, plumbPoint.Y - pos.Y, plumbPoint.Z - pos.Z).Length();
-            //return length < rad;
+            float u = ((pos.X - a.X) * (b.X - a.X) + (pos.Y - a.Y) * (b.Y - a.Y) + (pos.Z - a.Z) * (b.Z - a.Z)) / Vector3.DistanceSquared(a, b);
+            Vector3 plumbPoint = new Vector3(a.X + u * (b.X - a.X), a.Y + u * (b.Y - a.Y), a.Z + u * (b.Z - a.Z));
+            return Vector3.Distance(pos, plumbPoint) < rad;
         }
     }
 }
