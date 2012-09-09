@@ -36,6 +36,7 @@ namespace HideAndSeek
         Vector3[] borders;
 
         int squareSize = 10;
+        int numOfSquares;
         FieldMap map;
 
         public World(Game game)
@@ -44,6 +45,8 @@ namespace HideAndSeek
             // TODO: Construct any child components here
         }
 
+
+        //this function needs to be fixed up very badly!!
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
@@ -56,23 +59,29 @@ namespace HideAndSeek
             borders[2] = new Vector3(20, 0, -2000);
             borders[3] = new Vector3(-20, 0, -2000);
 
-            map = new FieldMap((int)(Math.Abs(borders[0].X - borders[3].X) / squareSize), (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
+            numOfSquares = (int)Math.Abs(borders[0].X - borders[3].X) / squareSize;
+            map = new FieldMap(numOfSquares, (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
 
             if (gameType == GameType.Hide || gameType == GameType.Seek)
             {
                 items = new Item[numOfItems];
-                //order items by z
                 for (int i = 0; i < numOfItems; i++)
                 {
                     items[i] = new Rock(Game, new Vector3(0, 0, -10 * i), new Vector3(1, 1, 1), 0, this);
                     //tell map that this place is off-limits
+                    //this is not correct because we have negative x coordinates!!!
                     map.addBlock((int)items[i].location.X / squareSize, (int)-items[i].location.Z / squareSize);
                     //depending on item size may need to block 2 or more squares?
                 }
 
                 hiders = new Hider[numOfHiders];
                 for (int i = 0; i < numOfHiders; i++)
+                {
                     hiders[i] = new Hider(Game, this);
+                    //tell map that this place is off-limits
+                    //this is not correct because we have negative x coordinates!!!
+                    map.addBlock((int)hiders[i].location.X / squareSize, (int)-hiders[i].location.Z / squareSize);
+                }
                 gamePhase = GamePhase.Counting;
             }
 
@@ -142,5 +151,33 @@ namespace HideAndSeek
         {
             return null;
         }
+
+        // tell field map that a player has moved from one square to another.  need to implement!
+        internal void updateLocation(int[] prevSpace, int[] nextSpace)
+        {
+            throw new NotImplementedException();
+        }
+
+        // get next space for player, using DFS (probably needs to be changed!)
+        internal int[] getNextSpace(Vector3 location)
+        {
+            return nodeToLoc(map.firstSon(locToNode(location)));
+        }
+
+        // convert 3D location to node on field map (needs to be fixed)
+        private FieldNode locToNode(Vector3 location)
+        {
+            if (location.X < 0)
+                return new FieldNode(numOfSquares / 2 - (int)-location.X / squareSize, (int)-location.Z / squareSize);
+            else
+                return new FieldNode(numOfSquares / 2 + (int)location.X / squareSize, (int)-location.Z / squareSize);
+        }
+
+        // convert node to 3D location - not implemented yet
+        private int[] nodeToLoc(FieldNode node)
+        {
+            return null;
+        }
+
     }
 }

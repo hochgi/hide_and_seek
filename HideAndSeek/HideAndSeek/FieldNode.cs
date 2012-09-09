@@ -5,19 +5,17 @@ using System.Text;
 
 namespace HideAndSeek
 {
+    // may be obselete?  just replace with vector2!
+    //represents a node in the field map
     class FieldNode
     {
         public int x;
         public int y;
-        public int depth;
-        public FieldNode father;
 
-        public FieldNode(int x, int y, int depth, FieldNode father)
+        public FieldNode(int x, int y)
         {
             this.x = x;
             this.y = y;
-            this.depth = depth;
-            this.father = father;
         }
 
         public override bool Equals(FieldNode other)

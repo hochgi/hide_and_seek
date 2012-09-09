@@ -19,7 +19,6 @@ namespace HideAndSeek
     /// </summary>
     public class Seeker : Player
     {
-        private World world;
 
         SeekerPhase phase;
 
@@ -32,10 +31,9 @@ namespace HideAndSeek
         Hider opponent;
 
         public Seeker(Game game, World world, int countNum)
-            : base(game)
+            : base(game, world)
         {
             // TODO: Construct any child components here
-            this.world = world;
             this.countNum = countNum;
         }
 
@@ -124,6 +122,11 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
+        public override bool act()
+        {
+            return false;
+        }
+
         //checks whether seeker can see given hider (will be relevant also for practice levels)
         //should be rewritten to call IsBlocking function in Item
         private bool CanSee(Hider hider)
@@ -142,6 +145,11 @@ namespace HideAndSeek
         public Vector3 getEyesPosition() 
         {
             throw new NotImplementedException();
+        }
+
+        public override int[] getNextSpace()
+        {
+            return null;
         }
     }
 }
