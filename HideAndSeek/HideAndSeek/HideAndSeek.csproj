@@ -109,6 +109,7 @@
   <ItemGroup>
     <Compile Include="FieldMap.cs" />
     <Compile Include="FieldNode.cs" />
+    <Compile Include="FieldSearch.cs" />
     <Compile Include="Hider.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="KinectMe.cs" />

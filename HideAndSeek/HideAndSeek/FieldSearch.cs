@@ -5,6 +5,8 @@ using System.Text;
 
 namespace HideAndSeek
 {
+    //may be obselete??!?!
+    // implementation of DFS algorithm
     class FieldSearch
     {
         static public LinkedList<Direction> FindPath(FieldMap map, FieldNode start, FieldNode goal)
@@ -15,9 +17,9 @@ namespace HideAndSeek
             while (stack.Count > 0)
             {
                 FieldNode node = stack.Pop();
-                AddToPath(path, node);
+                //AddToPath(path, node);
                 if (node.Equals(goal))
-                    return Translate(path);
+                    return TranslateToDirections(path);
                 LinkedList<FieldNode> sons = map.findSons(node);
                 //Iterator<Node> iter = sons.descendingIterator();
                 foreach (FieldNode son in sons)
@@ -29,19 +31,19 @@ namespace HideAndSeek
             return null;
         }
 
-        private static LinkedList<Direction> Translate(LinkedList<FieldNode> path)
+        private static LinkedList<Direction> TranslateToDirections(LinkedList<FieldNode> path)
         {
             LinkedList<Direction> list = new LinkedList<Direction>();
             //foreach (FieldNode node in path)
             return list;
         }
 
-        private static void AddToPath(LinkedList<FieldNode> path, FieldNode node)
-        {
-            while (path.Count>0 && !path.Last.Equals(node.father))
-                path.RemoveLast();
-            if (!path.Contains(node))
-                path.AddLast(node);
-        }
+        //private static void AddToPath(LinkedList<FieldNode> path, FieldNode node)
+        //{
+        //    while (path.Count>0 && !path.Last.Equals(node.father))
+        //        path.RemoveLast();
+        //    if (!path.Contains(node))
+        //        path.AddLast(node);
+        //}
     }
 }

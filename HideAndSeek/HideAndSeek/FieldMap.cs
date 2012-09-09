@@ -26,7 +26,14 @@ namespace HideAndSeek
         // add a space in map which players can't walk on
         public void addBlock(int x, int y)
         {
-            map[x,y] = 1;
+            map[x, y]++;
+        }
+
+        //notify map that someone moved from [x,y] to [z,w]
+        public void moveSomeone(int x, int y, int z, int w)
+        {
+            map[x, y]--;
+            map[z, w]++;
         }
 
         // find all spaces where it is possible to go to from current node
@@ -35,26 +42,51 @@ namespace HideAndSeek
             LinkedList<FieldNode> sons = new LinkedList<FieldNode>();
             int x = node.x;
             int y = node.y;
-            int depth = node.depth + 1;
             if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
                 return null;
-            if (y + 1 < sizeY && map[x, y + 1] != 1)
-                sons.AddLast(new FieldNode(x, y + 1, depth, node));
-            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1,y + 1] != 1)
-                sons.AddLast(new FieldNode(x + 1, y + 1, depth, node));
-            if (x + 1 < sizeX && map[x + 1,y] != 1)
-                sons.AddLast(new FieldNode(x + 1, y, depth, node));
-            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1,y - 1] != 1)
-                sons.AddLast(new FieldNode(x + 1, y - 1, depth, node));
-            if (y - 1 >= 0 && map[x,y - 1] != 1)
-                sons.AddLast(new FieldNode(x, y - 1, depth, node));
-            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1,y - 1] != 1)
-                sons.AddLast(new FieldNode(x - 1, y - 1, depth, node));
-            if (x - 1 >= 0 && map[x - 1,y] != 1)
-                sons.AddLast(new FieldNode(x - 1, y, depth, node));
-            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1,y + 1] != 1)
-                sons.AddLast(new FieldNode(x - 1, y + 1, depth, node));
+            if (y + 1 < sizeY && map[x, y + 1] <= 0)
+                sons.AddLast(new FieldNode(x, y + 1));
+            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
+                sons.AddLast(new FieldNode(x + 1, y + 1));
+            if (x + 1 < sizeX && map[x + 1, y] <= 0)
+                sons.AddLast(new FieldNode(x + 1, y));
+            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
+                sons.AddLast(new FieldNode(x + 1, y - 1));
+            if (y - 1 >= 0 && map[x, y - 1] <= 0)
+                sons.AddLast(new FieldNode(x, y - 1));
+            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
+                sons.AddLast(new FieldNode(x - 1, y - 1));
+            if (x - 1 >= 0 && map[x - 1, y] <= 0)
+                sons.AddLast(new FieldNode(x - 1, y));
+            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
+                sons.AddLast(new FieldNode(x - 1, y + 1));
             return sons;
+        }
+
+        // find first available space to move to 
+        public FieldNode firstSon (FieldNode node)
+        {
+            int x = node.x;
+            int y = node.y;
+            if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
+                return null;
+            if (y + 1 < sizeY && map[x, y + 1] <= 0)
+                return new FieldNode(x, y + 1);
+            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
+                return new FieldNode(x + 1, y + 1);
+            if (x + 1 < sizeX && map[x + 1, y] <= 0)
+                return new FieldNode(x + 1, y);
+            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
+                return new FieldNode(x + 1, y - 1);
+            if (y - 1 >= 0 && map[x, y - 1] <= 0)
+                return new FieldNode(x, y - 1);
+            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
+                return new FieldNode(x - 1, y - 1);
+            if (x - 1 >= 0 && map[x - 1, y] <= 0)
+                return new FieldNode(x - 1, y);
+            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
+                return new FieldNode(x - 1, y + 1);
+            return null;
         }
     }
 }

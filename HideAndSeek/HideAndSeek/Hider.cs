@@ -19,16 +19,14 @@ namespace HideAndSeek
     /// </summary>
     public class Hider : Player
     {
-        private World world;
         HiderPhase phase;
 
         Item spot;
 
         public Hider(Game game, World world)
-            : base(game)
+            : base(game, world)
         {
             // TODO: Construct any child components here
-            this.world = world;
         }
 
         /// <summary>
@@ -98,6 +96,11 @@ namespace HideAndSeek
             }
 
             base.Update(gameTime);
+        }
+
+        public override bool act()
+        {
+            return false;
         }
 
         //hider was found, start running back toward tree
