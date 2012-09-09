@@ -122,7 +122,7 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
-        public override bool act()
+        protected override bool act()
         {
             return false;
         }
@@ -147,7 +147,7 @@ namespace HideAndSeek
             throw new NotImplementedException();
         }
 
-        public override int[] getNextSpace()
+        protected override int[] getNextSpace()
         {
             return null;
         }

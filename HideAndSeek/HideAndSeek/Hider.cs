@@ -98,7 +98,7 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
-        public override bool act()
+        protected override bool act()
         {
             return false;
         }

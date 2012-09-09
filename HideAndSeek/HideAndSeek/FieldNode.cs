@@ -18,10 +18,10 @@ namespace HideAndSeek
             this.y = y;
         }
 
-        public override bool Equals(FieldNode other)
-        {
-            return (x == other.x && y == other.y);
-        }
+        //public override bool Equals(FieldNode other)
+        //{
+        //    return (x == other.x && y == other.y);
+        //}
 
     }
 }

@@ -92,13 +92,13 @@ namespace HideAndSeek
         }
 
         // get next square player needs to move to
-        private int[] getNextSpace()
+        protected virtual int[] getNextSpace()
         {
             return world.getNextSpace(location);
         }
 
         // do what needs to be done at certain place and check if need to keep moving
-        private abstract bool act();
+        protected abstract bool act();
 
         public void Win()
         {
