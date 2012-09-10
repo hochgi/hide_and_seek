@@ -28,7 +28,7 @@ namespace HideAndSeek
         public int numOfItems = 10;
 
         public Item[] items;
-        Hider[] hiders;
+        public Hider[] hiders;
         Seeker seeker;
         MeHider meHider;
         MeSeeker meSeeker;
@@ -36,7 +36,6 @@ namespace HideAndSeek
         Vector3[] borders;
 
         int squareSize = 10;
-        int numOfSquares;
         FieldMap map;
 
         public World(Game game)
@@ -59,8 +58,8 @@ namespace HideAndSeek
             borders[2] = new Vector3(20, 0, -2000);
             borders[3] = new Vector3(-20, 0, -2000);
 
-            numOfSquares = (int)Math.Abs(borders[0].X - borders[3].X) / squareSize;
-            map = new FieldMap(numOfSquares, (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
+            map = new FieldMap((int)Math.Abs(borders[0].X - borders[3].X) / squareSize,
+                (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
 
             if (gameType == GameType.Hide || gameType == GameType.Seek)
             {
@@ -127,23 +126,6 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            if (gameType == GameType.HidePractice)
-            {
-                //if (gamePhase == GamePhase.Counting)
-                //    if (me.location.Z <= items[0].location.Z && me.location.X >= items[0].location.X - items[0].size.X 
-                //        && me.location.X <= items[0].location.X + items[0].size.X)
-                //        gamePhase = GamePhase.Looking;
-                //else if (gamePhase == GamePhase.Looking)
-                //        if (me.location.Z <= items[0].location.Z)
-                //        {
-                //            //gamePhase = GamePhase.Done;
-                //            Console.WriteLine("YAYYYYY!!!");
-                //        }
-            }
-            if (gameType == GameType.Hide)
-            {
-                
-            }
             base.Update(gameTime);
         }
 
@@ -152,32 +134,50 @@ namespace HideAndSeek
             return null;
         }
 
-        // tell field map that a player has moved from one square to another.  need to implement!
-        internal void updateLocation(int[] prevSpace, int[] nextSpace)
+        // tell field map that a player has moved from one square to another.
+        internal void updateLocation(float[] prevSpace, float[] nextSpace)
         {
-            throw new NotImplementedException();
+            map.moveSomeone((int)Math.Abs(prevSpace[0] - borders[1].X) / squareSize, (int)-prevSpace[1] / squareSize,
+                (int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize);
         }
 
         // get next space for player, using DFS (probably needs to be changed!)
-        internal int[] getNextSpace(Vector3 location)
+        internal float[] getNextSpace(Vector3 location)
         {
             return nodeToLoc(map.firstSon(locToNode(location)));
         }
 
-        // convert 3D location to node on field map (needs to be fixed)
+        // convert 3D location to node on field map
         private FieldNode locToNode(Vector3 location)
         {
-            if (location.X < 0)
-                return new FieldNode(numOfSquares / 2 - (int)-location.X / squareSize, (int)-location.Z / squareSize);
-            else
-                return new FieldNode(numOfSquares / 2 + (int)location.X / squareSize, (int)-location.Z / squareSize);
+            return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize, (int)-location.Z / squareSize);
         }
 
-        // convert node to 3D location - not implemented yet
-        private int[] nodeToLoc(FieldNode node)
+        // convert node to 3D location
+        public float[] nodeToLoc(FieldNode node)
         {
-            return null;
+            float[] res = new float[4];
+            res[0] = node.x * squareSize + borders[1].X;
+            res[1] = -node.y * squareSize;
+            res[2] = (node.x + 1) * squareSize + borders[1].X;
+            res[3] = -(node.y + 1) * squareSize;
+            return res;
         }
 
+
+        internal int mapSizeX()
+        {
+            return (int)(Math.Abs(borders[0].X - borders[1].X)) / squareSize;
+        }
+
+        internal int mapSizeY()
+        {
+            return (int)(Math.Abs(borders[2].Z)) / squareSize;
+        }
+
+        internal LinkedList<FieldNode> getSons(Vector3 location)
+        {
+            return map.findSons(locToNode(location));
+        }
     }
 }

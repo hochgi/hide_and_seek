@@ -27,9 +27,9 @@ namespace HideAndSeek
 
         MyDrawable myDrawable = null;
 
-        Item goal;
-        int[] prevSpace;//square player is on now
-        int[] nextSpace;//next square player is going towards
+        Item goal;//delete??
+        protected float[] prevSpace;//square player is on now
+        protected float[] nextSpace;//next square player is going towards
 
         public Player(Game game, World world)
             : base(game)
@@ -92,7 +92,7 @@ namespace HideAndSeek
         }
 
         // get next square player needs to move to
-        protected virtual int[] getNextSpace()
+        protected virtual float[] getNextSpace()
         {
             return world.getNextSpace(location);
         }

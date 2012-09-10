@@ -100,7 +100,13 @@ namespace HideAndSeek
 
         protected override bool act()
         {
-            return false;
+            //if hiding spot is in this space
+            if (spot.location.X >= nextSpace[0] && spot.location.Z >= nextSpace[1] && spot.location.X <= nextSpace[2]
+                && spot.location.Z <= nextSpace[3])
+                //go behind spot and crouch down - need to implement!
+                return true;
+            else
+                return false;
         }
 
         //hider was found, start running back toward tree
