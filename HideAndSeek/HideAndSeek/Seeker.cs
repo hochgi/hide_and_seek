@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
-    enum SeekerPhase { Counting, Looking, Running, Done };
+    public enum SeekerPhase { Counting, Looking, Running, Done };
 
     /// <summary>
     /// This is a game component that implements IUpdateable.
@@ -31,8 +31,10 @@ namespace HideAndSeek
 
         Hider opponent;
 
+        private int hidersFound;
+
         public Seeker(Game game, World world, int countNum)
-            : base(game, world)
+            : base(game, world, PlayerPhase.Other)
         {
             // TODO: Construct any child components here
             this.countNum = countNum;
@@ -45,6 +47,7 @@ namespace HideAndSeek
         public override void Initialize()
         {
             // TODO: Add your initialization code here
+            opponent = null;
             phase = SeekerPhase.Counting;
             count = 0;
             mapX = world.mapSizeX();
@@ -54,6 +57,7 @@ namespace HideAndSeek
                 for (int j = 0; j < mapY; j++)
                     seenMap[i, j] = 0;
             base.Initialize();
+            hidersFound = 0;
         }
 
         /// <summary>
@@ -67,76 +71,105 @@ namespace HideAndSeek
                 for (int j = 0; j < mapY; j++)
                     if (seenMap[i, j] > 0)
                         seenMap[i, j]--;
-            //if (phase == SeekerPhase.Counting)
-            //{
-            //    //count to whatever number was given
-            //    count++;
-            //    if (count >= countNum / Game.TargetElapsedTime.Seconds)
-            //        phase = SeekerPhase.Looking;
-            //}
-            //else if (phase == SeekerPhase.Looking)
-            //{
-            //    //choose item and go to it and see if there is a person behind it.  all of this code needs to be rewritten
-            //    if (nextItem == null)
-            //    {
-            //        if (seenItems < world.numOfItems)
-            //            nextItem = world.items[seenItems];
-            //        else
-            //            phase = SeekerPhase.Done;
-            //    }
-            //    else
-            //    {
-            //        if (location.Z > nextItem.location.Z)
-            //            location.Z -= walkSpeed;
-            //        else
-            //        {
-            //            if (location.X > nextItem.location.X)
-            //                location.X -= walkSpeed;
-            //            else if (location.X < nextItem.location.X)
-            //                location.X += walkSpeed;
-            //            else
-            //            {
-            //                if (nextItem.taken == true)
-            //                {
-            //                    // say i found you!
-            //                    opponent = nextItem.hider;
-            //                    opponent.Found();
-            //                    phase = SeekerPhase.Running;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //else if (phase == SeekerPhase.Running)
-            //{
-            //    if (location.Z < 0)
-            //    {
-            //        //if opponent has reached tree before seeker, then they won and seeker looks for more people
-            //        if (opponent.location.Z >= 0)
-            //        {
-            //            opponent.Win();
-            //            phase = SeekerPhase.Looking;
-            //        }
-            //        //keep moving.  also needs to be rewritten
-            //        else
-            //            location.Z += runSpeed;
-            //    }
-            //    //seeker won but needs to keep looking for more people
-            //    else
-            //    {
-            //        Win();
-            //        phase = SeekerPhase.Looking;
-            //    }
-            //}
+            if (phase == SeekerPhase.Counting)
+            {
+                //count to whatever number was given
+                count++;
+                if (count >= countNum / Game.TargetElapsedTime.Seconds)
+                {
+                    phase = SeekerPhase.Looking;
+                    pPhase = PlayerPhase.Looking;
+                }
+            }
+            else if (phase == SeekerPhase.Looking)
+            {
+                ////choose item and go to it and see if there is a person behind it.  all of this code needs to be rewritten
+                //if (nextItem == null)
+                //{
+                //    if (seenItems < world.numOfItems)
+                //        nextItem = world.items[seenItems];
+                //    else
+                //        phase = SeekerPhase.Done;
+                //}
+                //else
+                //{
+                //    if (location.Z > nextItem.location.Z)
+                //        location.Z -= walkSpeed;
+                //    else
+                //    {
+                //        if (location.X > nextItem.location.X)
+                //            location.X -= walkSpeed;
+                //        else if (location.X < nextItem.location.X)
+                //            location.X += walkSpeed;
+                //        else
+                //        {
+                //            if (nextItem.taken == true)
+                //            {
+                //                // say i found you!
+                //                opponent = nextItem.hider;
+                //                opponent.Found();
+                //                phase = SeekerPhase.Running;
+                //            }
+                //        }
+                //    }
+                //}
+            }
+            else if (phase == SeekerPhase.Running)
+            {
+                if (location.Z < 0)
+                {
+                    //if opponent has reached tree before seeker, then they won and seeker looks for more people
+                    if (opponent.location.Z >= 0)
+                    {
+                        opponent.Win();
+                        if (hidersFound < world.numOfHiders)
+                        {
+                            phase = SeekerPhase.Looking;
+                            pPhase = PlayerPhase.Looking;
+                            prevSpace = world.locSquare(location);//delete if unnecessary!
+                            nextSpace = null;
+                        }
+                        else
+                        {
+                            phase = SeekerPhase.Done;
+                            pPhase = PlayerPhase.Other;
+                        }
+                    }
+                    //keep moving.  also needs to be rewritten
+                    else
+                        location.Z += runSpeed;
+                }
+                //seeker won but needs to keep looking for more people
+                else
+                {
+                    Win();
+                    if (hidersFound < world.numOfHiders)
+                    {
+                        phase = SeekerPhase.Looking;
+                        pPhase = PlayerPhase.Looking;
+                        prevSpace = world.locSquare(location);//delete if unnecessary!
+                        nextSpace = null;
+                    }
+                    else
+                    {
+                        phase = SeekerPhase.Done;
+                        pPhase = PlayerPhase.Other;
+                    }
+                }
+            }
             base.Update(gameTime);
         }
 
         protected override bool act()
         {
             foreach (Hider hider in world.hiders)
-                if (CanSee(hider))
+                if (hider.phase != HiderPhase.Done && CanSee(hider))
                 {
+                    opponent = hider;
+                    hidersFound++;
                     hider.Found();
+                    phase = SeekerPhase.Running;
+                    pPhase = PlayerPhase.Running;
                     return true;
                 }
             return false;

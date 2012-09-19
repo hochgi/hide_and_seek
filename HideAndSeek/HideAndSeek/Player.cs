@@ -12,11 +12,15 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    public enum PlayerPhase { Looking, Running, Other };
+
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public abstract class Player : Microsoft.Xna.Framework.GameComponent
     {
+        protected PlayerPhase pPhase;
+
         protected World world;
 
         public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
@@ -27,15 +31,15 @@ namespace HideAndSeek
 
         MyDrawable myDrawable = null;
 
-        Item goal;//delete??
         protected float[] prevSpace;//square player is on now
         protected float[] nextSpace;//next square player is going towards
 
-        public Player(Game game, World world)
+        public Player(Game game, World world, PlayerPhase phase)
             : base(game)
         {
             this.world = world;
             myDrawable = new MyDrawable(game);
+            this.pPhase = phase;
             // TODO: Construct any child components here;
         }
 
@@ -47,9 +51,9 @@ namespace HideAndSeek
         {
             // TODO: Add your initialization code here
             //initialize limbs!!
-            goal = null;
+            location = new Vector3(0, 0, 0);//change this...
             nextSpace = null; //0=lower x, 1=lower y, 2=upper x, 3=upper y
-            prevSpace = null; //should be initialized to initial location
+            prevSpace = world.locSquare(location);
             base.Initialize();
         }
 
@@ -60,32 +64,42 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            if (nextSpace != null && nextSpace.Length == 4)
+            if (pPhase == PlayerPhase.Looking)
             {
-                // if player has reached the next square then:
-                if (location.X >= nextSpace[0] && location.Z >= nextSpace[1] && location.X <= nextSpace[2] && location.Z <= nextSpace[3])
+                if (nextSpace != null && nextSpace.Length == 4)
                 {
-                    //update the player's location
-                    world.updateLocation(prevSpace, nextSpace);
-                    // do what needs to be done, if need to keep moving then find next square
-                    if (!act())
+                    // if player has reached the next square then:
+                    if (location.X >= nextSpace[0] && location.Z >= nextSpace[1] && location.X <= nextSpace[2] && location.Z <= nextSpace[3])
                     {
-                        prevSpace = nextSpace;
-                        nextSpace = getNextSpace();
+                        //update the player's location
+                        world.updateLocation(prevSpace, nextSpace);
+                        // do what needs to be done, if need to keep moving then find next square
+                        if (!act())
+                        {
+                            prevSpace = nextSpace;
+                            nextSpace = getNextSpace();
+                        }
+                    }
+                    // move towards next square
+                    else
+                    {
+                        //adjust to be more realistic (don't walk in 2 directions at same speed..)
+                        if (location.X < nextSpace[0])
+                            location.X += walkSpeed;
+                        else if (location.X > nextSpace[2])
+                            location.X -= walkSpeed;
+                        if (location.Z < nextSpace[1])
+                            location.Z += walkSpeed;
+                        else if (location.Z > nextSpace[3])
+                            location.Z -= walkSpeed;
                     }
                 }
-                // move towards next square
                 else
-                {
-                    if (location.X < nextSpace[0])
-                        location.X += walkSpeed;
-                    else if (location.X > nextSpace[2])
-                        location.X -= walkSpeed;
-                    if (location.Z < nextSpace[1])
-                        location.Z += walkSpeed;
-                    else if (location.Z > nextSpace[3])
-                        location.Z -= walkSpeed;
-                }
+                    nextSpace = getNextSpace();
+            }
+            //runnning needs to be implemented!
+            else if (pPhase == PlayerPhase.Running)
+            {
             }
 
             base.Update(gameTime);

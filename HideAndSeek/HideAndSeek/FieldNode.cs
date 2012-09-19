@@ -7,7 +7,7 @@ namespace HideAndSeek
 {
     // may be obselete?  just replace with vector2!
     //represents a node in the field map
-    class FieldNode
+    public class FieldNode
     {
         public int x;
         public int y;

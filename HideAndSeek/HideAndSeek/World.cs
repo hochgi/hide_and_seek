@@ -24,7 +24,7 @@ namespace HideAndSeek
         public GameType gameType = GameType.Hide;
         public GamePhase gamePhase;
         int countNum = 20;
-        int numOfHiders = 5;
+        public int numOfHiders = 5;
         public int numOfItems = 10;
 
         public Item[] items;
@@ -164,6 +164,10 @@ namespace HideAndSeek
             return res;
         }
 
+        public float[] locSquare(Vector3 location)
+        {
+            return nodeToLoc(locToNode(location));
+        }
 
         internal int mapSizeX()
         {

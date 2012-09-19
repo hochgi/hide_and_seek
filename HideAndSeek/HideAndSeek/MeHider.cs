@@ -59,10 +59,10 @@ namespace HideAndSeek
             {
                 if (myInput.isWalking())
                     location.Z += walkRate;
-                else if (myInput.isWalkingRight())
-                    location.X += walkRate;
-                else if (myInput.isWalkingLeft())
-                    location.X -= walkRate;
+                //else if (myInput.isWalkingRight())
+                //    location.X += walkRate;
+                //else if (myInput.isWalkingLeft())
+                //    location.X -= walkRate;
             }
             base.Update(gameTime);
         }
