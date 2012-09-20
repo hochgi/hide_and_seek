@@ -17,8 +17,8 @@ namespace HideAndSeek
     /// </summary>
     public class MeSeeker : Seeker
     {
-        public MeSeeker(Game game, World world, int countNum)//is countnum necessary??
-            : base(game, world, countNum)
+        public MeSeeker(Game game, World world, int countNum, int id)//is countnum necessary??
+            : base(game, world, countNum, id)
         {
             // TODO: Construct any child components here
         }
@@ -43,6 +43,11 @@ namespace HideAndSeek
             // TODO: Add your update code here
 
             base.Update(gameTime);
+        }
+
+        public override string ToString()
+        {
+            return "Me " + base.ToString();
         }
     }
 }

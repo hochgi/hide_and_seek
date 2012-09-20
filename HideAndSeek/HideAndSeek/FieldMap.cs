@@ -96,5 +96,17 @@ namespace HideAndSeek
                 return new FieldNode(x - 1, y);
             return null;
         }
+
+        public override string ToString()
+        {
+            String res = "";
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                    res += map[i, j];
+                res += "\n";
+            }
+            return res;
+        }
     }
 }

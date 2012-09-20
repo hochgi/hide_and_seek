@@ -23,8 +23,8 @@ namespace HideAndSeek
 
         Item spot;
 
-        public Hider(Game game, World world)
-            : base(game, world, PlayerPhase.Looking)
+        public Hider(Game game, World world, int id)
+            : base(game, world, PlayerPhase.Looking, id)
         {
             // TODO: Construct any child components here
         }
@@ -54,11 +54,12 @@ namespace HideAndSeek
                 {
                     //choose random spot which is not taken
                     Random rand = new Random();
-                    spot = world.items[rand.Next(world.numOfItems)];
+                    spot = world.items[rand.Next(world.numOfItems)+1];
                     while (spot.taken == true)
                         spot = world.items[rand.Next(world.numOfItems)];
                     spot.taken = true;
                     phase = HiderPhase.GoingToSpot;
+                    Console.WriteLine(this + " going to hide at " + spot);
                 }
                 //walking and running code need to be rewritten!!!
                 else if (phase == HiderPhase.GoingToSpot)
@@ -91,7 +92,11 @@ namespace HideAndSeek
                     if (location.Z < 0)
                         location.Z += runSpeed;
                     else
+                    {
+                        Console.WriteLine(this + " is done!");
                         phase = HiderPhase.Done;
+                        pPhase = PlayerPhase.Other;
+                    }
                 }
             }
 
@@ -104,6 +109,7 @@ namespace HideAndSeek
             if (spot.location.X >= nextSpace[0] && spot.location.Z >= nextSpace[1] && spot.location.X <= nextSpace[2]
                 && spot.location.Z <= nextSpace[3])
             {
+                Console.WriteLine(this + " found hiding spot " + spot);
                 //go behind spot and crouch down - need to implement!
                 phase = HiderPhase.Hiding;
                 pPhase = PlayerPhase.Other;
@@ -116,6 +122,7 @@ namespace HideAndSeek
         //hider was found, start running back toward tree
         internal void Found()
         {
+            Console.WriteLine(this + " was found!  Starting to run back!");
             phase = HiderPhase.Running;
             pPhase = PlayerPhase.Running;
         }
@@ -124,6 +131,11 @@ namespace HideAndSeek
         public List<Vector3> getPartsPositions()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            return "Hider " + base.ToString();
         }
     }
 }

@@ -19,6 +19,8 @@ namespace HideAndSeek
     /// </summary>
     public abstract class Item : Microsoft.Xna.Framework.GameComponent
     {
+        int id;
+
         World world;
 
         public Vector3 location;
@@ -30,7 +32,7 @@ namespace HideAndSeek
 
         protected MyDrawable myDrawable = null;
 
-        public Item(Game game, Vector3 loc, Vector3 size, int type, World world)
+        public Item(Game game, Vector3 loc, Vector3 size, int type, World world, int id)
             : base(game)
         {
             // TODO: Construct any child components here
@@ -38,6 +40,7 @@ namespace HideAndSeek
             this.world = world;
             this.location = loc;
             this.size = size;
+            this.id = id;
             myDrawable = new MyDrawable(game, Color.ForestGreen, location, size);
         }
 
@@ -86,12 +89,17 @@ namespace HideAndSeek
         }
 
         abstract protected List<PrimitiveShape> getCageShapes();
+
+        public override string ToString()
+        {
+            return "Item " + id + " at " + location;
+        }
     }
 
     public class Rock : Item
     {
-        public Rock(Game Game, Vector3 vector3, Vector3 vector3_2, int p, World world)
-            : base (Game, vector3, vector3_2, p, world)
+        public Rock(Game Game, Vector3 vector3, Vector3 vector3_2, int p, World world, int id)
+            : base (Game, vector3, vector3_2, p, world, id)
         {
             // TODO: Complete member initialization
         }
