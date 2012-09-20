@@ -38,6 +38,8 @@ namespace HideAndSeek
         {
             // TODO: Construct any child components here
             this.countNum = countNum;
+            //myDrawable = new MyDrawable(game, Color.Navy); //this is temporary!!!
+            myDrawable.color = Color.Navy;
         }
 
         /// <summary>
@@ -75,7 +77,8 @@ namespace HideAndSeek
             {
                 //count to whatever number was given
                 count++;
-                if (count >= countNum / Game.TargetElapsedTime.Seconds)
+                if ((Game.TargetElapsedTime.Seconds > 0 && count >= countNum / Game.TargetElapsedTime.Seconds)
+                    || count >= countNum * 60)
                 {
                     phase = SeekerPhase.Looking;
                     pPhase = PlayerPhase.Looking;

@@ -20,6 +20,15 @@ namespace HideAndSeek
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public BasicEffect m_effect;//public??
+        VertexPositionColor[] vertices;
+        Matrix m_CameraSettings;
+        Matrix m_CameraState;
+        Vector3 m_CameraTargetPosition;
+        Vector3 m_CameraLocation;
+        Vector3 m_CameraUpDirection;
+        RasterizerState m_RasterizerState;
+
         World world;
 
         public Game1()
@@ -37,11 +46,33 @@ namespace HideAndSeek
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            m_CameraTargetPosition = new Vector3(0, 0, -100);
+            m_CameraLocation = new Vector3(0, 20, 0);
+            m_CameraUpDirection = new Vector3(0, 1, 0);
 
-            base.Initialize();
+            setCameraSettings();
+            setCameraState();
 
-            world = new World(this);   
+            world = new World(this);
+
+            base.Initialize(); 
         }
+
+        private void setCameraSettings()
+        {
+            float k_nearPlaneDistance = 0.5f;
+            float k_farPlaneDistance = 1000.0f;
+            float k_ViewAngle = MathHelper.PiOver4;
+
+            m_CameraSettings = Matrix.CreatePerspectiveFieldOfView(
+                k_ViewAngle, GraphicsDevice.Viewport.AspectRatio, k_nearPlaneDistance, k_farPlaneDistance);
+        }
+
+        private void setCameraState()
+        {
+            m_CameraState = Matrix.CreateLookAt(m_CameraLocation, m_CameraTargetPosition, m_CameraUpDirection);
+        }
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -51,6 +82,12 @@ namespace HideAndSeek
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            m_effect = new BasicEffect(this.GraphicsDevice);
+            m_effect.VertexColorEnabled = true;
+
+            m_RasterizerState = new RasterizerState();
+            m_RasterizerState.CullMode = CullMode.None;
 
             // TODO: use this.Content to load your game content here
         }
@@ -86,9 +123,21 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.SkyBlue);
 
             // TODO: Add your drawing code here
+            m_effect.GraphicsDevice.RasterizerState = m_RasterizerState;
+
+            setCameraState();
+
+            m_effect.View = m_CameraState;
+            m_effect.Projection = m_CameraSettings;
+            m_effect.World = Matrix.Identity;
+
+            foreach (EffectPass pass in m_effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+            }
 
             base.Draw(gameTime);
         }

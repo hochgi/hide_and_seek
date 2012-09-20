@@ -26,10 +26,12 @@ namespace HideAndSeek
         public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
         public Vector3 location;
 
+        public Vector3 size = new Vector3(10, 10, 10);//change later!
+
         protected int runSpeed = 10;
         protected int walkSpeed = 5;
 
-        MyDrawable myDrawable = null;
+        protected MyDrawable myDrawable = null;//may need to change level, protected may not be necessary or it may have to be public
 
         protected float[] prevSpace;//square player is on now
         protected float[] nextSpace;//next square player is going towards
@@ -37,8 +39,9 @@ namespace HideAndSeek
         public Player(Game game, World world, PlayerPhase phase)
             : base(game)
         {
+            Game.Components.Add(this);
             this.world = world;
-            myDrawable = new MyDrawable(game);
+            myDrawable = new MyDrawable(game, Color.PaleVioletRed, location, size);
             this.pPhase = phase;
             // TODO: Construct any child components here;
         }
@@ -101,6 +104,7 @@ namespace HideAndSeek
             else if (pPhase == PlayerPhase.Running)
             {
             }
+            myDrawable.updateLocation(location);
 
             base.Update(gameTime);
         }

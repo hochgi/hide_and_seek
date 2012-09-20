@@ -42,6 +42,7 @@ namespace HideAndSeek
             : base(game)
         {
             // TODO: Construct any child components here
+            Game.Components.Add(this);
         }
 
 
@@ -66,7 +67,7 @@ namespace HideAndSeek
                 items = new Item[numOfItems];
                 for (int i = 0; i < numOfItems; i++)
                 {
-                    items[i] = new Rock(Game, new Vector3(0, 0, -10 * i), new Vector3(1, 1, 1), 0, this);
+                    items[i] = new Rock(Game, new Vector3(0, 0, -100 * i), new Vector3(10, 10, 10), 0, this);
                     //tell map that this place is off-limits
                     //this is not correct because we have negative x coordinates!!!
                     map.addBlock((int)items[i].location.X / squareSize, (int)-items[i].location.Z / squareSize);

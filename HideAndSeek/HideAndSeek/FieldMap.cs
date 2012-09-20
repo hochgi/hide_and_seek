@@ -86,6 +86,14 @@ namespace HideAndSeek
                 return new FieldNode(x - 1, y);
             if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
                 return new FieldNode(x - 1, y + 1);
+            if (y + 1 < sizeY)
+                return new FieldNode(x, y + 1);
+            if (x + 1 < sizeX)
+                return new FieldNode(x + 1, y);
+            if (y - 1 >= 0)
+                return new FieldNode(x, y - 1);
+            if (x - 1 >= 0)
+                return new FieldNode(x - 1, y);
             return null;
         }
     }

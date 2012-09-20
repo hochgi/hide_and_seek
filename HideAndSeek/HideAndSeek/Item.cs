@@ -28,14 +28,17 @@ namespace HideAndSeek
         public bool taken;
         public Hider hider;
 
+        protected MyDrawable myDrawable = null;
+
         public Item(Game game, Vector3 loc, Vector3 size, int type, World world)
             : base(game)
         {
             // TODO: Construct any child components here
-
+            Game.Components.Add(this);
             this.world = world;
             this.location = loc;
             this.size = size;
+            myDrawable = new MyDrawable(game, Color.ForestGreen, location, size);
         }
 
         /// <summary>
