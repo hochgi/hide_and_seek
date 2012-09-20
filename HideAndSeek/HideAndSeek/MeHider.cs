@@ -43,7 +43,7 @@ namespace HideAndSeek
 
             base.Initialize();
 
-            myInput = new KinectMe();
+            myInput = new KinectMe(Game);
 
             location = new Vector3(0, 0, 0);
         }

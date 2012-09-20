@@ -2,21 +2,74 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Research.Kinect.Nui;
+using Coding4Fun.Kinect.Wpf;
+using Microsoft.Xna.Framework;
+using System.Windows;
+using System.Windows.Forms; 
 
 namespace HideAndSeek
 {
     class KinectMe : Me
     {
+        Runtime nui;
         Queue<FeetState> walkHistory;
 
-        internal KinectMe() : base()
+        internal KinectMe(Game game) : base(game)
         {
+            //Kinect Runtime
+            nui = new Runtime();
+
+
             walkHistory = new Queue<FeetState>(20);
             for (int i = 0; i < 20; i++) 
             {
                 walkHistory.Enqueue(new FeetState());
             }
         }
+
+        /// <summary>
+        /// Allows the game component to perform any initialization it needs to before starting
+        /// to run.  This is where it can query for any required services and load content.
+        /// </summary>
+        public override void Initialize()
+        {
+            //Initialize to do skeletal tracking
+            nui.Initialize(RuntimeOptions.UseSkeletalTracking);
+
+            #region TransformSmooth
+            //Must set to true and set after call to Initialize
+            nui.SkeletonEngine.TransformSmooth = true;
+
+            //Use to transform and reduce jitter
+            var parameters = new TransformSmoothParameters
+            {
+                Smoothing = 0.75f,
+                Correction = 0.0f,
+                Prediction = 0.0f,
+                JitterRadius = 0.05f,
+                MaxDeviationRadius = 0.04f
+            };
+
+            nui.SkeletonEngine.SmoothParameters = parameters;
+
+            #endregion
+
+            //add event to receive skeleton data
+            nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
+            base.Initialize();
+        }
+
+        /// <summary>
+        /// Allows the game component to update itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+
 
         //what about facing direction?? speed??
         internal override bool isWalking()
@@ -62,6 +115,23 @@ namespace HideAndSeek
                 right = footPosition.Down;
                 timeStamp = DateTime.Now;
             }
+        }
+
+        void nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
+        {
+
+            SkeletonFrame allSkeletons = e.SkeletonFrame;
+            int iSkeletonSlot = 0;
+
+            //get the first tracked skeleton
+            SkeletonData skeleton = (from s in allSkeletons.Skeletons
+                                     where s.TrackingState == SkeletonTrackingState.Tracked
+                                     select s).FirstOrDefault();
+            if (skeleton != null)
+            {
+                MessageBox.Show("hi");
+            }
+            
         }
     }
 }
