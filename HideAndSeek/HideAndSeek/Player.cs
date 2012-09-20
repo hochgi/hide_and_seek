@@ -28,8 +28,8 @@ namespace HideAndSeek
 
         public Vector3 size = new Vector3(10, 10, 10);//change later!
 
-        protected int runSpeed = 10;
-        protected int walkSpeed = 5;
+        protected int runSpeed = 2;
+        protected int walkSpeed = 1;
 
         protected MyDrawable myDrawable = null;//may need to change level, protected may not be necessary or it may have to be public
 

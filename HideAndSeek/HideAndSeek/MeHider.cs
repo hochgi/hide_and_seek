@@ -21,7 +21,7 @@ namespace HideAndSeek
     {
         private World world;//necessary???
 
-        KinectMe myInput;
+        Me myInput;
 
         public Vector3 location;
         private int walkRate;

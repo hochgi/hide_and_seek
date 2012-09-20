@@ -5,11 +5,11 @@ using System.Text;
 
 namespace HideAndSeek
 {
-    class KinectMe
+    class KinectMe : Me
     {
         Queue<FeetState> walkHistory;
 
-        internal KinectMe()
+        internal KinectMe() : base()
         {
             walkHistory = new Queue<FeetState>(20);
             for (int i = 0; i < 20; i++) 
@@ -19,7 +19,7 @@ namespace HideAndSeek
         }
 
         //what about facing direction?? speed??
-        internal bool isWalking()
+        internal override bool isWalking()
         {
             throw new NotImplementedException();
             // TODO: check 4 last FeetState instances for a walk cycle.
@@ -27,7 +27,7 @@ namespace HideAndSeek
 
         //note that this function returns the position of the head including Z-coordinate
         //this can be used to conbinate the virtual position with the actual position 
-        internal Microsoft.Xna.Framework.Vector3 getHeadPosition()
+        internal override Microsoft.Xna.Framework.Vector3 getHeadPosition()
         {
             throw new NotImplementedException();
             // TODO: get the head position from skeleton-detecion

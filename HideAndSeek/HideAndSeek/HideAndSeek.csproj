@@ -112,7 +112,9 @@
     <Compile Include="FieldSearch.cs" />
     <Compile Include="Hider.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="KeyboardMe.cs" />
     <Compile Include="KinectMe.cs" />
+    <Compile Include="Me.cs" />
     <Compile Include="MeHider.cs" />
     <Compile Include="MeSeeker.cs" />
     <Compile Include="MyDrawable.cs" />
