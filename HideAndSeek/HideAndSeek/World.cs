@@ -24,7 +24,7 @@ namespace HideAndSeek
         public GameType gameType = GameType.Hide;
         public GamePhase gamePhase;
         int countNum = 20;
-        public int numOfHiders = 5;
+        public int numOfHiders = 6;
         public int numOfItems = 10;
 
         public Item[] items;
@@ -36,7 +36,7 @@ namespace HideAndSeek
         Vector3[] borders;
 
         int squareSize = 10;
-        FieldMap map;
+        public FieldMap map; //should be private!  public only for debugging
 
         public World(Game game)
             : base(game)
@@ -75,12 +75,21 @@ namespace HideAndSeek
                 }
 
                 hiders = new Hider[numOfHiders];
-                for (int i = 0; i < numOfHiders; i++)
+                if (gameType == GameType.Seek)
+                    for (int i = 0; i < numOfHiders; i++)
+                    {
+                        hiders[i] = new Hider(Game, this, i + 2);
+                        //tell map that this place is off-limits
+                        map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
+                    }
+                else
                 {
-                    hiders[i] = new Hider(Game, this, i+2);
-                    //tell map that this place is off-limits
-                    //this is not correct because we have negative x coordinates!!!
-                    map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
+                    for (int i = 1; i < numOfHiders; i++)
+                    {
+                        hiders[i] = new Hider(Game, this, i + 2);
+                        //tell map that this place is off-limits
+                        map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
+                    }
                 }
                 gamePhase = GamePhase.Counting;
             }
@@ -109,6 +118,8 @@ namespace HideAndSeek
             if (gameType == GameType.Hide || gameType == GameType.HidePractice)
             {
                 meHider = new MeHider(Game, this, 0);
+                if (gameType == GameType.Hide)
+                    hiders[0] = meHider;
                 meSeeker = null;
             }
             else
@@ -127,7 +138,7 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            Console.WriteLine(map);
+            //Console.WriteLine(map);
             base.Update(gameTime);
         }
 
@@ -158,6 +169,8 @@ namespace HideAndSeek
         // convert node to 3D location
         public float[] nodeToLoc(FieldNode node)
         {
+            if (node == null)
+                return null;
             float[] res = new float[4];
             res[0] = node.x * squareSize + borders[1].X;
             res[1] = -node.y * squareSize;

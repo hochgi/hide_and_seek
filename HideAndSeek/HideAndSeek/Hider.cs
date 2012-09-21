@@ -54,7 +54,7 @@ namespace HideAndSeek
                 {
                     //choose random spot which is not taken
                     Random rand = new Random();
-                    spot = world.items[rand.Next(world.numOfItems)+1];
+                    spot = world.items[rand.Next(world.numOfItems)];
                     while (spot.taken == true)
                         spot = world.items[rand.Next(world.numOfItems)];
                     spot.taken = true;
@@ -88,6 +88,7 @@ namespace HideAndSeek
                 }
                 else if (phase == HiderPhase.Running)
                 {
+                    Console.WriteLine(this + " is running");
                     //move towards zero, if reached zero wait by tree
                     if (location.Z < 0)
                         location.Z += runSpeed;
@@ -105,9 +106,10 @@ namespace HideAndSeek
 
         protected override bool act()
         {
+            Console.WriteLine(this + " acting in space " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
             //if hiding spot is in this space
-            if (spot.location.X >= nextSpace[0] && spot.location.Z >= nextSpace[1] && spot.location.X <= nextSpace[2]
-                && spot.location.Z <= nextSpace[3])
+            if (spot.location.X >= nextSpace[0] && spot.location.Z <= nextSpace[1] && spot.location.X <= nextSpace[2]
+                && spot.location.Z >= nextSpace[3])
             {
                 Console.WriteLine(this + " found hiding spot " + spot);
                 //go behind spot and crouch down - need to implement!
@@ -115,8 +117,7 @@ namespace HideAndSeek
                 pPhase = PlayerPhase.Other;
                 return true;
             }
-            else
-                return false;
+            return false;
         }
 
         //hider was found, start running back toward tree
