@@ -31,10 +31,10 @@ namespace HideAndSeek
 
         Hider opponent;
 
-        private int hidersFound;
+        private LinkedList<Hider> hidersFound;
 
-        public Seeker(Game game, World world, int countNum)
-            : base(game, world, PlayerPhase.Other)
+        public Seeker(Game game, World world, int countNum, int id)
+            : base(game, world, PlayerPhase.Other, id)
         {
             // TODO: Construct any child components here
             this.countNum = countNum;
@@ -59,7 +59,7 @@ namespace HideAndSeek
                 for (int j = 0; j < mapY; j++)
                     seenMap[i, j] = 0;
             base.Initialize();
-            hidersFound = 0;
+            hidersFound = new LinkedList<Hider>();
         }
 
         /// <summary>
@@ -68,6 +68,11 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            Console.WriteLine(this + " updating");
+            if (nextSpace != null)
+                Console.WriteLine("next space: " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
+            else
+                Console.WriteLine("next space is null!");
             // TODO: Add your update code here
             for (int i = 0; i < mapX; i++)
                 for (int j = 0; j < mapY; j++)
@@ -75,17 +80,20 @@ namespace HideAndSeek
                         seenMap[i, j]--;
             if (phase == SeekerPhase.Counting)
             {
+                Console.WriteLine(this + " counting " + count + " out of " + countNum);
                 //count to whatever number was given
                 count++;
                 if ((Game.TargetElapsedTime.Seconds > 0 && count >= countNum / Game.TargetElapsedTime.Seconds)
-                    || count >= countNum * 60)
+                    || count >= countNum /** 60*/)
                 {
+                    Console.WriteLine(this + " Ready or not, here I come!");
                     phase = SeekerPhase.Looking;
                     pPhase = PlayerPhase.Looking;
                 }
             }
             else if (phase == SeekerPhase.Looking)
             {
+                Console.WriteLine(this + " is looking");
                 ////choose item and go to it and see if there is a person behind it.  all of this code needs to be rewritten
                 //if (nextItem == null)
                 //{
@@ -119,14 +127,16 @@ namespace HideAndSeek
             }
             else if (phase == SeekerPhase.Running)
             {
+                Console.WriteLine(this + " is running");
                 if (location.Z < 0)
                 {
                     //if opponent has reached tree before seeker, then they won and seeker looks for more people
                     if (opponent.location.Z >= 0)
                     {
                         opponent.Win();
-                        if (hidersFound < world.numOfHiders)
+                        if (hidersFound.Count < world.numOfHiders)
                         {
+                            Console.WriteLine(this + " lost race against " + opponent + ".  going to find next hider!");
                             phase = SeekerPhase.Looking;
                             pPhase = PlayerPhase.Looking;
                             prevSpace = world.locSquare(location);//delete if unnecessary!
@@ -134,8 +144,10 @@ namespace HideAndSeek
                         }
                         else
                         {
+                            Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
                             phase = SeekerPhase.Done;
                             pPhase = PlayerPhase.Other;
+                            Game.Exit();
                         }
                     }
                     //keep moving.  also needs to be rewritten
@@ -146,8 +158,9 @@ namespace HideAndSeek
                 else
                 {
                     Win();
-                    if (hidersFound < world.numOfHiders)
+                    if (hidersFound.Count < world.numOfHiders)
                     {
+                        Console.WriteLine(this + " won race against " + opponent + ". going to find next hider!");
                         phase = SeekerPhase.Looking;
                         pPhase = PlayerPhase.Looking;
                         prevSpace = world.locSquare(location);//delete if unnecessary!
@@ -155,8 +168,10 @@ namespace HideAndSeek
                     }
                     else
                     {
+                        Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
                         phase = SeekerPhase.Done;
                         pPhase = PlayerPhase.Other;
+                        Game.Exit();
                     }
                 }
             }
@@ -166,10 +181,11 @@ namespace HideAndSeek
         protected override bool act()
         {
             foreach (Hider hider in world.hiders)
-                if (hider.phase != HiderPhase.Done && CanSee(hider))
+                if (!hidersFound.Contains(hider) && CanSee(hider))
                 {
+                    Console.WriteLine(this + " I found " + hider + "!");
                     opponent = hider;
-                    hidersFound++;
+                    hidersFound.AddLast(hider);
                     hider.Found();
                     phase = SeekerPhase.Running;
                     pPhase = PlayerPhase.Running;
@@ -213,6 +229,11 @@ namespace HideAndSeek
                     bestVal = seenMap[node.x, node.y];
                 }
             return world.nodeToLoc(best);
+        }
+
+        public override string ToString()
+        {
+            return "Seeker " + base.ToString();
         }
     }
 }

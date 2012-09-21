@@ -19,6 +19,8 @@ namespace HideAndSeek
     /// </summary>
     public abstract class Player : Microsoft.Xna.Framework.GameComponent
     {
+        public int id;
+
         protected PlayerPhase pPhase;
 
         protected World world;
@@ -26,23 +28,24 @@ namespace HideAndSeek
         public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
         public Vector3 location;
 
-        public Vector3 size = new Vector3(10, 10, 10);//change later!
+        public Vector3 size = new Vector3(11, 11, 11);//change later!
 
-        protected int runSpeed = 2;
-        protected int walkSpeed = 1;
+        protected int runSpeed = 10;
+        protected int walkSpeed = 5;
 
         protected MyDrawable myDrawable = null;//may need to change level, protected may not be necessary or it may have to be public
 
         protected float[] prevSpace;//square player is on now
         protected float[] nextSpace;//next square player is going towards
 
-        public Player(Game game, World world, PlayerPhase phase)
+        public Player(Game game, World world, PlayerPhase phase, int id)
             : base(game)
         {
             Game.Components.Add(this);
             this.world = world;
             myDrawable = new MyDrawable(game, Color.PaleVioletRed, location, size);
             this.pPhase = phase;
+            this.id = id;
             // TODO: Construct any child components here;
         }
 
@@ -66,19 +69,27 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
+            //Console.WriteLine(this + " updating");
+            //if (nextSpace != null)
+            //    Console.WriteLine("next space: " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
+            //else
+            //    Console.WriteLine("next space is null!");
+            //// TODO: Add your update code here
             if (pPhase == PlayerPhase.Looking)
             {
                 if (nextSpace != null && nextSpace.Length == 4)
                 {
                     // if player has reached the next square then:
-                    if (location.X >= nextSpace[0] && location.Z >= nextSpace[1] && location.X <= nextSpace[2] && location.Z <= nextSpace[3])
+                    if (location.X >= nextSpace[0] && location.Z <= nextSpace[1] && location.X <= nextSpace[2] && location.Z >= nextSpace[3])
                     {
+                        Console.WriteLine(this + " reached next square!");
                         //update the player's location
                         world.updateLocation(prevSpace, nextSpace);
+                        Console.WriteLine(world.map);
                         // do what needs to be done, if need to keep moving then find next square
                         if (!act())
                         {
+                            Console.WriteLine(this + " action was not successful.  Going to keep looking.");
                             prevSpace = nextSpace;
                             nextSpace = getNextSpace();
                         }
@@ -121,6 +132,13 @@ namespace HideAndSeek
         public void Win()
         {
             //victory dance and whatever
+            Console.WriteLine(this + " won!");
         }
+
+        public override string ToString()
+        {
+            return id + " at " + location;
+        }
+
     }
 }

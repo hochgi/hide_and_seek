@@ -21,7 +21,6 @@ namespace HideAndSeek
         SpriteBatch spriteBatch;
 
         public BasicEffect m_effect;//public??
-        VertexPositionColor[] vertices;
         Matrix m_CameraSettings;
         Matrix m_CameraState;
         Vector3 m_CameraTargetPosition;
@@ -47,7 +46,7 @@ namespace HideAndSeek
         {
             // TODO: Add your initialization logic here
             m_CameraTargetPosition = new Vector3(0, 0, -100);
-            m_CameraLocation = new Vector3(0, 20, 0);
+            m_CameraLocation = new Vector3(0, 30, 10);//fix this, not good!  should be user's real location.
             m_CameraUpDirection = new Vector3(0, 1, 0);
 
             setCameraSettings();

@@ -19,15 +19,13 @@ namespace HideAndSeek
     /// </summary>
     public class MeHider : Hider
     {
-        private World world;//necessary???
-
         Me myInput;
 
         public Vector3 location;
         private int walkRate;
 
-        public MeHider(Game game, World world)
-            : base(game, world)
+        public MeHider(Game game, World world, int id)
+            : base(game, world, id)
         {
             // TODO: Construct any child components here
             this.world = world;
@@ -65,6 +63,11 @@ namespace HideAndSeek
                 //    location.X -= walkRate;
             }
             base.Update(gameTime);
+        }
+
+        public override string ToString()
+        {
+            return "Me " + base.ToString();
         }
     }
 }

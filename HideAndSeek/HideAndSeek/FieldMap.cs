@@ -6,7 +6,7 @@ using System.Text;
 namespace HideAndSeek
 {
     // holds a representation of playing field so that players can find best route to hiding place
-    class FieldMap
+    public class FieldMap
     {
         int sizeX;
         int sizeY;
@@ -95,6 +95,18 @@ namespace HideAndSeek
             if (x - 1 >= 0)
                 return new FieldNode(x - 1, y);
             return null;
+        }
+
+        public override string ToString()
+        {
+            String res = "";
+            for (int i = 0; i < sizeX; i++)
+            {
+                for (int j = 0; j < sizeY; j++)
+                    res += map[i, j];
+                res += "\n";
+            }
+            return res;
         }
     }
 }
