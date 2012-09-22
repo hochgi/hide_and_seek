@@ -55,7 +55,9 @@ namespace HideAndSeek
             // TODO: Add your update code here
             if (world.gameType == GameType.HidePractice) //or other situations! 
             {
-                if (myInput.isWalking())
+
+                //PAY ATTENTION------I CHANGED THIS CONDITION
+                if (myInput.getWalkingState() == WalkingState.Forwards)
                     location.Z += walkRate;
                 //else if (myInput.isWalkingRight())
                 //    location.X += walkRate;

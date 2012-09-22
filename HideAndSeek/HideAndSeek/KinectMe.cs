@@ -72,7 +72,7 @@ namespace HideAndSeek
 
 
         //what about facing direction?? speed??
-        internal override bool isWalking()
+        internal override WalkingState getWalkingState()
         {
             throw new NotImplementedException();
             // TODO: check 4 last FeetState instances for a walk cycle.
@@ -84,6 +84,11 @@ namespace HideAndSeek
         {
             throw new NotImplementedException();
             // TODO: get the head position from skeleton-detecion
+        }
+
+        internal override bool isPointing()
+        {
+            throw new NotImplementedException();
         }
 
         

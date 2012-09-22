@@ -29,12 +29,17 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
-        internal override bool isWalking()
+        internal override WalkingState getWalkingState()
         {
             throw new NotImplementedException();
         }
 
         internal override Microsoft.Xna.Framework.Vector3 getHeadPosition()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override bool isPointing()
         {
             throw new NotImplementedException();
         }
