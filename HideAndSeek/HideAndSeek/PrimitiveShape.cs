@@ -54,6 +54,8 @@ namespace HideAndSeek
             this.height = height;
         }
 
+        // the idea of the implementation can be found here:
+        //http://paulbourke.net/geometry/lineline3d/
         public override bool isBlockingLineOfSight(Vector3 p1, Vector3 p2)
         {
             /* 1. find plumbpoint to the line f(y) = (pos.x,pos.z)
@@ -91,6 +93,65 @@ namespace HideAndSeek
             {
                 return false;
             }
+        }
+    }
+
+    public class AxisAlignedCube : PrimitiveShape
+    {
+        Vector3 topCorner;
+
+        private static Vector3 min(Vector3 p1, Vector3 p2)
+        {
+            float x = p1.X, y = p1.Y, z = p1.Z;
+
+            if (p1.X > p2.X)
+            {
+                x = p2.X;
+            }
+
+            if (p1.Y > p2.Y)
+            {
+                y = p2.Y;
+            }
+
+            if (p1.Z > p2.Z)
+            {
+                z = p2.Z;
+            }
+
+            return new Vector3(x, y, z);
+        }
+
+        private static Vector3 max(Vector3 p1, Vector3 p2)
+        {
+            float x = p1.X, y = p1.Y, z = p1.Z;
+
+            if (p1.X < p2.X)
+            {
+                x = p2.X;
+            }
+
+            if (p1.Y < p2.Y)
+            {
+                y = p2.Y;
+            }
+
+            if (p1.Z < p2.Z)
+            {
+                z = p2.Z;
+            }
+
+            return new Vector3(x, y, z);
+        }
+
+        public AxisAlignedCube(Vector3 p1, Vector3 p2) : base(min(p1, p2))
+        {
+            this.topCorner = max(p1, p2);
+        }
+
+        public override bool isBlockingLineOfSight(Vector3 p1, Vector3 p2)
+        {
+            throw new NotImplementedException();
         }
     }
 }
