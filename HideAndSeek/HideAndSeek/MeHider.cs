@@ -22,7 +22,6 @@ namespace HideAndSeek
         Me myInput;
 
         public Vector3 location;
-        private int walkRate;
 
         public MeHider(Game game, World world, int id)
             : base(game, world, id)
@@ -52,18 +51,11 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
-            if (world.gameType == GameType.HidePractice) //or other situations! 
-            {
-
-                //PAY ATTENTION------I CHANGED THIS CONDITION
-                if (myInput.getWalkingState() == WalkingState.Forwards)
-                    location.Z += walkRate;
-                //else if (myInput.isWalkingRight())
-                //    location.X += walkRate;
-                //else if (myInput.isWalkingLeft())
-                //    location.X -= walkRate;
-            }
+            WalkingState state = myInput.getWalkingState();
+            if (state == WalkingState.Forwards)
+                location.Z -= walkSpeed;
+            else if (state == WalkingState.Backwards)
+                location.Z += walkSpeed;
             base.Update(gameTime);
         }
 
