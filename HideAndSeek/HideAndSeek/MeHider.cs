@@ -21,7 +21,7 @@ namespace HideAndSeek
     {
         Me myInput;
 
-        public Vector3 location;
+        public Vector3 prevHead;
 
         public MeHider(Game game, World world, int id)
             : base(game, world, id)
@@ -40,9 +40,10 @@ namespace HideAndSeek
 
             base.Initialize();
 
-            myInput = new KinectMe(Game);
+            //myInput = new KinectMe(Game);
+            myInput = new KeyboardMe(Game);
 
-            location = new Vector3(0, 0, 0);
+            prevHead = new Vector3(0, 0, 0);
         }
 
         /// <summary>
@@ -51,11 +52,17 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            //may want to try to get speed from user instead of using walkSpeed.  Don't forget to make all changes in Seeker too!
             WalkingState state = myInput.getWalkingState();
             if (state == WalkingState.Forwards)
                 location.Z -= walkSpeed;
             else if (state == WalkingState.Backwards)
                 location.Z += walkSpeed;
+            Vector3 tempHead = prevHead;
+            prevHead = myInput.getHeadPosition();
+            location = location - tempHead + prevHead;
+            //Basically the hider is a totally passive position.  All that happens is the location is updated, and we just hope
+            //that at some point he'll make it back to the tree...
             base.Update(gameTime);
         }
 

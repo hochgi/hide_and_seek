@@ -17,6 +17,9 @@ namespace HideAndSeek
     /// </summary>
     public class MeSeeker : Seeker
     {
+        Me myInput;
+        public Vector3 prevHead;
+
         public MeSeeker(Game game, World world, int countNum, int id)//is countnum necessary??
             : base(game, world, countNum, id)
         {
@@ -31,6 +34,11 @@ namespace HideAndSeek
         {
             // TODO: Add your initialization code here
 
+            //myInput = new KinectMe(Game);
+            myInput = new KeyboardMe(Game);
+
+            prevHead = new Vector3(0, 0, 0);
+
             base.Initialize();
         }
 
@@ -41,7 +49,18 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            WalkingState state = myInput.getWalkingState();
+            if (state == WalkingState.Forwards)
+                location.Z -= walkSpeed;
+            else if (state == WalkingState.Backwards)
+                location.Z += walkSpeed;
+            Vector3 tempHead = prevHead;
+            prevHead = myInput.getHeadPosition();
+            location = location - tempHead + prevHead;
 
+            if (myInput.isPointing())
+            {
+            }
             base.Update(gameTime);
         }
 
