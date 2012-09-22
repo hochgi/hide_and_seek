@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace HideAndSeek
 {
     class KeyboardMe : Me
     {
-        internal KeyboardMe(Game game) : base(game) { }
+        Vector3 headPos;
+
+        internal KeyboardMe(Game game) : base(game) 
+        {
+            headPos = new Vector3(0, 0, 0);
+        }
 
 
         /// <summary>
@@ -26,22 +32,41 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Up))
+                headPos.Z -= 1;
+            else if (keyboardState.IsKeyDown(Keys.Down))
+                headPos.Z += 1;
+            else if (keyboardState.IsKeyDown(Keys.Right))
+                headPos.X += 1;
+            else if (keyboardState.IsKeyDown(Keys.Left))
+                headPos.X -= 1;
             base.Update(gameTime);
         }
 
         internal override WalkingState getWalkingState()
         {
-            throw new NotImplementedException();
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Up))
+                return WalkingState.Forwards;
+            else if (keyboardState.IsKeyDown(Keys.Down))
+                return WalkingState.Backwards;
+            else
+                return WalkingState.NotWalking;
         }
 
         internal override Microsoft.Xna.Framework.Vector3 getHeadPosition()
         {
-            throw new NotImplementedException();
+            return headPos;
         }
 
         internal override bool isPointing()
         {
-            throw new NotImplementedException();
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Space))
+                return true;
+            else
+                return false;
         }
     }
 }
