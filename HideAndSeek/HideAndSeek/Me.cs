@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace HideAndSeek 
 {
+    enum WalkingState { NotWalking, Forwards, Backwards };
+
     abstract class Me : Microsoft.Xna.Framework.GameComponent
     {
         internal Me(Game game) : base(game) 
@@ -31,8 +33,10 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
-        internal abstract bool isWalking();
+        internal abstract WalkingState getWalkingState();
 
         internal abstract Microsoft.Xna.Framework.Vector3 getHeadPosition();
+
+        internal abstract bool isPointing();
     }
 }
