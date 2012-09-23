@@ -210,8 +210,8 @@ namespace HideAndSeek
 
         public Vector3 getEyesPosition() 
         {
-            return location;//needs to be changed!
-            throw new NotImplementedException();
+            return new Vector3(location.X,location.Y + 9, location.Z);//needs to be changed!
+            //throw new NotImplementedException();
         }
 
         protected override float[] getNextSpace()

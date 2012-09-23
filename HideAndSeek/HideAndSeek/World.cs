@@ -64,11 +64,12 @@ namespace HideAndSeek
 
             if (gameType == GameType.Hide || gameType == GameType.Seek)
             {
+                Random rand = new Random(10);
                 items = new Item[numOfItems];
                 for (int i = 0; i < numOfItems; i++)
                 {
                     //TODO: XML file with all settings
-                    items[i] = new Rock(Game, new Vector3(0, 0, -100 * i - 100), new Vector3(10, 10, 10), 0, this, i);
+                    items[i] = new Rock(Game, new Vector3(20 - rand.Next(41), 0, -100 * i - 100), new Vector3(10, 10, 10), 0, this, i);
                     //tell map that this place is off-limits
                     //this is not correct because we have negative x coordinates!!!
                     map.addBlock((int)Math.Abs(items[i].position.X - borders[1].X) / squareSize, (int)-items[i].position.Z / squareSize);
