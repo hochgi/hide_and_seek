@@ -29,9 +29,9 @@ namespace HideAndSeek
         int mapY;
         private int[,] seenMap;
 
-        Hider opponent;
+        protected Hider opponent;
 
-        private LinkedList<Hider> hidersFound;
+        protected LinkedList<Hider> hidersFound;
 
         public Seeker(Game game, World world, int countNum, int id)
             : base(game, world, PlayerPhase.Other, id)
@@ -134,21 +134,7 @@ namespace HideAndSeek
                     if (opponent.location.Z >= 0)
                     {
                         opponent.Win();
-                        if (hidersFound.Count < world.numOfHiders)
-                        {
-                            Console.WriteLine(this + " lost race against " + opponent + ".  going to find next hider!");
-                            phase = SeekerPhase.Looking;
-                            pPhase = PlayerPhase.Looking;
-                            prevSpace = world.locSquare(location);//delete if unnecessary!
-                            nextSpace = null;
-                        }
-                        else
-                        {
-                            Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
-                            phase = SeekerPhase.Done;
-                            pPhase = PlayerPhase.Other;
-                            Game.Exit();
-                        }
+                        finishWithHider();
                     }
                     //keep moving.  also needs to be rewritten
                     else
@@ -158,27 +144,21 @@ namespace HideAndSeek
                 else
                 {
                     Win();
-                    if (hidersFound.Count < world.numOfHiders)
-                    {
-                        Console.WriteLine(this + " won race against " + opponent + ". going to find next hider!");
-                        phase = SeekerPhase.Looking;
-                        pPhase = PlayerPhase.Looking;
-                        prevSpace = world.locSquare(location);//delete if unnecessary!
-                        nextSpace = null;
-                    }
-                    else
-                    {
-                        Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
-                        phase = SeekerPhase.Done;
-                        pPhase = PlayerPhase.Other;
-                        Game.Exit();
-                    }
+                    finishWithHider();
                 }
             }
             base.Update(gameTime);
         }
 
         protected override bool act()
+        {
+            if (findHider() != null)
+                return true;
+            return false;
+        }
+
+        //Picks a hider which can be seen
+        protected Hider findHider()
         {
             foreach (Hider hider in world.hiders)
                 if (!hidersFound.Contains(hider) && CanSee(hider))
@@ -189,9 +169,28 @@ namespace HideAndSeek
                     hider.Found();
                     phase = SeekerPhase.Running;
                     pPhase = PlayerPhase.Running;
-                    return true;
+                    return hider;
                 }
-            return false;
+            return null;
+        }
+
+        //finish competing against a hider
+        protected void finishWithHider()
+        {
+            opponent = null;
+            if (hidersFound.Count == world.numOfHiders)
+            {
+                Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
+                Game.Exit();//change later!
+            }
+            else
+            {
+                Console.WriteLine(this + " finished with " + opponent + ". going to find next hider!");
+                phase = SeekerPhase.Looking;
+                pPhase = PlayerPhase.Looking;
+                prevSpace = world.locSquare(location);//delete if unnecessary!
+                nextSpace = null;
+            }
         }
 
         //checks whether seeker can see given hider (will be relevant also for practice levels)
@@ -211,6 +210,7 @@ namespace HideAndSeek
 
         public Vector3 getEyesPosition() 
         {
+            return location;//needs to be changed!
             throw new NotImplementedException();
         }
 

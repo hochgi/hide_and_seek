@@ -60,6 +60,21 @@ namespace HideAndSeek
 
             if (myInput.isPointing())
             {
+                findHider();
+            }
+
+            if (opponent != null)
+            {
+                if (location.Z >= 0)
+                {
+                    Win();
+                    finishWithHider();
+                }
+                else if (opponent.location.Z >= 0)
+                {
+                    opponent.Win();
+                    finishWithHider();
+                }
             }
             base.Update(gameTime);
         }
