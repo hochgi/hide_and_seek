@@ -30,8 +30,9 @@ namespace HideAndSeek
         public Item[] items;
         public Hider[] hiders;
         Seeker seeker;
-        MeHider meHider;
-        MeSeeker meSeeker;
+        MeHider meHider;//??
+        MeSeeker meSeeker;//??
+        public Player humanPlayer;
 
         Vector3[] borders;
 
@@ -129,6 +130,11 @@ namespace HideAndSeek
                 meSeeker = new MeSeeker(Game, this, countNum, 0);
                 meHider = null;
             }
+
+            if (meHider != null)
+                humanPlayer = meHider;
+            else if (meSeeker != null)
+                humanPlayer = meSeeker;
 
             base.Initialize();
         }

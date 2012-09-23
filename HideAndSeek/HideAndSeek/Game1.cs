@@ -29,6 +29,7 @@ namespace HideAndSeek
         RasterizerState m_RasterizerState;
 
         World world;
+        //Player humanPlayer;//should not be public!  change later
 
         public Game1()
         {
@@ -69,6 +70,8 @@ namespace HideAndSeek
 
         private void setCameraState()
         {
+            if (world != null && world.humanPlayer != null)
+                m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change!!
             m_CameraState = Matrix.CreateLookAt(m_CameraLocation, m_CameraTargetPosition, m_CameraUpDirection);
         }
 
@@ -112,6 +115,7 @@ namespace HideAndSeek
                 this.Exit();
 
             // TODO: Add your update logic here
+            //m_CameraLocation = humanPlayer.location;
 
             base.Update(gameTime);
         }
