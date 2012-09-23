@@ -23,7 +23,7 @@ namespace HideAndSeek
 
         World world;
 
-        public Vector3 location;
+        public Vector3 position;
         public Vector3 size; //X = W, Y = H, Z = D
         //add item type for drawing reasons!!
 
@@ -38,10 +38,15 @@ namespace HideAndSeek
             // TODO: Construct any child components here
             Game.Components.Add(this);
             this.world = world;
-            this.location = loc;
+            this.position = loc;
             this.size = size;
             this.id = id;
-            myDrawable = new MyDrawable(game, Color.ForestGreen, location, size);
+            myDrawable = new MyDrawable(game, Color.ForestGreen, position, size);
+        }
+
+        public Vector3 getPosition() 
+        {
+            return this.position;
         }
 
         /// <summary>
@@ -92,21 +97,26 @@ namespace HideAndSeek
 
         public override string ToString()
         {
-            return "Item " + id + " at " + location;
+            return "Item " + id + " at " + position;
         }
     }
 
     public class Rock : Item
     {
-        public Rock(Game Game, Vector3 vector3, Vector3 vector3_2, int p, World world, int id)
-            : base (Game, vector3, vector3_2, p, world, id)
+
+        List<PrimitiveShape> cage;
+
+        public Rock(Game Game, Vector3 position, Vector3 widthHeightDepth, int type, World world, int id)
+            : base (Game, position, widthHeightDepth, type, world, id)
         {
             // TODO: Complete member initialization
+            cage = new List<PrimitiveShape>();
+            cage.Add(new Sphere(widthHeightDepth.Length(), position));
         }
 
         protected override List<PrimitiveShape> getCageShapes()
         {
-            throw new NotImplementedException();
+            return cage;
         }
     }
 }

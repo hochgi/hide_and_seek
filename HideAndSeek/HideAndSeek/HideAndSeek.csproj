@@ -61,10 +61,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Coding4Fun.Kinect.WinForm">
-      <HintPath>..\..\..\..\Users\Gal\Desktop\כל מיני\darts\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Coding4Fun.Kinect.WinForm.dll</HintPath>
+      <HintPath>..\HideAndSeekLib\Coding4Fun-references\Coding4Fun.Kinect.WinForm.dll</HintPath>
     </Reference>
     <Reference Include="Coding4Fun.Kinect.Wpf">
-      <HintPath>..\..\..\..\Users\Gal\Desktop\כל מיני\darts\WindowsGame1\WindowsGame1\WindowsGame1\bin\x86\Debug\Coding4Fun.Kinect.Wpf.dll</HintPath>
+      <HintPath>..\HideAndSeekLib\Coding4Fun-references\Coding4Fun.Kinect.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Research.Kinect, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

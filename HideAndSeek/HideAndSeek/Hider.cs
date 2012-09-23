@@ -108,8 +108,8 @@ namespace HideAndSeek
         {
             Console.WriteLine(this + " acting in space " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
             //if hiding spot is in this space
-            if (spot.location.X >= nextSpace[0] && spot.location.Z <= nextSpace[1] && spot.location.X <= nextSpace[2]
-                && spot.location.Z >= nextSpace[3])
+            if (spot.position.X >= nextSpace[0] && spot.position.Z <= nextSpace[1] && spot.position.X <= nextSpace[2]
+                && spot.position.Z >= nextSpace[3])
             {
                 Console.WriteLine(this + " found hiding spot " + spot);
                 //go behind spot and crouch down - need to implement!
@@ -131,7 +131,13 @@ namespace HideAndSeek
         // return a list of locations for every organ (2 hands, 2 legs, body, head, or whatever...)
         public List<Vector3> getPartsPositions()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            List<Vector3> rv = new List<Vector3>();
+            rv.Add(new Vector3(location.X + 2.5f, location.Y, location.Z));
+            rv.Add(new Vector3(location.X - 2.5f, location.Y, location.Z));
+            rv.Add(new Vector3(location.X, location.Y + 10, location.Z));
+
+            return rv;
         }
 
         public override string ToString()

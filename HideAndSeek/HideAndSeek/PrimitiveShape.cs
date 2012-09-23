@@ -17,7 +17,7 @@ namespace HideAndSeek
             pos = position;
         }
 
-        public override Vector3 getPosition() { return pos; }
+        public Vector3 getPosition() { return pos; }
 
         abstract public bool isBlockingLineOfSight(Vector3 a, Vector3 b);
     }
