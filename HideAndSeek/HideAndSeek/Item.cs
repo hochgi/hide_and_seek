@@ -106,7 +106,7 @@ namespace HideAndSeek
 
         protected override List<PrimitiveShape> getCageShapes()
         {
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

@@ -67,6 +67,7 @@ namespace HideAndSeek
                 items = new Item[numOfItems];
                 for (int i = 0; i < numOfItems; i++)
                 {
+                    //TODO: XML file with all settings
                     items[i] = new Rock(Game, new Vector3(0, 0, -100 * i - 100), new Vector3(10, 10, 10), 0, this, i);
                     //tell map that this place is off-limits
                     //this is not correct because we have negative x coordinates!!!
