@@ -29,7 +29,6 @@ namespace HideAndSeek
         RasterizerState m_RasterizerState;
 
         World world;
-        //Player humanPlayer;//should not be public!  change later
 
         public Game1()
         {

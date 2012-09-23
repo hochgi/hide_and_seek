@@ -55,9 +55,15 @@ namespace HideAndSeek
             //may want to try to get speed from user instead of using walkSpeed.  Don't forget to make all changes in Seeker too!
             WalkingState state = myInput.getWalkingState();
             if (state == WalkingState.Forwards)
+            {
+                Console.WriteLine(this + " Walking forwards");
                 location.Z -= walkSpeed;
+            }
             else if (state == WalkingState.Backwards)
+            {
+                Console.WriteLine(this + " Walking backwards");
                 location.Z += walkSpeed;
+            }
             Vector3 tempHead = prevHead;
             prevHead = myInput.getHeadPosition();
             location = location - tempHead + prevHead;

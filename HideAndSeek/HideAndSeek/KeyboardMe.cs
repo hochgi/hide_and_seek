@@ -14,6 +14,7 @@ namespace HideAndSeek
         internal KeyboardMe(Game game) : base(game) 
         {
             headPos = new Vector3(0, 0, 0);
+            Game.Components.Add(this);
         }
 
 
@@ -34,13 +35,27 @@ namespace HideAndSeek
         {
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                Console.WriteLine("Up");
                 headPos.Z -= 1;
+            }
             else if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                Console.WriteLine("Down");
                 headPos.Z += 1;
+            }
             else if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                Console.WriteLine("Right");
                 headPos.X += 1;
+            }
             else if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                Console.WriteLine("Left");
                 headPos.X -= 1;
+            }
+            else if (keyboardState.IsKeyDown(Keys.Space))
+                Console.WriteLine("Space");
             base.Update(gameTime);
         }
 
