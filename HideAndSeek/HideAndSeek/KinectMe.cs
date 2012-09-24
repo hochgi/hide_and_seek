@@ -91,6 +91,11 @@ namespace HideAndSeek
             throw new NotImplementedException();
         }
 
+        internal override FaceDirection getFaceDirection()
+        {
+            throw new NotImplementedException();
+        }
+
         
         /* this functions will be omitted! do not use them!!
          * 

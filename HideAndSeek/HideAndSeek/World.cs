@@ -23,9 +23,9 @@ namespace HideAndSeek
     {
         public GameType gameType = GameType.Hide;
         public GamePhase gamePhase;
-        int countNum = 20;
-        public int numOfHiders = 6;
-        public int numOfItems = 10;
+        int countNum = 100;
+        public int numOfHiders = 2;
+        public int numOfItems = 4;
 
         public Item[] items;
         public Hider[] hiders;

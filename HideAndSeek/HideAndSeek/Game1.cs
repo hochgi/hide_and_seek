@@ -76,7 +76,12 @@ namespace HideAndSeek
         private void setCameraState()
         {
             if (world != null && world.humanPlayer != null)
+            {
                 m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change!!
+                m_CameraTargetPosition = m_CameraLocation;
+                 
+                    m_CameraTargetPosition.Z -= 50;
+            }
             Console.WriteLine("m_CameraLocation " + m_CameraLocation);
             m_CameraState = Matrix.CreateLookAt(m_CameraLocation, m_CameraTargetPosition, m_CameraUpDirection);
         }

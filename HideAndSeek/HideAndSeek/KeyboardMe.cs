@@ -10,7 +10,7 @@ namespace HideAndSeek
     class KeyboardMe : Me
     {
         Vector3 headPos;
-
+        FaceDirection faceDirection;
         internal KeyboardMe(Game game) : base(game) 
         {
             headPos = new Vector3(0, 0, 0);
@@ -54,8 +54,17 @@ namespace HideAndSeek
                 Console.WriteLine("Left");
                 headPos.X -= 1;
             }
+            else if (keyboardState.IsKeyDown(Keys.RightShift))
+            {
+                if (faceDirection == FaceDirection.Forwards)
+                    faceDirection = FaceDirection.Backwards;
+                else
+                    faceDirection = FaceDirection.Forwards;
+            }
             else if (keyboardState.IsKeyDown(Keys.Space))
+            {
                 Console.WriteLine("Space");
+            }
             base.Update(gameTime);
         }
 
@@ -92,6 +101,11 @@ namespace HideAndSeek
                 return true;
             else
                 return false;
+        }
+
+        internal override FaceDirection getFaceDirection()
+        {
+            return faceDirection;
         }
     }
 }
