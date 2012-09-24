@@ -61,13 +61,23 @@ namespace HideAndSeek
 
         internal override WalkingState getWalkingState()
         {
+            Console.WriteLine("Getting Walking State:");
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Up))
+            {
+                Console.WriteLine("Walking forwards");
                 return WalkingState.Forwards;
+            }
             else if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                Console.WriteLine("Walking backwards");
                 return WalkingState.Backwards;
+            }
             else
+            {
+                Console.WriteLine("Not walking");
                 return WalkingState.NotWalking;
+            }
         }
 
         internal override Microsoft.Xna.Framework.Vector3 getHeadPosition()

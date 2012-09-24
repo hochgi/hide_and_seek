@@ -69,7 +69,7 @@ namespace HideAndSeek
             location = location - tempHead + prevHead;
             //Basically the hider is a totally passive position.  All that happens is the location is updated, and we just hope
             //that at some point he'll make it back to the tree...
-            base.Update(gameTime);
+            //base.Update(gameTime);
         }
 
         public override string ToString()

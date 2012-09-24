@@ -54,6 +54,12 @@ namespace HideAndSeek
 
             world = new World(this);
 
+            IsFixedTimeStep = false;//i'm not sure this should be the case, but it's the only way the graphics look ok for now
+
+            Console.WriteLine("Game Initialize Debugging:");
+            Console.WriteLine("IsFixedTimeStep " + IsFixedTimeStep);
+            Console.WriteLine("TargetElapsedTime " + TargetElapsedTime);
+
             base.Initialize(); 
         }
 
@@ -71,6 +77,7 @@ namespace HideAndSeek
         {
             if (world != null && world.humanPlayer != null)
                 m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change!!
+            Console.WriteLine("m_CameraLocation " + m_CameraLocation);
             m_CameraState = Matrix.CreateLookAt(m_CameraLocation, m_CameraTargetPosition, m_CameraUpDirection);
         }
 
@@ -109,6 +116,11 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            Console.WriteLine("Game Debugging: " + gameTime.ElapsedGameTime);
+            Console.WriteLine("IsFixedTimeStep " + IsFixedTimeStep);
+            Console.WriteLine("TargetElapsedTime " + TargetElapsedTime);
+            Console.WriteLine("IsRunningSlowly " + gameTime.IsRunningSlowly);
+
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();

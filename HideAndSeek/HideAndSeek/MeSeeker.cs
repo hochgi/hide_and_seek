@@ -76,7 +76,7 @@ namespace HideAndSeek
                     finishWithHider();
                 }
             }
-            base.Update(gameTime);
+            //base.Update(gameTime);
         }
 
         public override string ToString()
