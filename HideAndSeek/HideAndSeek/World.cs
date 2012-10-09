@@ -14,7 +14,6 @@ namespace HideAndSeek
 {
 
     public enum GameType { HidePractice, SeekPractice, Hide, Seek };
-    public enum GamePhase { Counting, Looking }; //still relevant??
 
     /// <summary>
     /// This is a game component that implements IUpdateable.
@@ -22,22 +21,19 @@ namespace HideAndSeek
     public class World : Microsoft.Xna.Framework.GameComponent
     {
         public GameType gameType = GameType.Hide;
-        public GamePhase gamePhase;
         int countNum = 100;
         public int numOfHiders = 2;
         public int numOfItems = 4;
 
         public Item[] items;
         public Hider[] hiders;
-        Seeker seeker;
-        MeHider meHider;//??
-        MeSeeker meSeeker;//??
-        public Player humanPlayer;
+        Seeker seeker;//not sure if field is necessary since update gets called anyway, but didn't know where to put it.  may be enough to just create it?
+        public HumanPlayer humanPlayer;
 
         Vector3[] borders;
 
         int squareSize = 10;
-        public FieldMap map; //should be private!  public only for debugging
+        private FieldMap map; //should be private!  public only for debugging
 
         public World(Game game)
             : base(game)
@@ -72,69 +68,31 @@ namespace HideAndSeek
                     //TODO: XML file with all settings
                     items[i] = new Rock(Game, new Vector3(20 - rand.Next(41), 0, -100 * i - 100), new Vector3(10, 10, 10), 0, this, i);
                     //tell map that this place is off-limits
-                    //this is not correct because we have negative x coordinates!!!
                     map.addBlock((int)Math.Abs(items[i].position.X - borders[1].X) / squareSize, (int)-items[i].position.Z / squareSize);
                     //depending on item size may need to block 2 or more squares?
                 }
-
-                hiders = new Hider[numOfHiders];
-                if (gameType == GameType.Seek)
-                    for (int i = 0; i < numOfHiders; i++)
-                    {
-                        hiders[i] = new Hider(Game, this, i + 2);
-                        //tell map that this place is off-limits
-                        map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
-                    }
-                else
-                {
-                    for (int i = 1; i < numOfHiders; i++)
-                    {
-                        hiders[i] = new Hider(Game, this, i + 2);
-                        //tell map that this place is off-limits
-                        map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
-                    }
-                }
-                gamePhase = GamePhase.Counting;
             }
 
-            else if (gameType == GameType.HidePractice)
-            {
-                hiders = null;
-                items = new Item[1];
-                items[0] = new Rock(Game, new Vector3(0, 0, -10), new Vector3(1, 1, 1), 0, this, 1);
-            }
-
-            else // gameType == SeekPractice
-            {
-                hiders = new Hider[1];
-                hiders[0] = new Hider(Game, this, 2);
-                items = new Item[2];
-                items[0] = new Rock(Game, new Vector3(5, 0, -10), new Vector3(1, 1, 1), 0, this, 1);
-                items[1] = new Rock(Game, new Vector3(-5, 0, -10), new Vector3(1, 1, 1), 0, this, 2);
-            }
-
+            hiders = new Hider[numOfHiders];
             if (gameType == GameType.Hide)
-                seeker = new Seeker(Game, this, countNum, 1);
-            else
-                seeker = null;
-
-            if (gameType == GameType.Hide || gameType == GameType.HidePractice)
             {
-                meHider = new MeHider(Game, this, 0);
-                if (gameType == GameType.Hide)
-                    hiders[0] = meHider;
-                meSeeker = null;
+                humanPlayer = new HumanHider(Game, this, new Vector3(0, 0, 0), 5, 10, 0);
+                hiders[0] = (Hider)humanPlayer;
+                for (int i = 1; i < numOfHiders; i++)
+                    hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
+                seeker = new VirtualSeeker(Game, this, new Vector3(-5, 0, 0), 5, 10, 1, countNum);
             }
-            else
+            else if (gameType == GameType.Seek)
             {
-                meSeeker = new MeSeeker(Game, this, countNum, 0);
-                meHider = null;
+                humanPlayer = new HumanSeeker(Game, this, new Vector3(0, 0, 0), 5, 10, 0, countNum);
+                seeker = (Seeker)humanPlayer;
+                for (int i = 0; i < numOfHiders; i++)
+                    hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
             }
-
-            if (meHider != null)
-                humanPlayer = meHider;
-            else if (meSeeker != null)
-                humanPlayer = meSeeker;
+            for (int i=0;i<numOfHiders;i++)
+                map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
+            map.addBlock((int)Math.Abs(((Player)seeker).location.X - borders[1].X) / squareSize, (int)-((Player)seeker).location.Z / squareSize);
+            //need to initialize for practice modes!
 
             base.Initialize();
         }
@@ -205,6 +163,11 @@ namespace HideAndSeek
         internal LinkedList<FieldNode> getSons(Vector3 location)
         {
             return map.findSons(locToNode(location));
+        }
+
+        internal bool isAvailable(float[] nextSpace)
+        {
+            return map.isAvailable(new FieldNode((int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize));
         }
     }
 }

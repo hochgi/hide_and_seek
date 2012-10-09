@@ -12,22 +12,20 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
-    //phase enum!!!
-
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class MeHider : Hider
+    public abstract class HumanPlayer : Player
     {
-        Me myInput;
-        FaceDirection faceDir = FaceDirection.Forwards;
-        public Vector3 prevHead;
+        protected Me myInput;
 
-        public MeHider(Game game, World world, int id)
-            : base(game, world, id)
+        protected Vector3 prevHead;
+        protected FaceDirection faceDir;//why?
+
+        public HumanPlayer(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
+            : base(game, world, location, walkSpeed, runSpeed, id)
         {
             // TODO: Construct any child components here
-            this.world = world;
         }
 
         /// <summary>
@@ -36,14 +34,11 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
+            myInput = new KeyboardMe(Game);//change..
+            prevHead = myInput.getHeadPosition();//initialize location to same place?
+            faceDir = myInput.getFaceDirection();
 
             base.Initialize();
-
-            //myInput = new KinectMe(Game);
-            myInput = new KeyboardMe(Game);
-
-            prevHead = new Vector3(0, 0, 0);
         }
 
         /// <summary>
@@ -52,7 +47,11 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            //may want to try to get speed from user instead of using walkSpeed.  Don't forget to make all changes in Seeker too!
+            //must insert collision detection for human player!!!!!!!
+            Vector3 tempHead = prevHead;
+            prevHead = myInput.getHeadPosition();
+            location = location - tempHead + prevHead;
+            //may want to try to get speed from user instead of using walkSpeed.  in that case walk/runSpeed should be members of virtualPlayer 
             WalkingState state = myInput.getWalkingState();
             if (state == WalkingState.Forwards)
             {
@@ -64,18 +63,28 @@ namespace HideAndSeek
                 Console.WriteLine(this + " Walking backwards");
                 location.Z += walkSpeed;
             }
-            Vector3 tempHead = prevHead;
-            prevHead = myInput.getHeadPosition();
-            location = location - tempHead + prevHead;
             //Basically the hider is a totally passive position.  All that happens is the location is updated, and we just hope
             //that at some point he'll make it back to the tree...
             //base.Update(gameTime);
             faceDir = myInput.getFaceDirection();
+            if (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X > prevSpace[2] || location.Z < prevSpace[3])
+            {
+                float[] temp = prevSpace;
+                prevSpace = world.locSquare(location);
+                world.updateLocation(temp, prevSpace);
+            }
+            base.Update(gameTime);
+        }
+
+        //tell player he won
+        public override void win()
+        {
+            Console.WriteLine("YOU WON!!!");
         }
 
         public override string ToString()
         {
-            return "Me " + base.ToString();
+            return "Human " + base.ToString();
         }
     }
 }

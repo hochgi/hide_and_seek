@@ -6,7 +6,7 @@ using Microsoft.Research.Kinect.Nui;
 using Coding4Fun.Kinect.Wpf;
 using Microsoft.Xna.Framework;
 using System.Windows;
-using System.Windows.Forms; 
+using System.Windows.Forms;
 
 namespace HideAndSeek
 {
@@ -15,14 +15,15 @@ namespace HideAndSeek
         Runtime nui;
         Queue<FeetState> walkHistory;
 
-        internal KinectMe(Game game) : base(game)
+        internal KinectMe(Game game)
+            : base(game)
         {
             //Kinect Runtime
             nui = new Runtime();
 
 
             walkHistory = new Queue<FeetState>(20);
-            for (int i = 0; i < 20; i++) 
+            for (int i = 0; i < 20; i++)
             {
                 walkHistory.Enqueue(new FeetState());
             }
@@ -96,7 +97,7 @@ namespace HideAndSeek
             throw new NotImplementedException();
         }
 
-        
+
         /* this functions will be omitted! do not use them!!
          * 
         internal bool isWalkingRight()
@@ -119,7 +120,7 @@ namespace HideAndSeek
             footPosition left, right;
             DateTime timeStamp;
 
-            public FeetState() 
+            public FeetState()
             {
                 left = footPosition.Down;
                 right = footPosition.Down;
@@ -141,7 +142,7 @@ namespace HideAndSeek
             {
                 MessageBox.Show("hi");
             }
-            
+
         }
     }
 }

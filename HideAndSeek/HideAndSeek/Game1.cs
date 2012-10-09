@@ -63,6 +63,7 @@ namespace HideAndSeek
             base.Initialize(); 
         }
 
+        //basic definitions for the camera
         private void setCameraSettings()
         {
             float k_nearPlaneDistance = 0.5f;
@@ -73,11 +74,12 @@ namespace HideAndSeek
                 k_ViewAngle, GraphicsDevice.Viewport.AspectRatio, k_nearPlaneDistance, k_farPlaneDistance);
         }
 
+        //update camera's position with location of human player
         private void setCameraState()
         {
             if (world != null && world.humanPlayer != null)
             {
-                m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change!!
+                m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change when we know the position of the human's eyes
                 m_CameraTargetPosition = m_CameraLocation;
                  
                     m_CameraTargetPosition.Z -= 50;

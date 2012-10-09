@@ -108,5 +108,10 @@ namespace HideAndSeek
             }
             return res;
         }
+
+        internal bool isAvailable(FieldNode fieldNode)
+        {
+            return (map[fieldNode.x, fieldNode.y] == 0);
+        }
     }
 }

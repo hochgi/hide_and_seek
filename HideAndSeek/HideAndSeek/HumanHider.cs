@@ -15,27 +15,12 @@ namespace HideAndSeek
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public abstract class Player : Microsoft.Xna.Framework.GameComponent
+    public class HumanHider : HumanPlayer, Hider
     {
-        protected World world;
-
-        public Vector3 location;
-        protected float[] prevSpace;
-
-        protected int walkSpeed;
-        protected int runSpeed;
-
-        protected int id;
-
-        public Player(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
-            : base(game)
+        public HumanHider(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
+            : base(game, world, location, walkSpeed, runSpeed, id)
         {
-            this.world = world;
-            this.location = location;
-            this.walkSpeed = walkSpeed;
-            this.runSpeed = runSpeed;
-            this.id = id;
-            Game.Components.Add(this);
+            // TODO: Construct any child components here
         }
 
         /// <summary>
@@ -44,7 +29,7 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            prevSpace = world.locSquare(location);
+            // TODO: Add your initialization code here
 
             base.Initialize();
         }
@@ -60,12 +45,19 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
-        //Player's reaction to winning the game
-        public abstract void win();
-
-        public override string ToString()
+        public List<Vector3> getPartsPositions()
         {
-            return id + " at " + location;
+            throw new NotImplementedException();//needs input from kinect!
+        }
+
+        public void Found()
+        {
+        }
+
+
+        public new Vector3 location
+        {
+            get { return location; }
         }
     }
 }

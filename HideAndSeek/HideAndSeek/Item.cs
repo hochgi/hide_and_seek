@@ -28,7 +28,7 @@ namespace HideAndSeek
         //add item type for drawing reasons!!
 
         public bool taken;
-        public Hider hider;
+        public Hider hider;//may not be necessary!
 
         protected MyDrawable myDrawable = null;
 
