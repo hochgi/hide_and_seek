@@ -20,7 +20,7 @@ namespace HideAndSeek
     /// </summary>
     public class World : Microsoft.Xna.Framework.GameComponent
     {
-        public GameType gameType = GameType.Hide;
+        public GameType gameType = GameType.Seek;
         int countNum = 100;
         public int numOfHiders = 2;
         public int numOfItems = 4;
@@ -121,9 +121,9 @@ namespace HideAndSeek
         }
 
         // get next space for player, using DFS (probably needs to be changed!)
-        internal float[] getNextSpace(Vector3 location)
+        internal float[] getBestSpace(Vector3 location, Vector3 goal)
         {
-            return nodeToLoc(map.firstSon(locToNode(location)));
+            return nodeToLoc(map.getClosestNext(locToNode(location), locToNode(goal)));
         }
 
         // convert 3D location to node on field map

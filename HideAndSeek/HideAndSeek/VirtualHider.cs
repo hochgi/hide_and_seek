@@ -32,6 +32,7 @@ namespace HideAndSeek
         public override void Initialize()
         {
             spot = null;
+            phase = Phase.Looking;
 
             base.Initialize();
         }
@@ -74,7 +75,7 @@ namespace HideAndSeek
 
         public override float[] getNextSpace()
         {
-            return world.getNextSpace(location);//still needs to be fixed!!
+            return world.getBestSpace(location, spot.position);//still needs to be fixed!!
         }
 
 

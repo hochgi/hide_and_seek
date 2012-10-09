@@ -71,6 +71,7 @@ namespace HideAndSeek
                     // move towards next square
                     else
                     {
+                        //Console.WriteLine(this + " didn't yet reach next space...");
                         if (!world.isAvailable(nextSpace))
                             nextSpace = getNextSpace();
                         //adjust to be more realistic (don't walk in 2 directions at same speed..)

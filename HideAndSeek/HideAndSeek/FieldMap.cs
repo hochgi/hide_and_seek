@@ -97,6 +97,97 @@ namespace HideAndSeek
             return null;
         }
 
+        public FieldNode getClosestNext(FieldNode node, FieldNode goal)
+        {
+            int x = node.x;
+            int y = node.y;
+            if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
+                return null;
+            FieldNode best = null;
+            int bestVal = 300;//??
+            if (y + 1 < sizeY && map[x, y + 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x, y + 1);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x + 1, y + 1);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x + 1 < sizeX && map[x + 1, y] <= 0)
+            {
+                FieldNode next = new FieldNode(x + 1, y);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x + 1, y - 1);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (y - 1 >= 0 && map[x, y - 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x, y - 1);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x - 1, y - 1);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x - 1 >= 0 && map[x - 1, y] <= 0)
+            {
+                FieldNode next = new FieldNode(x - 1, y);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x - 1, y + 1);
+                int val = next.ManhattanDist(goal);
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            return best;
+        }
+
         public override string ToString()
         {
             String res = "";
