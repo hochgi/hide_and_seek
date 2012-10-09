@@ -99,11 +99,5 @@ namespace HideAndSeek
         {
             return "Hider " + base.ToString();
         }
-
-
-        public new Vector3 location
-        {
-            get { return location; }
-        }
     }
 }

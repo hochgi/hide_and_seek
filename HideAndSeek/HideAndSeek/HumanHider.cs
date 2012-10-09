@@ -47,17 +47,14 @@ namespace HideAndSeek
 
         public List<Vector3> getPartsPositions()
         {
-            throw new NotImplementedException();//needs input from kinect!
+            List<Vector3> res = new List<Vector3>();
+            res.Add(new Vector3(location.X, location.Y, location.Z));
+            return res;
         }
 
         public void Found()
         {
         }
 
-
-        public new Vector3 location
-        {
-            get { return location; }
-        }
     }
 }

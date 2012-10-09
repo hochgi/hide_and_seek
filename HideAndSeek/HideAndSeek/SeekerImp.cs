@@ -58,7 +58,7 @@ namespace HideAndSeek
                 else
                     return SeekerStatus.Won;
             }
-            else if (opponent.location.Z >= 0)
+            else if (((Player)opponent).location.Z >= 0)
             {
                 opponent.win();
                 if (finishWithHider())

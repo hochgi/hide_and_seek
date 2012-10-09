@@ -59,7 +59,7 @@ namespace HideAndSeek
                         Console.WriteLine(this + " reached next square!");
                         //update the player's location
                         world.updateLocation(prevSpace, nextSpace);
-                        Console.WriteLine(world.map);
+                        //Console.WriteLine(world.map);
                         // do what needs to be done, if need to keep moving then find next square
                         if (!act())
                         {

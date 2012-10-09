@@ -15,10 +15,5 @@ namespace HideAndSeek
         void Found();
 
         void win();
-
-        Vector3 location
-        {
-            get;
-        }
     }
 }

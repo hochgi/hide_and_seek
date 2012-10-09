@@ -90,7 +90,7 @@ namespace HideAndSeek
                     hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
             }
             for (int i=0;i<numOfHiders;i++)
-                map.addBlock((int)Math.Abs(hiders[i].location.X - borders[1].X) / squareSize, (int)-hiders[i].location.Z / squareSize);
+                map.addBlock((int)Math.Abs(((Player)hiders[i]).location.X - borders[1].X) / squareSize, (int)-((Player)hiders[i]).location.Z / squareSize);
             map.addBlock((int)Math.Abs(((Player)seeker).location.X - borders[1].X) / squareSize, (int)-((Player)seeker).location.Z / squareSize);
             //need to initialize for practice modes!
 
