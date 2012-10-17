@@ -43,6 +43,7 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            Console.WriteLine(this + " updating...");
             if (phase == Phase.Looking && spot == null)
             {
                 //choose random spot which is not taken
@@ -99,6 +100,12 @@ namespace HideAndSeek
         public override string ToString()
         {
             return "Hider " + base.ToString();
+        }
+
+
+        public void Done()
+        {
+            phase = Phase.Done;
         }
     }
 }

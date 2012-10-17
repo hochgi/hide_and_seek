@@ -23,7 +23,7 @@ namespace HideAndSeek
 
         protected float[] nextSpace;
 
-        MyDrawable myDrawable;
+        protected MyDrawable myDrawable;
 
         public VirtualPlayer(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
             : base(game, world, location, walkSpeed, runSpeed, id)
@@ -54,19 +54,23 @@ namespace HideAndSeek
                 if (nextSpace != null && nextSpace.Length == 4)
                 {
                     // if player has reached the next square then:
-                    if (location.X >= nextSpace[0] && location.Z <= nextSpace[1] && location.X <= nextSpace[2] && location.Z >= nextSpace[3])
+                    if (location.X >= nextSpace[0] && location.Z <= nextSpace[1] && location.X < nextSpace[2] && location.Z > nextSpace[3])
                     {
-                        Console.WriteLine(this + " reached next square!");
+                        Console.WriteLine(this + " reached next square!  Walking.");
                         //update the player's location
                         world.updateLocation(prevSpace, nextSpace);
+                        prevSpace = nextSpace;
                         //Console.WriteLine(world.map);
                         // do what needs to be done, if need to keep moving then find next square
                         if (!act())
                         {
                             Console.WriteLine(this + " action was not successful.  Going to keep looking.");
-                            prevSpace = nextSpace;
                             nextSpace = getNextSpace();
+                            if (nextSpace != null)
+                                Console.WriteLine(this + " chose next space: " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
                         }
+                        else
+                            nextSpace = null;
                     }
                     // move towards next square
                     else
@@ -77,11 +81,11 @@ namespace HideAndSeek
                         //adjust to be more realistic (don't walk in 2 directions at same speed..)
                         if (location.X < nextSpace[0])
                             location.X += walkSpeed;
-                        else if (location.X > nextSpace[2])
+                        else if (location.X >= nextSpace[2])
                             location.X -= walkSpeed;
                         if (location.Z < nextSpace[1])
                             location.Z += walkSpeed;
-                        else if (location.Z > nextSpace[3])
+                        else if (location.Z >= nextSpace[3])
                             location.Z -= walkSpeed;
                     }
                 }
@@ -90,16 +94,48 @@ namespace HideAndSeek
             }
             else if (phase == Phase.Running)
             {
-                Console.WriteLine(this + " is running");
-                //move towards zero, if reached zero wait by tree
-                if (location.Z < 0)
-                    location.Z += runSpeed;
-                else
+                if (nextSpace != null && nextSpace.Length == 4)
                 {
-                    Console.WriteLine(this + " is done!");
-                    phase = Phase.Done;
+                    // if player has reached the next square then:
+                    if (location.X >= nextSpace[0] && location.Z <= nextSpace[1] && location.X < nextSpace[2] && location.Z > nextSpace[3])
+                    {
+                        Console.WriteLine(this + " reached next square!  Running.");
+                        //update the player's location
+                        world.updateLocation(prevSpace, nextSpace);
+                        prevSpace = nextSpace;
+                        //Console.WriteLine(world.map);
+                        // do what needs to be done, if need to keep moving then find next square
+                        nextSpace = world.getNextRunSpace(location);
+                    }
+                    // move towards next square
+                    else
+                    {
+                        //Console.WriteLine(this + " didn't yet reach next space...");
+                        if (!world.isAvailable(nextSpace))
+                            nextSpace = getNextSpace();
+                        //adjust to be more realistic (don't walk in 2 directions at same speed..)
+                        if (location.X < nextSpace[0])
+                            location.X += runSpeed;
+                        else if (location.X >= nextSpace[2])
+                            location.X -= runSpeed;
+                        if (location.Z < nextSpace[1])
+                            location.Z += runSpeed;
+                        else if (location.Z >= nextSpace[3])
+                            location.Z -= runSpeed;
+                    }
                 }
-                //change all of this and update location!!
+                else
+                    nextSpace = world.getNextRunSpace(location);
+             ////   Console.WriteLine(this + " is running");
+             //   //move towards zero, if reached zero wait by tree
+             //   if (location.Z < 0)
+             //       location.Z += runSpeed;
+             //   else
+             //   {
+             //       Console.WriteLine(this + " is done!");
+             //       phase = Phase.Done;
+             //   }
+             //   //change all of this and update location!!
             }
             else if (phase == Phase.Done)
             {
@@ -117,6 +153,11 @@ namespace HideAndSeek
         {
             //victory dance and whatever
             Console.WriteLine(this + " won!");
+        }
+
+        public override string ToString()
+        {
+            return "Virtual " + base.ToString();
         }
     }
 }

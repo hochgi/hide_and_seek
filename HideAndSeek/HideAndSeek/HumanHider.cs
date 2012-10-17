@@ -40,7 +40,7 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            // TODO: Add your update code here
+            Console.WriteLine(this + " updating...");
 
             base.Update(gameTime);
         }
@@ -56,5 +56,15 @@ namespace HideAndSeek
         {
         }
 
+        public override string ToString()
+        {
+            return "Hider " + base.ToString();
+        }
+
+
+
+        public void Done()
+        {
+        }
     }
 }

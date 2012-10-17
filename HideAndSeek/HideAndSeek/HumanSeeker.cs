@@ -46,6 +46,7 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            Console.WriteLine(this + " updating...");
             if (count < countNum)
             {
                 int lastCount = 0;//get this value from input!
@@ -82,6 +83,11 @@ namespace HideAndSeek
         public Vector3 getEyesPosition()
         {
             return myInput.getHeadPosition();//not so great...
+        }
+
+        public override string ToString()
+        {
+            return "Seeker " + base.ToString();
         }
     }
 }

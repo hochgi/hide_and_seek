@@ -36,11 +36,11 @@ namespace HideAndSeek
             opponent = null;
             if (hidersFound.Count == world.numOfHiders)
             {
-                Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
+                //Console.WriteLine(this + " IS DONE!!!!!!!!!!!!!");
                 return true;
             }
             else
-                Console.WriteLine(this + " finished with " + opponent + ". going to find next hider!");
+                //Console.WriteLine(this + " finished with " + opponent + ". going to find next hider!");
             return false;
         }
 
@@ -53,18 +53,32 @@ namespace HideAndSeek
         {
             if (location.Z >= 0)
             {
+                opponent.Done();
                 if (finishWithHider())
+                {
+                    Console.WriteLine(this + " I won and I'm done!");
                     return SeekerStatus.WonDone;
+                }
                 else
+                {
+                    Console.WriteLine(this + " I won, going to find the next hider!");
                     return SeekerStatus.Won;
+                }
             }
             else if (((Player)opponent).location.Z >= 0)
             {
                 opponent.win();
+                opponent.Done();
                 if (finishWithHider())
+                {
+                    Console.WriteLine(this + " I didn't win but I'm done!");
                     return SeekerStatus.Done;
+                }
                 else
+                {
+                    Console.WriteLine(this + " I didn't win, going to find the next hider!");
                     return SeekerStatus.Lost;
+                }
             }
             return SeekerStatus.None;
         }

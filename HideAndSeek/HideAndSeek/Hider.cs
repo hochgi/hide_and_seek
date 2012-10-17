@@ -9,11 +9,11 @@ namespace HideAndSeek
     public interface Hider
     {
         List<Vector3> getPartsPositions();//returns the shape of the person
-        //i know it shouldn't be int but for now i don't know what it should return
-        //maybe not necessary?
 
         void Found();
 
         void win();
+
+        void Done();
     }
 }

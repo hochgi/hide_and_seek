@@ -119,7 +119,6 @@
   <ItemGroup>
     <Compile Include="FieldMap.cs" />
     <Compile Include="FieldNode.cs" />
-    <Compile Include="FieldSearch.cs" />
     <Compile Include="Hider.cs" />
     <Compile Include="HumanHider.cs" />
     <Compile Include="HumanPlayer.cs" />

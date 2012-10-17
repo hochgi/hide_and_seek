@@ -48,6 +48,7 @@ namespace HideAndSeek
                     seenMap[i, j] = 0;
             seeker = new SeekerImp(world);
             base.Initialize();
+            myDrawable.color = Color.DodgerBlue;
         }
 
         /// <summary>
@@ -56,10 +57,15 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
+            Console.WriteLine(this + " updating...");
             for (int i = 0; i < mapX; i++)
                 for (int j = 0; j < mapY; j++)
                     if (seenMap[i, j] > 0)
+                    {
+                        //Console.WriteLine("SM " + i + " " + j + "=" + seenMap[i, j]);
                         seenMap[i, j]--;
+                        //Console.WriteLine("SM " + i + " " + j + "=" + seenMap[i, j]);
+                    }
             if (phase == Phase.Counting)
             {
                 Console.WriteLine(this + " counting " + count + " out of " + countNum);
@@ -80,7 +86,10 @@ namespace HideAndSeek
                 if (status == SeekerStatus.Done || status == SeekerStatus.WonDone)
                     Game.Exit();
                 if (status != SeekerStatus.None)
+                {
                     phase = Phase.Looking;
+                    nextSpace = null;
+                }
             }
             base.Update(gameTime);
         }
@@ -108,6 +117,9 @@ namespace HideAndSeek
 
         public override bool act()
         {
+            Console.WriteLine(this + " acting in space " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
+            FieldNode node = world.spaceToNode(nextSpace);
+            seenMap[node.x, node.y] = 100;//change number?
             Hider hider = selectHider();
             if (hider != null)
             {
@@ -121,24 +133,17 @@ namespace HideAndSeek
 
         public override float[] getNextSpace()
         {
-            LinkedList<FieldNode> sons = world.getSons(location);
-            foreach (FieldNode node in sons)
-                if (seenMap[node.x, node.y] == 0)
-                    return world.nodeToLoc(node);
-            FieldNode best = null;
-            int bestVal = 100;
-            foreach (FieldNode node in sons)
-                if (seenMap[node.x, node.y] < bestVal)
-                {
-                    best = node;
-                    bestVal = seenMap[node.x, node.y];
-                }
-            return world.nodeToLoc(best);
+            return world.findBestNotSeen(prevSpace, seenMap);
         }
 
         public Vector3 getEyesPosition()
         {
             return new Vector3(location.X, location.Y + 9, location.Z);//needs to be changed!
+        }
+
+        public override string ToString()
+        {
+            return "Seeker " + base.ToString();
         }
     }
 }

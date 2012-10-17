@@ -37,66 +37,118 @@ namespace HideAndSeek
         }
 
         // find all spaces where it is possible to go to from current node
-        public LinkedList<FieldNode> findSons(FieldNode node) 
+        public FieldNode findBestNotSeen(FieldNode node, int[,] seenMap) 
         {
+            if (seenMap.GetLength(0) != sizeX || seenMap.GetLength(1) != sizeY)
+                return null;
             LinkedList<FieldNode> sons = new LinkedList<FieldNode>();
             int x = node.x;
             int y = node.y;
             if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
                 return null;
-            if (y + 1 < sizeY && map[x, y + 1] <= 0)
-                sons.AddLast(new FieldNode(x, y + 1));
-            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
-                sons.AddLast(new FieldNode(x + 1, y + 1));
-            if (x + 1 < sizeX && map[x + 1, y] <= 0)
-                sons.AddLast(new FieldNode(x + 1, y));
-            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
-                sons.AddLast(new FieldNode(x + 1, y - 1));
-            if (y - 1 >= 0 && map[x, y - 1] <= 0)
-                sons.AddLast(new FieldNode(x, y - 1));
-            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
-                sons.AddLast(new FieldNode(x - 1, y - 1));
-            if (x - 1 >= 0 && map[x - 1, y] <= 0)
-                sons.AddLast(new FieldNode(x - 1, y));
-            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
-                sons.AddLast(new FieldNode(x - 1, y + 1));
-            return sons;
-        }
-
-        // find first available space to move to 
-        public FieldNode firstSon (FieldNode node)
-        {
-            int x = node.x;
-            int y = node.y;
-            if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
-                return null;
-            if (y + 1 < sizeY && map[x, y + 1] <= 0)
+            //may make sense to change around order on these spaces
+            if (y + 1 < sizeY && map[x, y + 1] <= 0 && seenMap[x, y + 1] == 0)
                 return new FieldNode(x, y + 1);
-            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
+            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0 && seenMap[x + 1, y + 1] == 0)
                 return new FieldNode(x + 1, y + 1);
-            if (x + 1 < sizeX && map[x + 1, y] <= 0)
+            if (x + 1 < sizeX && map[x + 1, y] <= 0 && seenMap[x + 1, y] == 0)
                 return new FieldNode(x + 1, y);
-            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
+            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0 && seenMap[x + 1, y - 1] == 0)
                 return new FieldNode(x + 1, y - 1);
-            if (y - 1 >= 0 && map[x, y - 1] <= 0)
+            if (y - 1 >= 0 && map[x, y - 1] <= 0 && seenMap[x, y - 1] == 0)
                 return new FieldNode(x, y - 1);
-            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
+            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0 && seenMap[x - 1, y - 1] == 0)
                 return new FieldNode(x - 1, y - 1);
-            if (x - 1 >= 0 && map[x - 1, y] <= 0)
+            if (x - 1 >= 0 && map[x - 1, y] <= 0 && seenMap[x - 1, y] == 0)
                 return new FieldNode(x - 1, y);
-            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
+            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0 && seenMap[x - 1, y+1] == 0)
                 return new FieldNode(x - 1, y + 1);
-            if (y + 1 < sizeY)
-                return new FieldNode(x, y + 1);
-            if (x + 1 < sizeX)
-                return new FieldNode(x + 1, y);
-            if (y - 1 >= 0)
-                return new FieldNode(x, y - 1);
-            if (x - 1 >= 0)
-                return new FieldNode(x - 1, y);
-            return null;
+            FieldNode best = null;
+            int bestVal = 101;
+            if (y + 1 < sizeY && map[x, y + 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x, y + 1);
+                int val = seenMap[x, y + 1];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x + 1, y + 1);
+                int val = seenMap[x + 1, y + 1];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x + 1 < sizeX && map[x + 1, y] <= 0)
+            {
+                FieldNode next = new FieldNode(x + 1, y);
+                int val = seenMap[x + 1, y];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x + 1, y - 1);
+                int val = seenMap[x + 1, y - 1];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (y - 1 >= 0 && map[x, y - 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x, y - 1);
+                int val = seenMap[x, y - 1];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x - 1, y - 1);
+                int val = seenMap[x - 1, y - 1];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x - 1 >= 0 && map[x - 1, y] <= 0)
+            {
+                FieldNode next = new FieldNode(x - 1, y);
+                int val = seenMap[x - 1, y];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
+            {
+                FieldNode next = new FieldNode(x - 1, y + 1);
+                int val = seenMap[x - 1, y + 1];
+                if (val < bestVal)
+                {
+                    bestVal = val;
+                    best = next;
+                }
+            }
+            return best;
         }
 
+        //returns available node which is closest to goal (using manhattan distance)
         public FieldNode getClosestNext(FieldNode node, FieldNode goal)
         {
             int x = node.x;
@@ -203,6 +255,31 @@ namespace HideAndSeek
         internal bool isAvailable(FieldNode fieldNode)
         {
             return (map[fieldNode.x, fieldNode.y] == 0);
+        }
+
+        internal FieldNode findRunSpace(FieldNode node)
+        {
+            if (node == null)
+                return null;
+            int x = node.x;
+            int y = node.y;
+            if (y - 1 >= 0 && map[x, y - 1] == 0)
+                return new FieldNode(x, y - 1);
+            if (y - 1 >= 0 && x - 1 >= 0 && map[x - 1, y - 1] == 0)
+                return new FieldNode(x - 1, y - 1);
+            if (y - 1 >= 0 && x + 1 < sizeX && map[x + 1, y - 1] == 0)
+                return new FieldNode(x + 1, y - 1);
+            if (x - 1 >= 0 && map[x - 1, y] == 0)
+                return new FieldNode(x - 1, y);
+            if (x + 1 < sizeX && map[x + 1, y] == 0)
+                return new FieldNode(x + 1, y);
+            if (y + 1 < sizeY && x - 1 >= 0 && map[x - 1, y + 1] == 0)
+                return new FieldNode(x - 1, y + 1);
+            if (y + 1 < sizeY && map[x, y + 1] == 0)
+                return new FieldNode(x, y + 1);
+            if (y + 1 < sizeY && x + 1 < sizeX && map[x + 1, y + 1] == 0)
+                return new FieldNode(x + 1, y + 1);
+            return null;
         }
     }
 }

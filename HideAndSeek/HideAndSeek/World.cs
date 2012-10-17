@@ -20,9 +20,9 @@ namespace HideAndSeek
     /// </summary>
     public class World : Microsoft.Xna.Framework.GameComponent
     {
-        public GameType gameType = GameType.Seek;
+        public GameType gameType = GameType.Hide;
         int countNum = 100;
-        public int numOfHiders = 2;
+        public int numOfHiders = 3;
         public int numOfItems = 4;
 
         public Item[] items;
@@ -79,8 +79,8 @@ namespace HideAndSeek
                 humanPlayer = new HumanHider(Game, this, new Vector3(0, 0, 0), 5, 10, 0);
                 hiders[0] = (Hider)humanPlayer;
                 for (int i = 1; i < numOfHiders; i++)
-                    hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
-                seeker = new VirtualSeeker(Game, this, new Vector3(-5, 0, 0), 5, 10, 1, countNum);
+                    hiders[i] = new VirtualHider(Game, this, new Vector3(10 * i, 0, 0) + borders[1], 5, 10, i + 1);
+                seeker = new VirtualSeeker(Game, this, new Vector3(5, 0, 0), 5, 10, 1, countNum);
             }
             else if (gameType == GameType.Seek)
             {
@@ -123,7 +123,9 @@ namespace HideAndSeek
         // get next space for player, using DFS (probably needs to be changed!)
         internal float[] getBestSpace(Vector3 location, Vector3 goal)
         {
-            return nodeToLoc(map.getClosestNext(locToNode(location), locToNode(goal)));
+            FieldNode node = map.getClosestNext(locToNode(location), locToNode(goal));
+            Console.WriteLine("Closest next space: " + node);
+            return nodeToLoc(node);
         }
 
         // convert 3D location to node on field map
@@ -160,14 +162,33 @@ namespace HideAndSeek
             return (int)(Math.Abs(borders[2].Z)) / squareSize;
         }
 
-        internal LinkedList<FieldNode> getSons(Vector3 location)
+        public float[] findBestNotSeen(float[] prevSpace, int[,] seenMap) 
         {
-            return map.findSons(locToNode(location));
+            FieldNode node = map.findBestNotSeen(spaceToNode(prevSpace), seenMap);
+            Console.WriteLine("BestNotSeen: " + node);
+            return nodeToLoc(node);
         }
 
         internal bool isAvailable(float[] nextSpace)
         {
-            return map.isAvailable(new FieldNode((int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize));
+            return map.isAvailable(spaceToNode(nextSpace));
+        }
+
+        public FieldNode spaceToNode(float[] nextSpace)
+        {
+            return new FieldNode((int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize);
+        }
+
+        public override string ToString()
+        {
+            return map.ToString();
+        }
+
+        internal float[] getNextRunSpace(Vector3 location)
+        {
+            FieldNode node = map.findRunSpace(locToNode(location));
+            Console.WriteLine("RunSpace: " + node);
+            return nodeToLoc(node);
         }
     }
 }
