@@ -67,7 +67,7 @@ namespace HideAndSeek
             //that at some point he'll make it back to the tree...
             //base.Update(gameTime);
             faceDir = myInput.getFaceDirection();
-            if (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X > prevSpace[2] || location.Z < prevSpace[3])
+            if (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X >= prevSpace[2] || location.Z <= prevSpace[3])
             {
                 float[] temp = prevSpace;
                 prevSpace = world.locSquare(location);

@@ -97,9 +97,14 @@ namespace HideAndSeek
         public Hider selectHider()
         {
             foreach (Hider hider in world.hiders)
-                if (!seeker.foundYet(hider) && CanSee(hider))
+                if (!seeker.foundYet(hider) && CanFind(hider))
                     return hider;
             return null;
+        }
+
+        private bool CanFind(Hider hider)
+        {
+            return CanSee(hider);//needs to be changed to insert randomness!
         }
 
         private bool CanSee(Hider hider)

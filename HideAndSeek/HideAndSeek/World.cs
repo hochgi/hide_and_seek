@@ -131,6 +131,15 @@ namespace HideAndSeek
         // convert 3D location to node on field map
         private FieldNode locToNode(Vector3 location)
         {
+            if (location.X == borders[0].X)
+            {
+                if (location.Z == borders[2].Z)
+                    return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize - 1, (int)-location.Z / squareSize - 1);
+                else
+                    return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize - 1, (int)-location.Z / squareSize);
+            }
+            else if (location.Z == borders[2].Z)
+                return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize, (int)-location.Z / squareSize - 1);
             return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize, (int)-location.Z / squareSize);
         }
 

@@ -151,6 +151,13 @@ namespace HideAndSeek
         //returns available node which is closest to goal (using manhattan distance)
         public FieldNode getClosestNext(FieldNode node, FieldNode goal)
         {
+            if (Math.Abs(node.x - goal.x) == 1 || Math.Abs(node.y - goal.y) == 1)
+            {
+                if (map[goal.x, goal.y] == 1)
+                    return goal;
+                else
+                    throw new SpotTakenException();
+            }
             int x = node.x;
             int y = node.y;
             if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
@@ -281,5 +288,9 @@ namespace HideAndSeek
                 return new FieldNode(x + 1, y + 1);
             return null;
         }
+    }
+
+    public class SpotTakenException : Exception
+    {
     }
 }

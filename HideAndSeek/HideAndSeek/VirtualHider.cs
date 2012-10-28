@@ -63,8 +63,8 @@ namespace HideAndSeek
         {
             Console.WriteLine(this + " acting in space " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
             //if hiding spot is in this space
-            if (spot.position.X >= nextSpace[0] && spot.position.Z <= nextSpace[1] && spot.position.X <= nextSpace[2]
-                && spot.position.Z >= nextSpace[3])
+            if (spot.position.X >= nextSpace[0] && spot.position.Z <= nextSpace[1] && spot.position.X < nextSpace[2]
+                && spot.position.Z > nextSpace[3])
             {
                 Console.WriteLine(this + " found hiding spot " + spot);
                 //go behind spot and crouch down - need to implement!
@@ -76,7 +76,15 @@ namespace HideAndSeek
 
         public override float[] getNextSpace()
         {
-            return world.getBestSpace(location, spot.position);//still needs to be fixed!!
+            try
+            {
+                return world.getBestSpace(location, spot.position);//still needs to be fixed!!
+            }
+            catch (SpotTakenException e)
+            {
+                spot = null;
+                return null;
+            }
         }
 
 
