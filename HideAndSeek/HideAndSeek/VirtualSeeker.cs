@@ -24,6 +24,9 @@ namespace HideAndSeek
         int mapY;
         private int[,] seenMap;
 
+        int lowerSightBound = 50;
+        int upperSightBound = 450;
+
         SeekerImp seeker;
 
         public VirtualSeeker(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id, int countNum)
@@ -102,11 +105,42 @@ namespace HideAndSeek
             return null;
         }
 
+        //returns whether or not seeker notices hider
         private bool CanFind(Hider hider)
         {
-            return CanSee(hider);//needs to be changed to insert randomness!
+            float visibleBodyParts;
+            if (CanSee(hider))//change visibleBodyParts when change CanSee return value to accommodate different body parts
+                visibleBodyParts = 1.0f;
+            else
+                visibleBodyParts = 0f;
+            float distPercentage = GetDistPercentage(GetDist(hider));
+            float totalChance = visibleBodyParts * distPercentage;
+            Random rand = new Random();
+            double randFloat = rand.NextDouble();
+            if (randFloat < totalChance)
+                return true;
+            else
+                return false;
         }
 
+        private float GetDistPercentage(float p)
+        {
+            if (p > upperSightBound)
+                return 0;
+            if (p < lowerSightBound)
+                return 1;
+            float sightRange = upperSightBound - lowerSightBound;
+            return p / sightRange;
+        }
+
+        private float GetDist(Hider hider)
+        {
+            float xDist = location.X - ((Player)hider).location.X;
+            float zDist = location.Z - ((Player)hider).location.Z;
+            return (float)Math.Sqrt(xDist * xDist + zDist * zDist);
+        }
+
+        //returns whether or not seeker can see hider
         private bool CanSee(Hider hider)
         {
             //create line of sight from seeker's eyes to limbs[i] in hider. i.e., can seeker see limb #i?
