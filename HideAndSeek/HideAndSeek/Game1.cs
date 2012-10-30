@@ -17,10 +17,11 @@ namespace HideAndSeek
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        //variables for drawing objects
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public BasicEffect m_effect;//public??
+        public BasicEffect m_effect;
         Matrix m_CameraSettings;
         Matrix m_CameraState;
         Vector3 m_CameraTargetPosition;
@@ -28,8 +29,10 @@ namespace HideAndSeek
         Vector3 m_CameraUpDirection;
         RasterizerState m_RasterizerState;
 
+        //the world, which holds all of the variables and components for the game
         World world;
 
+        //constructor for Game1 class
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -44,9 +47,7 @@ namespace HideAndSeek
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             m_CameraTargetPosition = new Vector3(0, 0, -100);
-            m_CameraLocation = new Vector3(0, 30, 10);//fix this, not good!  should be user's real location.
             m_CameraUpDirection = new Vector3(0, 1, 0);
 
             setCameraSettings();
@@ -55,10 +56,6 @@ namespace HideAndSeek
             world = new World(this);
 
             IsFixedTimeStep = false;//i'm not sure this should be the case, but it's the only way the graphics look ok for now
-
-            //Console.WriteLine("Game Initialize Debugging:");
-            //Console.WriteLine("IsFixedTimeStep " + IsFixedTimeStep);
-            //Console.WriteLine("TargetElapsedTime " + TargetElapsedTime);
 
             base.Initialize(); 
         }
@@ -80,11 +77,11 @@ namespace HideAndSeek
             if (world != null && world.humanPlayer != null)
             {
                 m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change when we know the position of the human's eyes
-                m_CameraTargetPosition = m_CameraLocation;
-                 
-                    m_CameraTargetPosition.Z -= 50;
             }
-            //Console.WriteLine("m_CameraLocation " + m_CameraLocation);
+            else
+                m_CameraLocation = new Vector3(0, 0, 0);
+            m_CameraTargetPosition = m_CameraLocation;
+            m_CameraTargetPosition.Z -= 50;
             m_CameraState = Matrix.CreateLookAt(m_CameraLocation, m_CameraTargetPosition, m_CameraUpDirection);
         }
 
@@ -123,17 +120,11 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            //Console.WriteLine("Game Debugging: " + gameTime.ElapsedGameTime);
-            //Console.WriteLine("IsFixedTimeStep " + IsFixedTimeStep);
-            //Console.WriteLine("TargetElapsedTime " + TargetElapsedTime);
-            //Console.WriteLine("IsRunningSlowly " + gameTime.IsRunningSlowly);
-
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
             // TODO: Add your update logic here
-            //m_CameraLocation = humanPlayer.location;
 
             base.Update(gameTime);
         }

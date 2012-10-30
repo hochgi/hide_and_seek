@@ -6,14 +6,16 @@ using Microsoft.Xna.Framework;
 
 namespace HideAndSeek
 {
+    //interface to represent hider
     public interface Hider
     {
-        List<Vector3> getPartsPositions();//returns the shape of the person
+        //returns the shape of the person
+        List<Vector3> getPartsPositions();
 
+        //what to do when found by Seeker
         void Found();
 
+        //what to do when win against Seeker
         void win();
-
-        void Done();
     }
 }

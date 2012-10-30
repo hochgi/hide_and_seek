@@ -55,6 +55,8 @@ namespace HideAndSeek
                 Console.WriteLine(this + " going to hide at " + spot);
             }
             //if phase==hiding?  for drawing purposes?
+            else if (phase == Phase.Running && location.Z >= 0)
+                phase = Phase.Done;
 
             base.Update(gameTime);
         }
@@ -78,7 +80,7 @@ namespace HideAndSeek
         {
             try
             {
-                return world.getBestSpace(location, spot.position);//still needs to be fixed!!
+                return world.getBestSpace(location, spot.position);
             }
             catch (SpotTakenException e)
             {
@@ -108,12 +110,6 @@ namespace HideAndSeek
         public override string ToString()
         {
             return "Hider " + base.ToString();
-        }
-
-
-        public void Done()
-        {
-            phase = Phase.Done;
         }
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //represents seeker played by human
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
@@ -19,11 +20,14 @@ namespace HideAndSeek
     {
         SeekerImp seeker;
 
+        //number to count up to
         int countNum;
+        //number counted so far
         int count;
 
+        //Constructor for HumanSeeker class
         public HumanSeeker(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id, int countNum)
-            : base(game, world, location, walkSpeed, runSpeed, id)
+            : base(game, world, location, walkSpeed, runSpeed, id, false)
         {
             this.countNum = countNum;
         }
@@ -47,26 +51,36 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             Console.WriteLine(this + " updating...");
+            //if not done counting yet
             if (count < countNum)
             {
-                int lastCount = 0;//get this value from input!
+                int lastCount = 0;
                 if (lastCount == count + 1)
                     count++;
+                if (count == countNum)
+                    counting = false;
             }
+            //if Seeker isn't racing against anyone at the moment
             else if (seeker.opponent == null)
             {
+                //if player is pointing
                 if (myInput.isPointing())
                 {
+                    //check if player is pointing at a specific hider and if so start racing against them
                     Hider hider = selectHider();
                     if (hider != null)
                         seeker.hiderFound(hider);
                 }
             }
+            //if seeker is racing
             else
             {
+                //check the status of the seeker vs. the hider
                 SeekerStatus status = seeker.Status(location);
+                //if the seeker won
                 if (status == SeekerStatus.Won || status == SeekerStatus.WonDone)
                     win();
+                //competitor was the last hider, exit the game
                 if (status == SeekerStatus.Done || status == SeekerStatus.WonDone)
                     Game.Exit();
             }
@@ -74,17 +88,20 @@ namespace HideAndSeek
             base.Update(gameTime);
         }
 
+        //choose which hider seeker was pointing at
         public Hider selectHider()
         {
             //follow arm and find out who player is pointing at.  if nobody, return null.
             throw new NotImplementedException();
         }
 
+        //returns the location of player's eyes
         public Vector3 getEyesPosition()
         {
             return myInput.getHeadPosition();//not so great...
         }
 
+        //returns a string representation of the human seeker
         public override string ToString()
         {
             return "Seeker " + base.ToString();

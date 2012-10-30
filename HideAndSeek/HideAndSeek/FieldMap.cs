@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HideAndSeek
 {
-    // holds a representation of playing field so that players can find best route to hiding place
+    // holds a representation of playing field so that players can find best route to their destination
     public class FieldMap
     {
         int sizeX;
@@ -13,6 +13,7 @@ namespace HideAndSeek
 
         int[,] map;
 
+        //constructor for FieldMap class
         public FieldMap(int x, int y)
         {
             sizeX = x;
@@ -36,7 +37,7 @@ namespace HideAndSeek
             map[z, w]++;
         }
 
-        // find all spaces where it is possible to go to from current node
+        // find the neighbor where the Seeker has been least recently
         public FieldNode findBestNotSeen(FieldNode node, int[,] seenMap) 
         {
             if (seenMap.GetLength(0) != sizeX || seenMap.GetLength(1) != sizeY)
@@ -46,7 +47,7 @@ namespace HideAndSeek
             int y = node.y;
             if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
                 return null;
-            //may make sense to change around order on these spaces
+            //if there is a neighbor which hasn't been seen recently, return it
             if (y + 1 < sizeY && map[x, y + 1] <= 0 && seenMap[x, y + 1] == 0)
                 return new FieldNode(x, y + 1);
             if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0 && seenMap[x + 1, y + 1] == 0)
@@ -65,6 +66,7 @@ namespace HideAndSeek
                 return new FieldNode(x - 1, y + 1);
             FieldNode best = null;
             int bestVal = 101;
+            // go through all neighbors and find the one that has been seen least recently
             if (y + 1 < sizeY && map[x, y + 1] <= 0)
             {
                 FieldNode next = new FieldNode(x, y + 1);
@@ -145,16 +147,20 @@ namespace HideAndSeek
                     best = next;
                 }
             }
+            //return the neighbor which has been seen least recently
             return best;
         }
 
         //returns available node which is closest to goal (using manhattan distance)
         public FieldNode getClosestNext(FieldNode node, FieldNode goal)
         {
+            //if the goal is a neighbor
             if (Math.Abs(node.x - goal.x) == 1 || Math.Abs(node.y - goal.y) == 1)
             {
+                //if the only item in the goal space is the hiding spot, return it
                 if (map[goal.x, goal.y] == 1)
                     return goal;
+                //otherwise, need to find a new hiding spot
                 else
                     throw new SpotTakenException();
             }
@@ -162,8 +168,9 @@ namespace HideAndSeek
             int y = node.y;
             if (x >= sizeX || y >= sizeY || x < 0 || y < 0)
                 return null;
+            //go through all neighbors and find the one which is closest to the hiding spot, using Manhattan distancea
             FieldNode best = null;
-            int bestVal = 300;//??
+            int bestVal = 300;
             if (y + 1 < sizeY && map[x, y + 1] <= 0)
             {
                 FieldNode next = new FieldNode(x, y + 1);
@@ -247,6 +254,7 @@ namespace HideAndSeek
             return best;
         }
 
+        //returns a string representation of the map
         public override string ToString()
         {
             String res = "";
@@ -259,27 +267,32 @@ namespace HideAndSeek
             return res;
         }
 
+        //check if space on map is still available
         internal bool isAvailable(FieldNode fieldNode)
         {
             return (map[fieldNode.x, fieldNode.y] == 0);
         }
 
+        //find best space to go to while racing to tree
         internal FieldNode findRunSpace(FieldNode node)
         {
             if (node == null)
                 return null;
             int x = node.x;
             int y = node.y;
+            //if possible, go to the nodes which are closer to the tree (meaning a smaller y value)
             if (y - 1 >= 0 && map[x, y - 1] == 0)
                 return new FieldNode(x, y - 1);
             if (y - 1 >= 0 && x - 1 >= 0 && map[x - 1, y - 1] == 0)
                 return new FieldNode(x - 1, y - 1);
             if (y - 1 >= 0 && x + 1 < sizeX && map[x + 1, y - 1] == 0)
                 return new FieldNode(x + 1, y - 1);
+            //otherwise, go sideways (equal y value)
             if (x - 1 >= 0 && map[x - 1, y] == 0)
                 return new FieldNode(x - 1, y);
             if (x + 1 < sizeX && map[x + 1, y] == 0)
                 return new FieldNode(x + 1, y);
+            //if none of the above nodes are available, go to nodes which are farther away from the tree (larger y value)
             if (y + 1 < sizeY && x - 1 >= 0 && map[x - 1, y + 1] == 0)
                 return new FieldNode(x - 1, y + 1);
             if (y + 1 < sizeY && map[x, y + 1] == 0)
@@ -290,6 +303,7 @@ namespace HideAndSeek
         }
     }
 
+    //exception which is thrown when another hider has taken this hider's designated hiding spot, to notify hider to choose a new spot
     public class SpotTakenException : Exception
     {
     }

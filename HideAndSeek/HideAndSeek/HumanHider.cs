@@ -12,13 +12,15 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //represents the hider played by the human player
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public class HumanHider : HumanPlayer, Hider
     {
+        //constructor for HumanHider class
         public HumanHider(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
-            : base(game, world, location, walkSpeed, runSpeed, id)
+            : base(game, world, location, walkSpeed, runSpeed, id, false)
         {
             // TODO: Construct any child components here
         }
@@ -44,7 +46,8 @@ namespace HideAndSeek
 
             base.Update(gameTime);
         }
-
+        
+        //returns the locations of player's body parts
         public List<Vector3> getPartsPositions()
         {
             List<Vector3> res = new List<Vector3>();
@@ -52,19 +55,15 @@ namespace HideAndSeek
             return res;
         }
 
+        //when found, do nothing.
         public void Found()
         {
         }
 
+        //returns a string representation of the human hider
         public override string ToString()
         {
             return "Hider " + base.ToString();
-        }
-
-
-
-        public void Done()
-        {
         }
     }
 }

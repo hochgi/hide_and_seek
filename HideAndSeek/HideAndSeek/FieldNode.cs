@@ -5,13 +5,13 @@ using System.Text;
 
 namespace HideAndSeek
 {
-    // may be obselete?  just replace with vector2!
     //represents a node in the field map
     public class FieldNode
     {
         public int x;
         public int y;
 
+        //constructor for FieldNode class
         public FieldNode(int x, int y)
         {
             this.x = x;
@@ -19,12 +19,12 @@ namespace HideAndSeek
         }
 
         //calculate distance between to spaces
-        //we may decide to use a better calculation.
         public int ManhattanDist(FieldNode other)
         {
             return Math.Abs(x - other.x) + Math.Abs(y - other.y);
         }
 
+        //returns a string representation of the node
         public override string ToString()
         {
             return "FieldNode: (" + x + "," + y + ")";

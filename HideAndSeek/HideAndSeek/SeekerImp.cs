@@ -53,7 +53,6 @@ namespace HideAndSeek
         {
             if (location.Z >= 0)
             {
-                opponent.Done();
                 if (finishWithHider())
                 {
                     Console.WriteLine(this + " I won and I'm done!");
@@ -68,7 +67,6 @@ namespace HideAndSeek
             else if (((Player)opponent).location.Z >= 0)
             {
                 opponent.win();
-                opponent.Done();
                 if (finishWithHider())
                 {
                     Console.WriteLine(this + " I didn't win but I'm done!");
