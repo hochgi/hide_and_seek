@@ -93,6 +93,7 @@ namespace HideAndSeek
             {
                 foreach (Vector3 v in hider.getPartsPositions())
                 {
+
                     rv = rv || p.isBlockingLineOfSight(seeker.getEyesPosition(), v);
                 }
             }
