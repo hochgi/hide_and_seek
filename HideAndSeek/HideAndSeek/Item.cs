@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //represents an item which players can hide behind
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// all subclasses of item should define a calculateble primitive,
@@ -19,19 +20,24 @@ namespace HideAndSeek
     /// </summary>
     public abstract class Item : Microsoft.Xna.Framework.GameComponent
     {
+        //item's ID number
         int id;
 
+        //the world representing the game state
         World world;
 
+        //item's location
         public Vector3 position;
-        public Vector3 size; //X = W, Y = H, Z = D
-        //add item type for drawing reasons!!
+        //item's size
+        public Vector3 size;
 
+        //whether a hider has chosen this item as a hiding place
         public bool taken;
-        public Hider hider;//may not be necessary!
 
+        //DrawableGameComponent of the item
         protected MyDrawable myDrawable = null;
 
+        //constructor for Item class
         public Item(Game game, Vector3 loc, Vector3 size, int type, World world, int id)
             : base(game)
         {
@@ -44,6 +50,7 @@ namespace HideAndSeek
             myDrawable = new MyDrawable(game, Color.ForestGreen, position, size);
         }
 
+        //returns the position of the item
         public Vector3 getPosition() 
         {
             return this.position;
@@ -57,7 +64,6 @@ namespace HideAndSeek
         {
             // TODO: Add your initialization code here
             taken = false;
-            hider = null;
             base.Initialize();
         }
 
@@ -93,14 +99,17 @@ namespace HideAndSeek
             return rv;
         }
 
+        //returns list of PrimitiveShapes that make up the item
         abstract protected List<PrimitiveShape> getCageShapes();
 
+        //returns string representation of item
         public override string ToString()
         {
             return "Item " + id + " at " + position;
         }
     }
 
+    //represents a rock as an item
     public class Rock : Item
     {
 

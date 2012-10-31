@@ -6,11 +6,13 @@ using Microsoft.Xna.Framework;
 
 namespace HideAndSeek
 {
+    //interface to represent seeker
     public interface Seeker
     {
+        //find a hider
         Hider selectHider();
 
-        Vector3 getEyesPosition();//maybe should return a different value that also considers the direction player is facing?
-        //as of now we don't know what direction virtual players face..
+        //return the location of Seeker's eyes
+        Vector3 getEyesPosition();
     }
 }

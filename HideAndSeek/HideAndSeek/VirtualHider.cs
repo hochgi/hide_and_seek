@@ -12,13 +12,16 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //represents hider played by the computer
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public class VirtualHider : VirtualPlayer, Hider
     {
+        //hiding spot hider has selected
         Item spot;
 
+        //constructor for VirtualHider class
         public VirtualHider(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
             : base(game, world, location, walkSpeed, runSpeed, id)
         {
@@ -44,6 +47,7 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             Console.WriteLine(this + " updating...");
+            //if hider is looking for a spot but has not chosen one yet
             if (phase == Phase.Looking && spot == null)
             {
                 //choose random spot which is not taken
@@ -51,16 +55,18 @@ namespace HideAndSeek
                 spot = world.items[rand.Next(world.numOfItems)];
                 while (spot.taken == true)
                     spot = world.items[rand.Next(world.numOfItems)];
+                //mark spot as taken
                 spot.taken = true;
                 Console.WriteLine(this + " going to hide at " + spot);
             }
-            //if phase==hiding?  for drawing purposes?
+            //if hider was running back to zero and has passed it, change phase to done
             else if (phase == Phase.Running && location.Z >= 0)
                 phase = Phase.Done;
 
             base.Update(gameTime);
         }
 
+        //when arriving in new space, check if hiding spot is in this space and if so hide behind it
         public override bool act()
         {
             Console.WriteLine(this + " acting in space " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
@@ -69,17 +75,18 @@ namespace HideAndSeek
                 && spot.position.Z > nextSpace[3])
             {
                 Console.WriteLine(this + " found hiding spot " + spot);
-                //go behind spot and crouch down - need to implement!
                 phase = Phase.Hiding;
                 return true;
             }
             return false;
         }
 
+        //choose next square to advance hider to
         public override float[] getNextSpace()
         {
             try
             {
+                //call world
                 return world.getBestSpace(location, spot.position);
             }
             catch (SpotTakenException e)
