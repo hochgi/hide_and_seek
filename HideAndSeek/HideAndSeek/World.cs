@@ -12,29 +12,38 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
-
+    //type of game being played
     public enum GameType { HidePractice, SeekPractice, Hide, Seek };
 
+    //represents the game state, which holds all of the information
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public class World : Microsoft.Xna.Framework.GameComponent
     {
+        //type of game being played
         public GameType gameType = GameType.Hide;
+        //number seeker needs to count to
         int countNum = 100;
+        //number of hiders
         public int numOfHiders = 3;
+        //number of items in playing space
         public int numOfItems = 4;
 
         public Item[] items;
         public Hider[] hiders;
-        Seeker seeker;//not sure if field is necessary since update gets called anyway, but didn't know where to put it.  may be enough to just create it?
+        Seeker seeker;
         public HumanPlayer humanPlayer;
 
+        //boundaries of playing space
         Vector3[] borders;
 
+        //size of a square on the map
         int squareSize = 10;
-        private FieldMap map; //should be private!  public only for debugging
+        //map representing the space
+        private FieldMap map;
 
+        //constructor for World class
         public World(Game game)
             : base(game)
         {
@@ -42,58 +51,63 @@ namespace HideAndSeek
             Game.Components.Add(this);
         }
 
-
-        //this function needs to be fixed up very badly!!
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
         /// to run.  This is where it can query for any required services and load content.
         /// </summary>
         public override void Initialize()
         {
+            //initialize game space borders
             borders = new Vector3[4];
             borders[0] = new Vector3(20, 0, 0);
             borders[1] = new Vector3(-20, 0, 0);
             borders[2] = new Vector3(20, 0, -2000);
             borders[3] = new Vector3(-20, 0, -2000);
 
+            //create map
             map = new FieldMap((int)Math.Abs(borders[0].X - borders[3].X) / squareSize,
                 (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
 
+            //if game is a real game and not a practice
             if (gameType == GameType.Hide || gameType == GameType.Seek)
             {
                 Random rand = new Random(10);
                 items = new Item[numOfItems];
                 for (int i = 0; i < numOfItems; i++)
                 {
-                    //TODO: XML file with all settings
-                    items[i] = new Rock(Game, new Vector3(20 - rand.Next(41), 0, -100 * i - 100), new Vector3(10, 10, 10), 0, this, i);
+                    items[i] = new Rock(Game, new Vector3(20 - rand.Next(41), 0, -100 * i - 100), new Vector3(0.25f, 0.25f, 0.25f), 0, this, i);
                     //tell map that this place is off-limits
                     map.addBlock((int)Math.Abs(items[i].position.X - borders[1].X) / squareSize, (int)-items[i].position.Z / squareSize);
-                    //depending on item size may need to block 2 or more squares?
                 }
             }
 
             hiders = new Hider[numOfHiders];
+            //if human player is a hider
             if (gameType == GameType.Hide)
             {
+                //create human hider
                 humanPlayer = new HumanHider(Game, this, new Vector3(0, 0, 0), 5, 10, 0);
                 hiders[0] = (Hider)humanPlayer;
+                //create rest of hiders to be virtual players
                 for (int i = 1; i < numOfHiders; i++)
                     hiders[i] = new VirtualHider(Game, this, new Vector3(10 * i, 0, 0) + borders[1], 5, 10, i + 1);
+                //create virtual seeker
                 seeker = new VirtualSeeker(Game, this, new Vector3(5, 0, 0), 5, 10, 1, countNum);
             }
+            //if human player is a seeker
             else if (gameType == GameType.Seek)
             {
+                //create human seeker
                 humanPlayer = new HumanSeeker(Game, this, new Vector3(0, 0, 0), 5, 10, 0, countNum);
                 seeker = (Seeker)humanPlayer;
+                //create all hiders to be virtual players
                 for (int i = 0; i < numOfHiders; i++)
                     hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
             }
+            //tell map that locations of all players are off-limits
             for (int i=0;i<numOfHiders;i++)
                 map.addBlock((int)Math.Abs(((Player)hiders[i]).location.X - borders[1].X) / squareSize, (int)-((Player)hiders[i]).location.Z / squareSize);
             map.addBlock((int)Math.Abs(((Player)seeker).location.X - borders[1].X) / squareSize, (int)-((Player)seeker).location.Z / squareSize);
-            //need to initialize for practice modes!
-
             base.Initialize();
         }
 
@@ -104,7 +118,6 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
-            //Console.WriteLine(map);
             base.Update(gameTime);
         }
 
@@ -120,7 +133,7 @@ namespace HideAndSeek
                 (int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize);
         }
 
-        // get next space for player, using DFS (probably needs to be changed!)
+        // get next space for player, which is closest to their goal
         internal float[] getBestSpace(Vector3 location, Vector3 goal)
         {
             FieldNode node = map.getClosestNext(locToNode(location), locToNode(goal));
@@ -156,21 +169,25 @@ namespace HideAndSeek
             return res;
         }
 
+        //returns borders of square which contains location
         public float[] locSquare(Vector3 location)
         {
             return nodeToLoc(locToNode(location));
         }
 
+        //x-size of map
         internal int mapSizeX()
         {
             return (int)(Math.Abs(borders[0].X - borders[1].X)) / squareSize;
         }
 
+        //y-size of map
         internal int mapSizeY()
         {
             return (int)(Math.Abs(borders[2].Z)) / squareSize;
         }
 
+        //returns neighboring space which has been seen least recently
         public float[] findBestNotSeen(float[] prevSpace, int[,] seenMap) 
         {
             FieldNode node = map.findBestNotSeen(spaceToNode(prevSpace), seenMap);
@@ -178,21 +195,25 @@ namespace HideAndSeek
             return nodeToLoc(node);
         }
 
+        //returns whether a space is available
         internal bool isAvailable(float[] nextSpace)
         {
             return map.isAvailable(spaceToNode(nextSpace));
         }
 
+        //converts the borders of a space to the node which represents it
         public FieldNode spaceToNode(float[] nextSpace)
         {
             return new FieldNode((int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize);
         }
 
+        //string representation of world
         public override string ToString()
         {
             return map.ToString();
         }
 
+        //returns neighboring space which is closest possible to starting point
         internal float[] getNextRunSpace(Vector3 location)
         {
             FieldNode node = map.findRunSpace(locToNode(location));

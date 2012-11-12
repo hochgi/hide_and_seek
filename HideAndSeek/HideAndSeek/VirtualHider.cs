@@ -86,17 +86,18 @@ namespace HideAndSeek
         {
             try
             {
-                //call world
+                //find next space to advance to 
                 return world.getBestSpace(location, spot.position);
             }
             catch (SpotTakenException e)
             {
+                //if spot is now taken, need to find new spot
                 spot = null;
                 return null;
             }
         }
 
-
+        //if hider was found, start to run back
         public void Found()
         {
             Console.WriteLine(this + " was found!  Starting to run back!");
@@ -114,6 +115,7 @@ namespace HideAndSeek
             return rv;
         }
 
+        //string representation of the hider
         public override string ToString()
         {
             return "Hider " + base.ToString();
