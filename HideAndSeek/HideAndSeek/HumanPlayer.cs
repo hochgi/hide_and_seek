@@ -62,22 +62,32 @@ namespace HideAndSeek
                 Vector3 tempHead = prevHead;
                 prevHead = myInput.getHeadPosition();
                 location = location - tempHead + prevHead;
+                //if player is walking into an item, undo last step
+                if (world.isConflict(location))
+                    location = location - prevHead + tempHead;
                 //check if player is walking and update location accordingly
                 WalkingState state = myInput.getWalkingState();
                 if (state == WalkingState.Forwards)
                 {
                     Console.WriteLine(this + " Walking forwards");
                     location.Z -= walkSpeed;
+                    //if player is walking into an item, undo last step
+                    if (world.isConflict(location))
+                        location.Z += walkSpeed;
                 }
                 else if (state == WalkingState.Backwards)
                 {
                     Console.WriteLine(this + " Walking backwards");
                     location.Z += walkSpeed;
+                    //if player is walking into an item, undo last step
+                    if (world.isConflict(location))
+                        location.Z -= walkSpeed;
                 }
                 //update face direction
                 faceDir = myInput.getFaceDirection();
                 //if player has passed into another square on map, update it
-                if (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X >= prevSpace[2] || location.Z <= prevSpace[3])
+                if (((prevSpace != null) && (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X >= prevSpace[2]
+                    || location.Z <= prevSpace[3])) || (prevSpace == null && !world.isOutOfBounds(location)))
                 {
                     float[] temp = prevSpace;
                     prevSpace = world.locSquare(location);

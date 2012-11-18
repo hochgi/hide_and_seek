@@ -77,7 +77,7 @@ namespace HideAndSeek
                 {
                     items[i] = new Rock(Game, new Vector3(20 - rand.Next(41), 0, -100 * i - 100), new Vector3(0.25f, 0.25f, 0.25f), 0, this, i);
                     //tell map that this place is off-limits
-                    map.addBlock((int)Math.Abs(items[i].position.X - borders[1].X) / squareSize, (int)-items[i].position.Z / squareSize);
+                    map.addItem(items[i], (int)Math.Abs(items[i].position.X - borders[1].X) / squareSize, (int)-items[i].position.Z / squareSize);
                 }
             }
 
@@ -144,7 +144,7 @@ namespace HideAndSeek
         private FieldNode locToNode(Vector3 location)
         {
             //if location is outside of game borders
-            if (location.X > borders[0].X || location.X < borders[1].X || location.Z > 0 || location.Z < borders[2].Z)
+            if (isOutOfBounds(location))
                 return new FieldNode(-1, -1);
             //if location is on borders
             if (location.X == borders[0].X)
@@ -227,9 +227,23 @@ namespace HideAndSeek
             return nodeToLoc(node);
         }
 
+        //remove marking that a certain space is off-limits
         internal void removeBlock(float[] prevSpace)
         {
             map.removeBlock(spaceToNode(prevSpace));
+        }
+        
+        //returns whether location is in conflict with one of the items
+        internal bool isConflict(Vector3 location)
+        {
+            if (isOutOfBounds(location))
+                return false;
+            return map.isConflict(location, locToNode(location));
+        }
+
+        public bool isOutOfBounds(Vector3 location)
+        {
+            return (location.X > borders[0].X || location.X < borders[1].X || location.Z > 0 || location.Z < borders[2].Z);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace HideAndSeek
 {
@@ -12,6 +13,7 @@ namespace HideAndSeek
         int sizeY;
 
         int[,] map;
+        List<Item>[,] itemMap;
 
         //constructor for FieldMap class
         public FieldMap(int x, int y)
@@ -19,9 +21,13 @@ namespace HideAndSeek
             sizeX = x;
             sizeY = y;
             map = new int[x, y];
+            itemMap = new List<Item>[x, y];
             for (int i = 0; i < x; i++)
                 for (int j = 0; j < y; j++)
-                    map[i,j] = 0;
+                {
+                    map[i, j] = 0;
+                    itemMap[i, j] = null;
+                }
         }
 
         // add a space in map which players can't walk on
@@ -30,11 +36,22 @@ namespace HideAndSeek
             map[x, y]++;
         }
 
+        // add item to map
+        public void addItem(Item item, int x, int y)
+        {
+            map[x, y]++;
+            if (itemMap[x, y] == null)
+                itemMap[x, y] = new List<Item>();
+            itemMap[x, y].Add(item);
+        }
+
         //notify map that someone moved from [x,y] to [z,w]
         public void moveSomeone(FieldNode node1, FieldNode node2)
         {
-            map[node1.x, node1.y]--;
-            map[node2.x, node2.y]++;
+            if (node1 != null && node1.x >= 0 && node1.y >= 0)
+                map[node1.x, node1.y]--;
+            if (node2 != null && node2.x >= 0 && node2.y >= 0)
+                map[node2.x, node2.y]++;
         }
 
         // find the neighbor where the Seeker has been least recently
@@ -302,9 +319,22 @@ namespace HideAndSeek
             return null;
         }
 
+        //lower count of objects in a certain space
         internal void removeBlock(FieldNode fieldNode)
         {
             map[fieldNode.x, fieldNode.y]--;
+        }
+
+        //returns whether location is in conflict with one of the items
+        internal bool isConflict(Vector3 location, FieldNode fieldNode)
+        {
+            List<Item> items = itemMap[fieldNode.x, fieldNode.y];
+            if (items == null)
+                return false;
+            foreach (Item item in items)
+                if (item.isConflict(location))
+                    return true;
+            return false;
         }
     }
 

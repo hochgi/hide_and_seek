@@ -108,6 +108,8 @@ namespace HideAndSeek
         {
             return "Item " + id + " at " + position;
         }
+
+        internal abstract bool isConflict(Vector3 location);
     }
 
     //represents a rock as an item
@@ -127,6 +129,12 @@ namespace HideAndSeek
         protected override List<PrimitiveShape> getCageShapes()
         {
             return cage;
+        }
+
+        //return whether location is conflicting with location
+        internal override bool isConflict(Vector3 location)
+        {
+            throw new NotImplementedException();
         }
     }
 }
