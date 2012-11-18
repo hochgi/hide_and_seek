@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 namespace HideAndSeek
 {
     //different phases a player can be in
-    public enum Phase { Counting, Looking, Hiding, Running, Done }
+    public enum Phase { Counting, Looking, Hiding, Running, RunningEnd, Done }
 
     //represents a player played by the computer
     /// <summary>
@@ -114,8 +114,15 @@ namespace HideAndSeek
                         //update the player's location
                         world.updateLocation(prevSpace, nextSpace);
                         prevSpace = nextSpace;
-                        // find space which will get player back to starting point fastest
-                        nextSpace = world.getNextRunSpace(location);
+                        //if we have reached the space at the end
+                        if (nextSpace != null && nextSpace[1] == 0)
+                        {
+                            nextSpace = null;
+                            phase = Phase.RunningEnd;
+                        }
+                        else
+                            // find space which will get player back to starting point fastest
+                            nextSpace = world.getNextRunSpace(location);
                     }
                     // move towards next square
                     else
@@ -135,6 +142,10 @@ namespace HideAndSeek
                 //if nextSpace hasn't been initialized, get a space
                 else
                     nextSpace = world.getNextRunSpace(location);
+            }
+            else if (phase == Phase.RunningEnd)
+            {
+                location.Z += runSpeed;
             }
             //if player is waiting for game to be done
             else if (phase == Phase.Done)

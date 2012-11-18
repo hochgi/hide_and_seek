@@ -91,7 +91,7 @@ namespace HideAndSeek
                 }
             }
             //if seeker is running
-            else if (phase == Phase.Running)
+            else if (phase == Phase.Running || phase == Phase.RunningEnd)
             {
                 //check status of seeker in relation to opponent
                 SeekerStatus status = seeker.Status(location);

@@ -60,9 +60,13 @@ namespace HideAndSeek
                 Console.WriteLine(this + " going to hide at " + spot);
             }
             //if hider was running back to zero and has passed it, change phase to done
-            else if (phase == Phase.Running && location.Z >= 0)
+            else if ((phase == Phase.Running || phase == Phase.RunningEnd) && location.Z >= 0)
+            {
                 phase = Phase.Done;
-
+                //just make sure hider has left boundaries of game so as to stay out of the way
+                location.Z += 1;
+                world.removeBlock(prevSpace);
+            }
             base.Update(gameTime);
         }
 

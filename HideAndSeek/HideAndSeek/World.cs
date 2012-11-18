@@ -129,8 +129,7 @@ namespace HideAndSeek
         // tell field map that a player has moved from one square to another.
         internal void updateLocation(float[] prevSpace, float[] nextSpace)
         {
-            map.moveSomeone((int)Math.Abs(prevSpace[0] - borders[1].X) / squareSize, (int)-prevSpace[1] / squareSize,
-                (int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize);
+            map.moveSomeone(spaceToNode(prevSpace), spaceToNode(nextSpace));
         }
 
         // get next space for player, which is closest to their goal
@@ -144,6 +143,10 @@ namespace HideAndSeek
         // convert 3D location to node on field map
         private FieldNode locToNode(Vector3 location)
         {
+            //if location is outside of game borders
+            if (location.X > borders[0].X || location.X < borders[1].X || location.Z > 0 || location.Z < borders[2].Z)
+                return new FieldNode(-1, -1);
+            //if location is on borders
             if (location.X == borders[0].X)
             {
                 if (location.Z == borders[2].Z)
@@ -153,13 +156,14 @@ namespace HideAndSeek
             }
             else if (location.Z == borders[2].Z)
                 return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize, (int)-location.Z / squareSize - 1);
+            //if location is well inside game
             return new FieldNode((int)Math.Abs(location.X - borders[1].X) / squareSize, (int)-location.Z / squareSize);
         }
 
         // convert node to 3D location
         public float[] nodeToLoc(FieldNode node)
         {
-            if (node == null)
+            if (node == null || node.x < 0 || node.y < 0)
                 return null;
             float[] res = new float[4];
             res[0] = node.x * squareSize + borders[1].X;
@@ -204,6 +208,8 @@ namespace HideAndSeek
         //converts the borders of a space to the node which represents it
         public FieldNode spaceToNode(float[] nextSpace)
         {
+            if (nextSpace == null)
+                return new FieldNode(-1, -1);
             return new FieldNode((int)Math.Abs(nextSpace[0] - borders[1].X) / squareSize, (int)-nextSpace[1] / squareSize);
         }
 
@@ -219,6 +225,11 @@ namespace HideAndSeek
             FieldNode node = map.findRunSpace(locToNode(location));
             Console.WriteLine("RunSpace: " + node);
             return nodeToLoc(node);
+        }
+
+        internal void removeBlock(float[] prevSpace)
+        {
+            map.removeBlock(spaceToNode(prevSpace));
         }
     }
 }

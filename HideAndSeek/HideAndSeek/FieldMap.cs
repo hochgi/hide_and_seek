@@ -31,10 +31,10 @@ namespace HideAndSeek
         }
 
         //notify map that someone moved from [x,y] to [z,w]
-        public void moveSomeone(int x, int y, int z, int w)
+        public void moveSomeone(FieldNode node1, FieldNode node2)
         {
-            map[x, y]--;
-            map[z, w]++;
+            map[node1.x, node1.y]--;
+            map[node2.x, node2.y]++;
         }
 
         // find the neighbor where the Seeker has been least recently
@@ -300,6 +300,11 @@ namespace HideAndSeek
             if (y + 1 < sizeY && x + 1 < sizeX && map[x + 1, y + 1] == 0)
                 return new FieldNode(x + 1, y + 1);
             return null;
+        }
+
+        internal void removeBlock(FieldNode fieldNode)
+        {
+            map[fieldNode.x, fieldNode.y]--;
         }
     }
 
