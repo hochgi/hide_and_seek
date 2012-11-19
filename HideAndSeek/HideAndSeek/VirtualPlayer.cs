@@ -95,6 +95,13 @@ namespace HideAndSeek
                                 location.Z += walkSpeed;
                             else if (location.Z >= nextSpace[3])
                                 location.Z -= walkSpeed;
+                            //if (location.X < nextSpace[0])
+                            //{
+                            //    if (location.Z<nextSpace[1])
+                            //    {
+                            //        float 
+                            //        location.X+=(float)walkSpeed/Math.Sqrt(2);
+
                         }
                     }
                 }

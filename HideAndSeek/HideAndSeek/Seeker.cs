@@ -14,5 +14,7 @@ namespace HideAndSeek
 
         //return the location of Seeker's eyes
         Vector3 getEyesPosition();
+
+        Vector3 Location { get; }
     }
 }

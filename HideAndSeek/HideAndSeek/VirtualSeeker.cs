@@ -124,11 +124,7 @@ namespace HideAndSeek
         //returns whether or not seeker notices hider
         private bool CanFind(Hider hider)
         {
-            float visibleBodyParts;
-            if (CanSee(hider))
-                visibleBodyParts = 1.0f;
-            else
-                visibleBodyParts = 0f;
+            float visibleBodyParts = CanSee(hider);
             //calculate relative distance to hider within sight range
             float distPercentage = GetDistPercentage(GetDist(hider));
             //calculate total probability of seeker noticing hider
@@ -159,24 +155,29 @@ namespace HideAndSeek
         //returns distance between seeker and hider
         private float GetDist(Hider hider)
         {
-            float xDist = location.X - ((Player)hider).location.X;
-            float zDist = location.Z - ((Player)hider).location.Z;
+            float xDist = location.X - hider.Location.X;
+            float zDist = location.Z - hider.Location.Z;
             return (float)Math.Sqrt(xDist * xDist + zDist * zDist);
         }
 
         //returns whether or not seeker can see hider
-        private bool CanSee(Hider hider)
+        private float CanSee(Hider hider)
         {
-            //for each item in world
-            for (int j = 0; j < world.numOfItems; j++)
-            {
-                //if seeker can't see hider
-                if (world.items[j].IsBlocking(this, hider))
+            List<Vector3> locs=hider.getPartsPositions();
+            float res = 0.5f;
+            float frac = 0.5f / locs.Count;
+            //for each body part in hider
+            foreach (Vector3 loc in locs)
+                //for each item in world
+                for (int j = 0; j < world.numOfItems; j++)
                 {
-                    return false;
+                    //if seeker can't see hider
+                    if (!world.items[j].IsBlocking(this, loc))
+                    {
+                        res += frac;
+                    }
                 }
-            }
-            return true;
+            return res;
         }
 
         //if arrive at new space, look to see if any hider is visible
@@ -216,6 +217,11 @@ namespace HideAndSeek
         public override string ToString()
         {
             return "Seeker " + base.ToString();
+        }
+
+        public Vector3 Location
+        {
+            get { return location; }
         }
     }
 }

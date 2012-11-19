@@ -21,6 +21,10 @@ namespace HideAndSeek
         //hiding spot hider has selected
         Item spot;
 
+        //locations of body parts in relation to location
+        //0=head, 1=r. hand, 2=l.hand, 3=r.foot, 4=l.foot
+        Vector3[] bodyParts;
+
         //constructor for VirtualHider class
         public VirtualHider(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
             : base(game, world, location, walkSpeed, runSpeed, id)
@@ -36,6 +40,12 @@ namespace HideAndSeek
         {
             spot = null;
             phase = Phase.Looking;
+            bodyParts = new Vector3[5];
+            bodyParts[0] = new Vector3(0, 10, 0);
+            bodyParts[1] = new Vector3(-2.5f, 5, 0);
+            bodyParts[2] = new Vector3(2.5f, 5, 0);
+            bodyParts[3] = new Vector3(-2.5f, 0, 0);
+            bodyParts[4] = new Vector3(2.5f, 0, 0);
 
             base.Initialize();
         }
@@ -60,7 +70,7 @@ namespace HideAndSeek
                 Console.WriteLine(this + " going to hide at " + spot);
             }
             //if hider was running back to zero and has passed it, change phase to done
-            else if ((phase == Phase.Running || phase == Phase.RunningEnd) && location.Z >= 0)
+            else if ((phase == Phase.Running || phase == Phase.RunningEnd) && Location.Z >= 0)
             {
                 phase = Phase.Done;
                 //just make sure hider has left boundaries of game so as to stay out of the way
@@ -91,7 +101,7 @@ namespace HideAndSeek
             try
             {
                 //find next space to advance to 
-                return world.getBestSpace(location, spot.position);
+                return world.getBestSpace(Location, spot.position);
             }
             catch (SpotTakenException e)
             {
@@ -112,9 +122,11 @@ namespace HideAndSeek
         public List<Vector3> getPartsPositions()
         {
             List<Vector3> rv = new List<Vector3>();
-            rv.Add(new Vector3(location.X + 2.5f, location.Y, location.Z));
-            rv.Add(new Vector3(location.X - 2.5f, location.Y, location.Z));
-            rv.Add(new Vector3(location.X, location.Y + 10, location.Z));
+            for (int i = 0; i < 5; i++)
+                rv.Add(Location + bodyParts[i]);
+            //rv.Add(new Vector3(location.X + 2.5f, location.Y, location.Z));
+            //rv.Add(new Vector3(location.X - 2.5f, location.Y, location.Z));
+            //rv.Add(new Vector3(location.X, location.Y + 10, location.Z));
 
             return rv;
         }
@@ -123,6 +135,12 @@ namespace HideAndSeek
         public override string ToString()
         {
             return "Hider " + base.ToString();
+        }
+
+
+        public new Vector3 Location
+        {
+            get { return location; }
         }
     }
 }

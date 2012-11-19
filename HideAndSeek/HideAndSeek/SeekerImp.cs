@@ -74,7 +74,7 @@ namespace HideAndSeek
                 }
             }
             //if hider reached zero before seeker
-            else if (((Player)opponent).location.Z >= 0)
+            else if (opponent.Location.Z >= 0)
             {
                 //hider won
                 opponent.win();

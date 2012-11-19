@@ -51,7 +51,7 @@ namespace HideAndSeek
         public List<Vector3> getPartsPositions()
         {
             List<Vector3> res = new List<Vector3>();
-            res.Add(new Vector3(location.X, location.Y, location.Z));
+            res.Add(new Vector3(Location.X, Location.Y, Location.Z));
             return res;
         }
 
@@ -64,6 +64,12 @@ namespace HideAndSeek
         public override string ToString()
         {
             return "Hider " + base.ToString();
+        }
+
+
+        public new Vector3 Location
+        {
+            get { return location; }
         }
     }
 }

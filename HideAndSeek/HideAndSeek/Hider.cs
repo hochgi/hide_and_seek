@@ -17,5 +17,7 @@ namespace HideAndSeek
 
         //what to do when win against Seeker
         void win();
+
+        Vector3 Location { get; }
     }
 }

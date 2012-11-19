@@ -54,7 +54,7 @@ namespace HideAndSeek
             //if not done counting yet
             if (count < countNum)
             {
-                int lastCount = 0;
+                int lastCount = count + 1;//lastCount should be the number obtained from voice input
                 if (lastCount == count + 1)
                     count++;
                 if (count == countNum)
@@ -92,6 +92,25 @@ namespace HideAndSeek
         public Hider selectHider()
         {
             //follow arm and find out who player is pointing at.  if nobody, return null.
+            //temporary code!
+            foreach (Hider hider in world.hiders)
+                //if seeker has not yet found hider, and notices them
+                if (!seeker.foundYet(hider))
+                {
+                    bool blocked = false;
+                    for (int j = 0; j < world.numOfItems; j++)
+                    {
+                        //if seeker can't see hider
+                        if (world.items[j].IsBlocking(this, hider.Location))
+                        {
+                            blocked = true;
+                        }
+                    }
+                    if (!blocked)
+                        return hider;
+                }
+            return null;
+            //end of temporary code!!!
             throw new NotImplementedException();
         }
 
@@ -105,6 +124,11 @@ namespace HideAndSeek
         public override string ToString()
         {
             return "Seeker " + base.ToString();
+        }
+
+        public Vector3 Location
+        {
+            get { return location; }
         }
     }
 }

@@ -85,17 +85,13 @@ namespace HideAndSeek
         }
 
         //checks whether item is blocking seeker from seeing hider
-        public bool IsBlocking(Seeker seeker, Hider hider)
+        public bool IsBlocking(Seeker seeker, Vector3 loc)
         {
             bool rv = false;
 
-            foreach(PrimitiveShape p in getCageShapes())
+            foreach (PrimitiveShape p in getCageShapes())
             {
-                foreach (Vector3 v in hider.getPartsPositions())
-                {
-
-                    rv = rv || p.isBlockingLineOfSight(seeker.getEyesPosition(), v);
-                }
+                rv = rv || p.isBlockingLineOfSight(seeker.getEyesPosition(), loc);
             }
             return rv;
         }

@@ -106,8 +106,8 @@ namespace HideAndSeek
             }
             //tell map that locations of all players are off-limits
             for (int i=0;i<numOfHiders;i++)
-                map.addBlock((int)Math.Abs(((Player)hiders[i]).location.X - borders[1].X) / squareSize, (int)-((Player)hiders[i]).location.Z / squareSize);
-            map.addBlock((int)Math.Abs(((Player)seeker).location.X - borders[1].X) / squareSize, (int)-((Player)seeker).location.Z / squareSize);
+                map.addBlock((int)Math.Abs(hiders[i].Location.X - borders[1].X) / squareSize, (int)-(hiders[i].Location.Z / squareSize);
+            map.addBlock((int)Math.Abs((seeker.Location.X - borders[1].X)) / squareSize, (int)-seeker.Location.Z / squareSize);
             base.Initialize();
         }
 
