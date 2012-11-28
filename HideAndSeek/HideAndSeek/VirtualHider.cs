@@ -29,7 +29,8 @@ namespace HideAndSeek
         public VirtualHider(Game game, Vector3 location, int walkSpeed, int runSpeed, int id)
             : base(game, location, walkSpeed, runSpeed, id)
         {
-            // TODO: Construct any child components here
+            spot = null;
+            phase = Phase.Looking;
         }
 
         /// <summary>
@@ -38,8 +39,6 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            spot = null;
-            phase = Phase.Looking;
             bodyParts = new Vector3[5];
             bodyParts[0] = new Vector3(0, 10, 0);
             bodyParts[1] = new Vector3(-2.5f, 5, 0);
@@ -60,6 +59,7 @@ namespace HideAndSeek
             //if hider is looking for a spot but has not chosen one yet
             if (phase == Phase.Looking && spot == null)
             {
+                Console.WriteLine(this + " is looking for a spot and hasn't found one yet!!");
                 //choose random spot which is not taken
                 Random rand = new Random();
                 spot = World.getWorld().items[rand.Next(World.getWorld().numOfItems)];
@@ -72,11 +72,14 @@ namespace HideAndSeek
             //if hider was running back to zero and has passed it, change phase to done
             else if ((phase == Phase.Running || phase == Phase.RunningEnd) && Location.Z >= 0)
             {
+                Console.WriteLine(this + " is running! (Updating VirtualHider)");
                 phase = Phase.Done;
                 //just make sure hider has left boundaries of game so as to stay out of the way
                 location.Z += 1;
                 World.getWorld().removeBlock(prevSpace);
             }
+            if (phase == Phase.Hiding)
+                Console.WriteLine(this + " is hiding at " + "!");
             base.Update(gameTime);
         }
 

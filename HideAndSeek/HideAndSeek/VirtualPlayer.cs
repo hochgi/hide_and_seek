@@ -59,6 +59,7 @@ namespace HideAndSeek
             //if player is looking (seeker may be looking for a hider; hider may be looking for a hiding spot)
             if (phase == Phase.Looking)
             {
+                Console.WriteLine(this + " is looking for my spot!");
                 if (nextSpace != null && nextSpace.Length == 4)
                 {
                     // if player has reached the next square then:
@@ -74,7 +75,8 @@ namespace HideAndSeek
                             Console.WriteLine(this + " action was not successful.  Going to keep looking.");
                             nextSpace = getNextSpace();
                             if (nextSpace != null)
-                                Console.WriteLine(this + " chose next space: " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
+                                Console.WriteLine(this + " chose next space: " + nextSpace[0] + " " + nextSpace[1]
+                                    + " " + nextSpace[2] + " " + nextSpace[3]);
                         }
                         else
                             nextSpace = null;
@@ -96,6 +98,7 @@ namespace HideAndSeek
             //if player is running
             else if (phase == Phase.Running)
             {
+                Console.WriteLine(this + " is running! (Updating VirtualPlayer)");
                 if (nextSpace != null && nextSpace.Length == 4)
                 {
                     // if player has reached the next square then:
@@ -129,6 +132,7 @@ namespace HideAndSeek
             }
             else if (phase == Phase.RunningEnd)
             {
+                Console.WriteLine(this + " is Running in last space!");
                 location.Z += runSpeed;
             }
             //if player is waiting for game to be done

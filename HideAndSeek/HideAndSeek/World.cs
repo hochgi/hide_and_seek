@@ -22,7 +22,7 @@ namespace HideAndSeek
     public class World : Microsoft.Xna.Framework.GameComponent
     {
         //type of game being played
-        public GameType gameType = GameType.HidePractice;
+        public GameType gameType = GameType.SeekPractice;
         //number seeker needs to count to
         int countNum = 100;
         //number of hiders

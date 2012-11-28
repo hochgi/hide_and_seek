@@ -52,7 +52,7 @@ namespace HideAndSeek
         {
             Console.WriteLine(this + " updating...");
             //if not done counting yet
-            if (count < countNum)
+            if (counting || count < countNum)
             {
                 int lastCount = count + 1;//lastCount should be the number obtained from voice input
                 if (lastCount == count + 1)
