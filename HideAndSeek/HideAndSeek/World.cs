@@ -22,7 +22,7 @@ namespace HideAndSeek
     public class World : Microsoft.Xna.Framework.GameComponent
     {
         //type of game being played
-        public GameType gameType = GameType.Hide;
+        public GameType gameType = GameType.HidePractice;
         //number seeker needs to count to
         int countNum = 100;
         //number of hiders
@@ -136,6 +136,7 @@ namespace HideAndSeek
                 numOfHiders = 1;
                 items = new Item[1];
                 items[0] = new Rock(Game, new Vector3(0, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
+                Console.WriteLine("only item: " + items[0]);
                 hiders = new Hider[1];
                 humanPlayer = new HumanHider(Game, new Vector3(0, 0, 0), 5, 10, 0);
                 hiders[0] = (Hider)humanPlayer;

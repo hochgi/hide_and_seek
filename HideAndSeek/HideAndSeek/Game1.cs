@@ -44,6 +44,7 @@ namespace HideAndSeek
         /// </summary>
         protected override void Initialize()
         {
+            World.getWorld(this);
             m_CameraTargetPosition = new Vector3(0, 0, -100);
             m_CameraUpDirection = new Vector3(0, 1, 0);
 
