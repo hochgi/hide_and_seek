@@ -69,7 +69,15 @@ namespace HideAndSeek
                     //check if player is pointing at a specific hider and if so start racing against them
                     Hider hider = selectHider();
                     if (hider != null)
+                    {
+                        //if player was playing in practice mode, once they found one hider the game is over.
+                        if (world.gameType == GameType.SeekPractice)
+                        {
+                            Console.WriteLine("Good job finding that hider!");
+                            Game.Exit();
+                        }
                         seeker.hiderFound(hider);
+                    }
                 }
             }
             //if seeker is racing
@@ -101,7 +109,7 @@ namespace HideAndSeek
                     for (int j = 0; j < world.numOfItems; j++)
                     {
                         //if seeker can't see hider
-                        if (world.items[j].IsBlocking(this, hider.Location))
+                        if (world.items[j].IsBlocking(getEyesPosition(), hider.Location))
                         {
                             blocked = true;
                         }
@@ -129,6 +137,11 @@ namespace HideAndSeek
         public Vector3 Location
         {
             get { return location; }
+        }
+
+        internal void skipCounting()
+        {
+            counting = false;
         }
     }
 }

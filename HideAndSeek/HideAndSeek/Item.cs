@@ -12,6 +12,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
+    //different types of items
+    public enum ItemType { Rock };
+
     //represents an item which players can hide behind
     /// <summary>
     /// This is a game component that implements IUpdateable.
@@ -85,13 +88,13 @@ namespace HideAndSeek
         }
 
         //checks whether item is blocking seeker from seeing hider
-        public bool IsBlocking(Seeker seeker, Vector3 loc)
+        public bool IsBlocking(Vector3 eyes, Vector3 loc)
         {
             bool rv = false;
 
             foreach (PrimitiveShape p in getCageShapes())
             {
-                rv = rv || p.isBlockingLineOfSight(seeker.getEyesPosition(), loc);
+                rv = rv || p.isBlockingLineOfSight(eyes, loc);
             }
             return rv;
         }
@@ -106,6 +109,12 @@ namespace HideAndSeek
         }
 
         internal abstract bool isConflict(Vector3 location);
+
+        //return the best location for the item so that it is as close as possible to the front of the square
+        static public Vector3 findBestLoc(float[] square, ItemType type)
+        {
+            return new Vector3(square[0], 0, square[1]);
+        }
     }
 
     //represents a rock as an item

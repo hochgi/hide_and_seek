@@ -60,15 +60,6 @@
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Coding4Fun.Kinect.WinForm">
-      <HintPath>..\HideAndSeekLib\Coding4Fun-references\Coding4Fun.Kinect.WinForm.dll</HintPath>
-    </Reference>
-    <Reference Include="Coding4Fun.Kinect.Wpf">
-      <HintPath>..\HideAndSeekLib\Coding4Fun-references\Coding4Fun.Kinect.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Research.Kinect">
-      <HintPath>..\HideAndSeekLib\MS\Microsoft.Research.Kinect.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
       <Private>False</Private>
     </Reference>

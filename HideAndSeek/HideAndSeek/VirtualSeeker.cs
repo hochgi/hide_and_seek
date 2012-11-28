@@ -124,7 +124,7 @@ namespace HideAndSeek
         //returns whether or not seeker notices hider
         private bool CanFind(Hider hider)
         {
-            float visibleBodyParts = CanSee(hider);
+            float visibleBodyParts = seeker.CanSee(hider, getEyesPosition());
             //calculate relative distance to hider within sight range
             float distPercentage = GetDistPercentage(GetDist(hider));
             //calculate total probability of seeker noticing hider
@@ -158,26 +158,6 @@ namespace HideAndSeek
             float xDist = location.X - hider.Location.X;
             float zDist = location.Z - hider.Location.Z;
             return (float)Math.Sqrt(xDist * xDist + zDist * zDist);
-        }
-
-        //returns whether or not seeker can see hider
-        private float CanSee(Hider hider)
-        {
-            List<Vector3> locs=hider.getPartsPositions();
-            float res = 0.5f;
-            float frac = 0.5f / locs.Count;
-            //for each body part in hider
-            foreach (Vector3 loc in locs)
-                //for each item in world
-                for (int j = 0; j < world.numOfItems; j++)
-                {
-                    //if seeker can't see hider
-                    if (!world.items[j].IsBlocking(this, loc))
-                    {
-                        res += frac;
-                    }
-                }
-            return res;
         }
 
         //if arrive at new space, look to see if any hider is visible

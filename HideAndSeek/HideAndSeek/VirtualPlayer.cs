@@ -86,23 +86,7 @@ namespace HideAndSeek
                         if (!world.isAvailable(nextSpace))
                             nextSpace = getNextSpace();
                         if (nextSpace != null)
-                        {
-                            if (location.X < nextSpace[0])
-                                location.X += walkSpeed;
-                            else if (location.X >= nextSpace[2])
-                                location.X -= walkSpeed;
-                            if (location.Z < nextSpace[1])
-                                location.Z += walkSpeed;
-                            else if (location.Z >= nextSpace[3])
-                                location.Z -= walkSpeed;
-                            //if (location.X < nextSpace[0])
-                            //{
-                            //    if (location.Z<nextSpace[1])
-                            //    {
-                            //        float 
-                            //        location.X+=(float)walkSpeed/Math.Sqrt(2);
-
-                        }
+                            move(walkSpeed);
                     }
                 }
                 //if nextSpace is null, find a new one
@@ -136,14 +120,7 @@ namespace HideAndSeek
                     {
                         if (!world.isAvailable(nextSpace))
                             nextSpace = getNextSpace();
-                        if (location.X < nextSpace[0])
-                            location.X += runSpeed;
-                        else if (location.X >= nextSpace[2])
-                            location.X -= runSpeed;
-                        if (location.Z < nextSpace[1])
-                            location.Z += runSpeed;
-                        else if (location.Z >= nextSpace[3])
-                            location.Z -= runSpeed;
+                        move(runSpeed);
                     }
                 }
                 //if nextSpace hasn't been initialized, get a space
@@ -160,6 +137,45 @@ namespace HideAndSeek
             }
             myDrawable.updateLocation(location);
             base.Update(gameTime);
+        }
+
+        private void move(int speed)
+        {
+            float addition = (float)(speed / Math.Sqrt(2));
+            if (location.X < nextSpace[0])
+            {
+                if (location.Z < nextSpace[1])
+                {
+                    location.X += addition;
+                    location.Z += addition;
+                }
+                else if (location.Z >= nextSpace[3])
+                {
+                    location.X += addition;
+                    location.Z -= addition;
+                }
+                else
+                    location.X += speed;
+            }
+            else if (location.X >= nextSpace[2])
+            {
+                if (location.Z < nextSpace[1])
+                {
+                    location.X -= addition;
+                    location.Z += addition;
+                }
+                else if (location.Z >= nextSpace[3])
+                {
+                    location.X -= addition;
+                    location.Z -= addition;
+                }
+                else
+                    location.X -= speed;
+            }
+            else if (location.Z < nextSpace[1])
+                location.Z += speed;
+            else if (location.Z >= nextSpace[3])
+                location.Z -= speed;
         }
 
         //action to perform when reach new square

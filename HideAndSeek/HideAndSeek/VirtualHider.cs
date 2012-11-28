@@ -142,5 +142,12 @@ namespace HideAndSeek
         {
             get { return location; }
         }
+
+        internal void skipSearch(Item item)
+        {
+            spot = item;
+            location = item.position + new Vector3(0, 0, -10);//??
+            phase = Phase.Hiding;
+        }
     }
 }

@@ -94,5 +94,25 @@ namespace HideAndSeek
             //if neither hider nor seeker has reached zero yet, return that nothing has happened
             return SeekerStatus.None;
         }
+
+        //returns whether or not seeker can see hider
+        public float CanSee(Hider hider, Vector3 pos)
+        {
+            List<Vector3> locs = hider.getPartsPositions();
+            float res = 0.5f;
+            float frac = 0.5f / locs.Count;
+            //for each body part in hider
+            foreach (Vector3 loc in locs)
+                //for each item in world
+                for (int j = 0; j < world.numOfItems; j++)
+                {
+                    //if seeker can't see hider
+                    if (!world.items[j].IsBlocking(pos, loc))
+                    {
+                        res += frac;
+                    }
+                }
+            return res;
+        }
     }
 }

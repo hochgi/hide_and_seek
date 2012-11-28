@@ -22,7 +22,7 @@ namespace HideAndSeek
     public class World : Microsoft.Xna.Framework.GameComponent
     {
         //type of game being played
-        public GameType gameType = GameType.Hide;
+        public GameType gameType = GameType.SeekPractice;
         //number seeker needs to count to
         int countNum = 100;
         //number of hiders
@@ -42,6 +42,9 @@ namespace HideAndSeek
         int squareSize = 10;
         //map representing the space
         private FieldMap map;
+
+        //implementation for imaginary seeker for hide practice
+        private SeekerImp seekerImp = null;
 
         //constructor for World class
         public World(Game game)
@@ -65,8 +68,9 @@ namespace HideAndSeek
             borders[3] = new Vector3(-20, 0, -2000);
 
             //create map
-            map = new FieldMap((int)Math.Abs(borders[0].X - borders[3].X) / squareSize,
-                (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
+            int sizeX = (int)Math.Abs(borders[0].X - borders[3].X) / squareSize;
+            int sizeY = (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize);
+            map = new FieldMap(sizeX, sizeY);
 
             //if game is a real game and not a practice
             if (gameType == GameType.Hide || gameType == GameType.Seek)
@@ -75,9 +79,20 @@ namespace HideAndSeek
                 items = new Item[numOfItems];
                 for (int i = 0; i < numOfItems; i++)
                 {
-                    items[i] = new Rock(Game, new Vector3(20 - rand.Next(41), 0, -100 * i - 100), new Vector3(0.25f, 0.25f, 0.25f), 0, this, i);
-                    //tell map that this place is off-limits
-                    map.addItem(items[i], (int)Math.Abs(items[i].position.X - borders[1].X) / squareSize, (int)-items[i].position.Z / squareSize);
+                    //choose space on map which has no item in it yet
+                    FieldNode node = null;
+                    int x;
+                    int y;
+                    do
+                    {
+                        x = rand.Next(sizeX);
+                        y = rand.Next(sizeY);
+                        node = new FieldNode(x, y);
+                    } while (!map.isAvailable(node));
+                    //find optimal location in space for item
+                    Vector3 loc = Rock.findBestLoc(nodeToLoc(node), ItemType.Rock);
+                    items[i] = new Rock(Game, loc, new Vector3(0.25f, 0.25f, 0.25f), 0, this, i);
+                    map.addItem(items[i], x, y);
                 }
             }
 
@@ -104,10 +119,41 @@ namespace HideAndSeek
                 for (int i = 0; i < numOfHiders; i++)
                     hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
             }
-            //tell map that locations of all players are off-limits
-            for (int i=0;i<numOfHiders;i++)
-                map.addBlock((int)Math.Abs(hiders[i].Location.X - borders[1].X) / squareSize, (int)-(hiders[i].Location.Z / squareSize);
-            map.addBlock((int)Math.Abs((seeker.Location.X - borders[1].X)) / squareSize, (int)-seeker.Location.Z / squareSize);
+            if (gameType == GameType.HidePractice)
+            {
+                numOfItems = 1;
+                numOfHiders = 1;
+                items = new Item[1];
+                items[0] = new Rock(Game, new Vector3(0, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, this, 1);
+                hiders = new Hider[1];
+                humanPlayer = new HumanHider(Game, this, new Vector3(0, 0, 0), 5, 10, 0);
+                hiders[0] = (Hider)humanPlayer;
+                seekerImp = new SeekerImp(this);
+                seeker = null;
+            }
+            else if (gameType == GameType.SeekPractice)
+            {
+                numOfItems = 2;
+                numOfHiders = 1;
+                items = new Item[2];
+                items[0] = new Rock(Game, new Vector3(20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, this, 1);
+                items[1] = new Rock(Game, new Vector3(-20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, this, 2);
+                hiders = new Hider[1];
+                hiders[0] = new VirtualHider(Game, this, new Vector3(10, 0, 0), 5, 10, 2);
+                seeker = new HumanSeeker(Game, this, new Vector3(0, 0, 0), 5, 10, 1, 0);
+                humanPlayer = (HumanPlayer)seeker;
+                Random rand = new Random();
+                int i = rand.Next(2);
+                ((VirtualHider)hiders[0]).skipSearch(items[i]);
+                ((HumanSeeker)seeker).skipCounting();
+            }
+            else
+            {
+                //tell map that locations of all players are off-limits
+                for (int i = 0; i < numOfHiders; i++)
+                    map.addBlock((int)Math.Abs(hiders[i].Location.X - borders[1].X) / squareSize, (int)-(hiders[i].Location.Z / squareSize));
+                map.addBlock((int)Math.Abs((seeker.Location.X - borders[1].X)) / squareSize, (int)-seeker.Location.Z / squareSize);
+            }
             base.Initialize();
         }
 
@@ -118,6 +164,12 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+            //if player was hiding in practice mode, and can't be seen, game is over.
+            if (gameType == GameType.HidePractice && seekerImp.CanSee(hiders[0], Vector3.Zero) == 0)
+            {
+                Console.WriteLine("Good job hiding!");
+                Game.Exit();
+            }
             base.Update(gameTime);
         }
 
