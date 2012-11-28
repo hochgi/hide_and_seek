@@ -12,18 +12,14 @@ namespace HideAndSeek
     //implementation of functionality for Seeker
     class SeekerImp
     {
-        //world in which game is being played
-        World world;
-
         //current hider which seeker is racing against
         public Hider opponent;
         //hiders seeker has found so far
         LinkedList<Hider> hidersFound;
 
         //constructor for SeekerImp class
-        public SeekerImp(World world)
+        public SeekerImp()
         {
-            this.world = world;
             opponent = null;
             hidersFound = new LinkedList<Hider>();
         }
@@ -41,7 +37,7 @@ namespace HideAndSeek
         {
             opponent = null;
             //if all hiders have been found
-            if (hidersFound.Count == world.numOfHiders)
+            if (hidersFound.Count == World.getWorld().numOfHiders)
             {
                 return true;
             }
@@ -96,7 +92,7 @@ namespace HideAndSeek
         }
 
         //returns whether or not seeker can see hider
-        public float CanSee(Hider hider, Vector3 pos)
+        public static float CanSee(Hider hider, Vector3 pos)
         {
             List<Vector3> locs = hider.getPartsPositions();
             float res = 0.5f;
@@ -104,10 +100,10 @@ namespace HideAndSeek
             //for each body part in hider
             foreach (Vector3 loc in locs)
                 //for each item in world
-                for (int j = 0; j < world.numOfItems; j++)
+                for (int j = 0; j < World.getWorld().numOfItems; j++)
                 {
                     //if seeker can't see hider
-                    if (!world.items[j].IsBlocking(pos, loc))
+                    if (!World.getWorld().items[j].IsBlocking(pos, loc))
                     {
                         res += frac;
                     }

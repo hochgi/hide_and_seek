@@ -26,8 +26,8 @@ namespace HideAndSeek
         int count;
 
         //Constructor for HumanSeeker class
-        public HumanSeeker(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id, int countNum)
-            : base(game, world, location, walkSpeed, runSpeed, id, false)
+        public HumanSeeker(Game game, Vector3 location, int walkSpeed, int runSpeed, int id, int countNum)
+            : base(game, location, walkSpeed, runSpeed, id, false)
         {
             this.countNum = countNum;
         }
@@ -38,7 +38,7 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            seeker = new SeekerImp(world);
+            seeker = new SeekerImp();
             count = 0;
 
             base.Initialize();
@@ -71,7 +71,7 @@ namespace HideAndSeek
                     if (hider != null)
                     {
                         //if player was playing in practice mode, once they found one hider the game is over.
-                        if (world.gameType == GameType.SeekPractice)
+                        if (World.getWorld().gameType == GameType.SeekPractice)
                         {
                             Console.WriteLine("Good job finding that hider!");
                             Game.Exit();
@@ -101,15 +101,15 @@ namespace HideAndSeek
         {
             //follow arm and find out who player is pointing at.  if nobody, return null.
             //temporary code!
-            foreach (Hider hider in world.hiders)
+            foreach (Hider hider in World.getWorld().hiders)
                 //if seeker has not yet found hider, and notices them
                 if (!seeker.foundYet(hider))
                 {
                     bool blocked = false;
-                    for (int j = 0; j < world.numOfItems; j++)
+                    for (int j = 0; j < World.getWorld().numOfItems; j++)
                     {
                         //if seeker can't see hider
-                        if (world.items[j].IsBlocking(getEyesPosition(), hider.Location))
+                        if (World.getWorld().items[j].IsBlocking(getEyesPosition(), hider.Location))
                         {
                             blocked = true;
                         }

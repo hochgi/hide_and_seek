@@ -19,8 +19,8 @@ namespace HideAndSeek
     public class HumanHider : HumanPlayer, Hider
     {
         //constructor for HumanHider class
-        public HumanHider(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
-            : base(game, world, location, walkSpeed, runSpeed, id, false)
+        public HumanHider(Game game, Vector3 location, int walkSpeed, int runSpeed, int id)
+            : base(game, location, walkSpeed, runSpeed, id, false)
         {
             // TODO: Construct any child components here
         }

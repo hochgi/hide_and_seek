@@ -187,11 +187,11 @@ namespace HideAndSeek
                 return null;
             //go through all neighbors and find the one which is closest to the hiding spot, using Manhattan distancea
             FieldNode best = null;
-            int bestVal = 300;
+            double bestVal = 300;
             if (y + 1 < sizeY && map[x, y + 1] <= 0)
             {
                 FieldNode next = new FieldNode(x, y + 1);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -201,7 +201,7 @@ namespace HideAndSeek
             if (x + 1 < sizeX && y + 1 < sizeY && map[x + 1, y + 1] <= 0)
             {
                 FieldNode next = new FieldNode(x + 1, y + 1);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -211,7 +211,7 @@ namespace HideAndSeek
             if (x + 1 < sizeX && map[x + 1, y] <= 0)
             {
                 FieldNode next = new FieldNode(x + 1, y);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -221,7 +221,7 @@ namespace HideAndSeek
             if (x + 1 < sizeX && y - 1 >= 0 && map[x + 1, y - 1] <= 0)
             {
                 FieldNode next = new FieldNode(x + 1, y - 1);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -231,7 +231,7 @@ namespace HideAndSeek
             if (y - 1 >= 0 && map[x, y - 1] <= 0)
             {
                 FieldNode next = new FieldNode(x, y - 1);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -241,7 +241,7 @@ namespace HideAndSeek
             if (x - 1 >= 0 && y - 1 >= 0 && map[x - 1, y - 1] <= 0)
             {
                 FieldNode next = new FieldNode(x - 1, y - 1);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -251,7 +251,7 @@ namespace HideAndSeek
             if (x - 1 >= 0 && map[x - 1, y] <= 0)
             {
                 FieldNode next = new FieldNode(x - 1, y);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;
@@ -261,7 +261,7 @@ namespace HideAndSeek
             if (x - 1 >= 0 && y + 1 < sizeY && map[x - 1, y + 1] <= 0)
             {
                 FieldNode next = new FieldNode(x - 1, y + 1);
-                int val = next.ManhattanDist(goal);
+                double val = next.EuclideanDist(goal);
                 if (val < bestVal)
                 {
                     bestVal = val;

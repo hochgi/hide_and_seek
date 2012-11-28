@@ -18,9 +18,6 @@ namespace HideAndSeek
     /// </summary>
     public abstract class Player : Microsoft.Xna.Framework.GameComponent
     {
-        //the world player is playing in
-        protected World world;
-
         //player's location
         public Vector3 location;
         //borders of square in map which player is currently in.  0 = bottom X, 1 = bottom Z, 2 = top X, 3 = top Z.
@@ -35,10 +32,9 @@ namespace HideAndSeek
         protected int id;
 
         //constructor for Player class
-        public Player(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
+        public Player(Game game, Vector3 location, int walkSpeed, int runSpeed, int id)
             : base(game)
         {
-            this.world = world;
             this.location = location;
             this.walkSpeed = walkSpeed;
             this.runSpeed = runSpeed;
@@ -53,7 +49,7 @@ namespace HideAndSeek
         public override void Initialize()
         {
             //initialize prevSpace to be the square in which player's location is located
-            prevSpace = world.locSquare(location);
+            prevSpace = World.getWorld().locSquare(location);
 
             base.Initialize();
         }

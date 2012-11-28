@@ -31,8 +31,8 @@ namespace HideAndSeek
         protected MyDrawable myDrawable;
 
         //constructor for VirtualPlayer class
-        public VirtualPlayer(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
-            : base(game, world, location, walkSpeed, runSpeed, id)
+        public VirtualPlayer(Game game, Vector3 location, int walkSpeed, int runSpeed, int id)
+            : base(game, location, walkSpeed, runSpeed, id)
         {
             // TODO: Construct any child components here
         }
@@ -66,7 +66,7 @@ namespace HideAndSeek
                     {
                         Console.WriteLine(this + " reached next square!  Walking.");
                         //update the player's location
-                        world.updateLocation(prevSpace, nextSpace);
+                        World.getWorld().updateLocation(prevSpace, nextSpace);
                         prevSpace = nextSpace;
                         // do what needs to be done, if need to keep moving then find next square
                         if (!act())
@@ -83,7 +83,7 @@ namespace HideAndSeek
                     else
                     {
                         //if nextSpace has become unavailable, choose a new one
-                        if (!world.isAvailable(nextSpace))
+                        if (!World.getWorld().isAvailable(nextSpace))
                             nextSpace = getNextSpace();
                         if (nextSpace != null)
                             move(walkSpeed);
@@ -103,7 +103,7 @@ namespace HideAndSeek
                     {
                         Console.WriteLine(this + " reached next square!  Running.");
                         //update the player's location
-                        world.updateLocation(prevSpace, nextSpace);
+                        World.getWorld().updateLocation(prevSpace, nextSpace);
                         prevSpace = nextSpace;
                         //if we have reached the space at the end
                         if (nextSpace != null && nextSpace[1] == 0)
@@ -113,19 +113,19 @@ namespace HideAndSeek
                         }
                         else
                             // find space which will get player back to starting point fastest
-                            nextSpace = world.getNextRunSpace(location);
+                            nextSpace = World.getWorld().getNextRunSpace(location);
                     }
                     // move towards next square
                     else
                     {
-                        if (!world.isAvailable(nextSpace))
+                        if (!World.getWorld().isAvailable(nextSpace))
                             nextSpace = getNextSpace();
                         move(runSpeed);
                     }
                 }
                 //if nextSpace hasn't been initialized, get a space
                 else
-                    nextSpace = world.getNextRunSpace(location);
+                    nextSpace = World.getWorld().getNextRunSpace(location);
             }
             else if (phase == Phase.RunningEnd)
             {

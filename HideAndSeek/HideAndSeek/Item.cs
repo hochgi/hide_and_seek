@@ -26,9 +26,6 @@ namespace HideAndSeek
         //item's ID number
         int id;
 
-        //the world representing the game state
-        World world;
-
         //item's location
         public Vector3 position;
         //item's size
@@ -41,12 +38,11 @@ namespace HideAndSeek
         protected MyDrawable myDrawable = null;
 
         //constructor for Item class
-        public Item(Game game, Vector3 loc, Vector3 size, int type, World world, int id)
+        public Item(Game game, Vector3 loc, Vector3 size, int type, int id)
             : base(game)
         {
             // TODO: Construct any child components here
             Game.Components.Add(this);
-            this.world = world;
             this.position = loc;
             this.size = size;
             this.id = id;
@@ -123,8 +119,8 @@ namespace HideAndSeek
 
         List<PrimitiveShape> cage;
 
-        public Rock(Game Game, Vector3 position, Vector3 widthHeightDepth, int type, World world, int id)
-            : base (Game, position, widthHeightDepth, type, world, id)
+        public Rock(Game Game, Vector3 position, Vector3 widthHeightDepth, int type, int id)
+            : base (Game, position, widthHeightDepth, type, id)
         {
             // TODO: Complete member initialization
             cage = new List<PrimitiveShape>();

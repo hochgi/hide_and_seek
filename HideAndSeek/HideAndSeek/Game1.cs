@@ -29,9 +29,6 @@ namespace HideAndSeek
         Vector3 m_CameraUpDirection;
         RasterizerState m_RasterizerState;
 
-        //the world, which holds all of the variables and components for the game
-        World world;
-
         //constructor for Game1 class
         public Game1()
         {
@@ -53,8 +50,6 @@ namespace HideAndSeek
             setCameraSettings();
             setCameraState();
 
-            world = new World(this);
-
             IsFixedTimeStep = false;//i'm not sure this should be the case, but it's the only way the graphics look ok for now
 
             base.Initialize(); 
@@ -74,9 +69,9 @@ namespace HideAndSeek
         //update camera's position with location of human player
         private void setCameraState()
         {
-            if (world != null && world.humanPlayer != null)
+            if (World.getWorld() != null && World.getWorld().humanPlayer != null)
             {
-                m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change when we know the position of the human's eyes
+                m_CameraLocation = World.getWorld().humanPlayer.location + new Vector3(0, 20, 0);//change when we know the position of the human's eyes
             }
             else
                 m_CameraLocation = new Vector3(0, 0, 0);

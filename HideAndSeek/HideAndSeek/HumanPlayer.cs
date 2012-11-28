@@ -30,8 +30,8 @@ namespace HideAndSeek
         protected bool counting;
 
         //constructor for HumanPlayer class
-        public HumanPlayer(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id, bool counting)
-            : base(game, world, location, walkSpeed, runSpeed, id)
+        public HumanPlayer(Game game, Vector3 location, int walkSpeed, int runSpeed, int id, bool counting)
+            : base(game, location, walkSpeed, runSpeed, id)
         {
             this.counting = counting;
         }
@@ -63,7 +63,7 @@ namespace HideAndSeek
                 prevHead = myInput.getHeadPosition();
                 location = location - tempHead + prevHead;
                 //if player is walking into an item, undo last step
-                if (world.isConflict(location))
+                if (World.getWorld().isConflict(location))
                     location = location - prevHead + tempHead;
                 //check if player is walking and update location accordingly
                 WalkingState state = myInput.getWalkingState();
@@ -72,7 +72,7 @@ namespace HideAndSeek
                     Console.WriteLine(this + " Walking forwards");
                     location.Z -= walkSpeed;
                     //if player is walking into an item, undo last step
-                    if (world.isConflict(location))
+                    if (World.getWorld().isConflict(location))
                         location.Z += walkSpeed;
                 }
                 else if (state == WalkingState.Backwards)
@@ -80,18 +80,18 @@ namespace HideAndSeek
                     Console.WriteLine(this + " Walking backwards");
                     location.Z += walkSpeed;
                     //if player is walking into an item, undo last step
-                    if (world.isConflict(location))
+                    if (World.getWorld().isConflict(location))
                         location.Z -= walkSpeed;
                 }
                 //update face direction
                 faceDir = myInput.getFaceDirection();
                 //if player has passed into another square on map, update it
                 if (((prevSpace != null) && (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X >= prevSpace[2]
-                    || location.Z <= prevSpace[3])) || (prevSpace == null && !world.isOutOfBounds(location)))
+                    || location.Z <= prevSpace[3])) || (prevSpace == null && !World.getWorld().isOutOfBounds(location)))
                 {
                     float[] temp = prevSpace;
-                    prevSpace = world.locSquare(location);
-                    world.updateLocation(temp, prevSpace);
+                    prevSpace = World.getWorld().locSquare(location);
+                    World.getWorld().updateLocation(temp, prevSpace);
                 }
             }
             base.Update(gameTime);

@@ -38,8 +38,8 @@ namespace HideAndSeek
         SeekerImp seeker;
 
         //constructor for VirtualSeeker class
-        public VirtualSeeker(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id, int countNum)
-            : base(game, world, location, walkSpeed, runSpeed, id)
+        public VirtualSeeker(Game game, Vector3 location, int walkSpeed, int runSpeed, int id, int countNum)
+            : base(game, location, walkSpeed, runSpeed, id)
         {
             this.countNum = countNum;
         }
@@ -52,14 +52,14 @@ namespace HideAndSeek
         {
             phase = Phase.Counting;
             count = 0;
-            mapX = world.mapSizeX();
-            mapY = world.mapSizeY();
+            mapX = World.getWorld().mapSizeX();
+            mapY = World.getWorld().mapSizeY();
             seenMap = new int[mapX, mapY];
             //initialize all values in map to 0, because seeker hasn't seen anything yet
             for (int i = 0; i < mapX; i++)
                 for (int j = 0; j < mapY; j++)
                     seenMap[i, j] = 0;
-            seeker = new SeekerImp(world);
+            seeker = new SeekerImp();
             base.Initialize();
             myDrawable.color = Color.DodgerBlue;
         }
@@ -114,7 +114,7 @@ namespace HideAndSeek
         //find a hider
         public Hider selectHider()
         {
-            foreach (Hider hider in world.hiders)
+            foreach (Hider hider in World.getWorld().hiders)
                 //if seeker has not yet found hider, and notices them
                 if (!seeker.foundYet(hider) && CanFind(hider))
                     return hider;
@@ -124,7 +124,7 @@ namespace HideAndSeek
         //returns whether or not seeker notices hider
         private bool CanFind(Hider hider)
         {
-            float visibleBodyParts = seeker.CanSee(hider, getEyesPosition());
+            float visibleBodyParts = SeekerImp.CanSee(hider, getEyesPosition());
             //calculate relative distance to hider within sight range
             float distPercentage = GetDistPercentage(GetDist(hider));
             //calculate total probability of seeker noticing hider
@@ -165,7 +165,7 @@ namespace HideAndSeek
         {
             Console.WriteLine(this + " acting in space " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
             //mark this space as seen
-            FieldNode node = world.spaceToNode(nextSpace);
+            FieldNode node = World.getWorld().spaceToNode(nextSpace);
             seenMap[node.x, node.y] = 100;//change number?
             //find a visible hider
             Hider hider = selectHider();
@@ -184,7 +184,7 @@ namespace HideAndSeek
         //get best space to move to in order to find more hiders
         public override float[] getNextSpace()
         {
-            return world.findBestNotSeen(prevSpace, seenMap);
+            return World.getWorld().findBestNotSeen(prevSpace, seenMap);
         }
 
         //return location of eyes

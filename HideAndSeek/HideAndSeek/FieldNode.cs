@@ -19,9 +19,10 @@ namespace HideAndSeek
         }
 
         //calculate distance between to spaces
-        public int ManhattanDist(FieldNode other)
+        public double EuclideanDist(FieldNode other)
         {
-            return Math.Abs(x - other.x) + Math.Abs(y - other.y);
+            //return Math.Abs(x - other.x) + Math.Abs(y - other.y);
+            return Math.Sqrt((x-other.x)*(x-other.x)+(y-other.y)*(y-other.y));
         }
 
         //returns a string representation of the node

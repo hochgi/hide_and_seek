@@ -22,7 +22,7 @@ namespace HideAndSeek
     public class World : Microsoft.Xna.Framework.GameComponent
     {
         //type of game being played
-        public GameType gameType = GameType.SeekPractice;
+        public GameType gameType = GameType.Hide;
         //number seeker needs to count to
         int countNum = 100;
         //number of hiders
@@ -43,11 +43,22 @@ namespace HideAndSeek
         //map representing the space
         private FieldMap map;
 
-        //implementation for imaginary seeker for hide practice
-        private SeekerImp seekerImp = null;
+        private static World singleWorld = null;
+
+        public static World getWorld()
+        {
+            return singleWorld;
+        }
+
+        public static World getWorld(Game game)
+        {
+            if (singleWorld == null)
+                singleWorld = new World(game);
+            return singleWorld;
+        }
 
         //constructor for World class
-        public World(Game game)
+        private World(Game game)
             : base(game)
         {
             // TODO: Construct any child components here
@@ -91,7 +102,7 @@ namespace HideAndSeek
                     } while (!map.isAvailable(node));
                     //find optimal location in space for item
                     Vector3 loc = Rock.findBestLoc(nodeToLoc(node), ItemType.Rock);
-                    items[i] = new Rock(Game, loc, new Vector3(0.25f, 0.25f, 0.25f), 0, this, i);
+                    items[i] = new Rock(Game, loc, new Vector3(0.25f, 0.25f, 0.25f), 0, i);
                     map.addItem(items[i], x, y);
                 }
             }
@@ -101,34 +112,33 @@ namespace HideAndSeek
             if (gameType == GameType.Hide)
             {
                 //create human hider
-                humanPlayer = new HumanHider(Game, this, new Vector3(0, 0, 0), 5, 10, 0);
+                humanPlayer = new HumanHider(Game, new Vector3(0, 0, 0), 5, 10, 0);
                 hiders[0] = (Hider)humanPlayer;
                 //create rest of hiders to be virtual players
                 for (int i = 1; i < numOfHiders; i++)
-                    hiders[i] = new VirtualHider(Game, this, new Vector3(10 * i, 0, 0) + borders[1], 5, 10, i + 1);
+                    hiders[i] = new VirtualHider(Game, new Vector3(10 * i, 0, 0) + borders[1], 5, 10, i + 1);
                 //create virtual seeker
-                seeker = new VirtualSeeker(Game, this, new Vector3(5, 0, 0), 5, 10, 1, countNum);
+                seeker = new VirtualSeeker(Game, new Vector3(5, 0, 0), 5, 10, 1, countNum);
             }
             //if human player is a seeker
             else if (gameType == GameType.Seek)
             {
                 //create human seeker
-                humanPlayer = new HumanSeeker(Game, this, new Vector3(0, 0, 0), 5, 10, 0, countNum);
+                humanPlayer = new HumanSeeker(Game, new Vector3(0, 0, 0), 5, 10, 0, countNum);
                 seeker = (Seeker)humanPlayer;
                 //create all hiders to be virtual players
                 for (int i = 0; i < numOfHiders; i++)
-                    hiders[i] = new VirtualHider(Game, this, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
+                    hiders[i] = new VirtualHider(Game, new Vector3(5 * i, 0, 0), 5, 10, i + 1);
             }
             if (gameType == GameType.HidePractice)
             {
                 numOfItems = 1;
                 numOfHiders = 1;
                 items = new Item[1];
-                items[0] = new Rock(Game, new Vector3(0, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, this, 1);
+                items[0] = new Rock(Game, new Vector3(0, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
                 hiders = new Hider[1];
-                humanPlayer = new HumanHider(Game, this, new Vector3(0, 0, 0), 5, 10, 0);
+                humanPlayer = new HumanHider(Game, new Vector3(0, 0, 0), 5, 10, 0);
                 hiders[0] = (Hider)humanPlayer;
-                seekerImp = new SeekerImp(this);
                 seeker = null;
             }
             else if (gameType == GameType.SeekPractice)
@@ -136,11 +146,11 @@ namespace HideAndSeek
                 numOfItems = 2;
                 numOfHiders = 1;
                 items = new Item[2];
-                items[0] = new Rock(Game, new Vector3(20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, this, 1);
-                items[1] = new Rock(Game, new Vector3(-20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, this, 2);
+                items[0] = new Rock(Game, new Vector3(20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
+                items[1] = new Rock(Game, new Vector3(-20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 2);
                 hiders = new Hider[1];
-                hiders[0] = new VirtualHider(Game, this, new Vector3(10, 0, 0), 5, 10, 2);
-                seeker = new HumanSeeker(Game, this, new Vector3(0, 0, 0), 5, 10, 1, 0);
+                hiders[0] = new VirtualHider(Game, new Vector3(10, 0, 0), 5, 10, 2);
+                seeker = new HumanSeeker(Game, new Vector3(0, 0, 0), 5, 10, 1, 0);
                 humanPlayer = (HumanPlayer)seeker;
                 Random rand = new Random();
                 int i = rand.Next(2);
@@ -165,7 +175,7 @@ namespace HideAndSeek
         {
             // TODO: Add your update code here
             //if player was hiding in practice mode, and can't be seen, game is over.
-            if (gameType == GameType.HidePractice && seekerImp.CanSee(hiders[0], Vector3.Zero) == 0)
+            if (gameType == GameType.HidePractice && SeekerImp.CanSee(hiders[0], Vector3.Zero) == 0)
             {
                 Console.WriteLine("Good job hiding!");
                 Game.Exit();

@@ -26,8 +26,8 @@ namespace HideAndSeek
         Vector3[] bodyParts;
 
         //constructor for VirtualHider class
-        public VirtualHider(Game game, World world, Vector3 location, int walkSpeed, int runSpeed, int id)
-            : base(game, world, location, walkSpeed, runSpeed, id)
+        public VirtualHider(Game game, Vector3 location, int walkSpeed, int runSpeed, int id)
+            : base(game, location, walkSpeed, runSpeed, id)
         {
             // TODO: Construct any child components here
         }
@@ -62,9 +62,9 @@ namespace HideAndSeek
             {
                 //choose random spot which is not taken
                 Random rand = new Random();
-                spot = world.items[rand.Next(world.numOfItems)];
+                spot = World.getWorld().items[rand.Next(World.getWorld().numOfItems)];
                 while (spot.taken == true)
-                    spot = world.items[rand.Next(world.numOfItems)];
+                    spot = World.getWorld().items[rand.Next(World.getWorld().numOfItems)];
                 //mark spot as taken
                 spot.taken = true;
                 Console.WriteLine(this + " going to hide at " + spot);
@@ -75,7 +75,7 @@ namespace HideAndSeek
                 phase = Phase.Done;
                 //just make sure hider has left boundaries of game so as to stay out of the way
                 location.Z += 1;
-                world.removeBlock(prevSpace);
+                World.getWorld().removeBlock(prevSpace);
             }
             base.Update(gameTime);
         }
@@ -101,7 +101,7 @@ namespace HideAndSeek
             try
             {
                 //find next space to advance to 
-                return world.getBestSpace(Location, spot.position);
+                return World.getWorld().getBestSpace(Location, spot.position);
             }
             catch (SpotTakenException e)
             {
