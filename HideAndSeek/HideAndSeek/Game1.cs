@@ -29,6 +29,11 @@ namespace HideAndSeek
         Vector3 m_CameraUpDirection;
         RasterizerState m_RasterizerState;
 
+        //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+        Texture2D m_tree;
+        Rectangle m_spriteArea;
+        Vector3 m_treeLocation;
+
         //constructor for Game1 class
         public Game1()
         {
@@ -52,6 +57,10 @@ namespace HideAndSeek
             setCameraState();
 
             IsFixedTimeStep = false;//i'm not sure this should be the case, but it's the only way the graphics look ok for now
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            m_spriteArea = new Rectangle(GraphicsDevice.Viewport.X, GraphicsDevice.Viewport.Y, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            m_treeLocation = new Vector3(0, 0, -200);//currently not used
 
             base.Initialize(); 
         }
@@ -98,6 +107,9 @@ namespace HideAndSeek
             m_RasterizerState.CullMode = CullMode.None;
 
             // TODO: use this.Content to load your game content here
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            m_tree = this.Content.Load<Texture2D>("tree");
         }
 
         /// <summary>
@@ -121,6 +133,9 @@ namespace HideAndSeek
                 this.Exit();
 
             // TODO: Add your update logic here
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            //TODO: make a billboard of the tree, that is perpendicular to the camera
 
             base.Update(gameTime);
         }
@@ -146,6 +161,11 @@ namespace HideAndSeek
             {
                 pass.Apply();
             }
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            spriteBatch.Begin();
+            spriteBatch.Draw(m_tree, m_spriteArea, new Color(255, 255, 255, 255));
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

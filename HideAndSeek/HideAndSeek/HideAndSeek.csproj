@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Billboard.cs" />
     <Compile Include="FieldMap.cs" />
     <Compile Include="FieldNode.cs" />
     <Compile Include="Hider.cs" />

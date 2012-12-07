@@ -138,4 +138,48 @@ namespace HideAndSeek
             throw new NotImplementedException();
         }
     }
+
+
+
+
+    //represents a rock as an item
+    public class Tree : Item, Billboard
+    {
+
+        List<PrimitiveShape> cage;
+
+        public Tree(Game Game, Vector3 position, Vector3 widthHeightDepth, int type, int id)
+            : base(Game, position, widthHeightDepth, type, id)
+        {
+            // TODO: Complete member initialization
+            cage = new List<PrimitiveShape>();
+            cage.Add(new Sphere(widthHeightDepth.Length(), position));
+
+            BillboardSystem bbs = BillboardSystem.getBillboardSystem();
+            bbs.addBillboard(this);
+        }
+
+        protected override List<PrimitiveShape> getCageShapes()
+        {
+            return cage;
+        }
+
+        //return whether location is conflicting with location
+        internal override bool isConflict(Vector3 location)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Vector3[] getQuadBillboard(Vector3 up, Vector3 position)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Texture2D getTexture()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
