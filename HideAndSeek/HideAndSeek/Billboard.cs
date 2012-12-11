@@ -14,7 +14,7 @@ namespace HideAndSeek
          * the order is important, starting from upper
          * left corner, and moving on in clockwise order.
          */
-        Vector3[] getQuadBillboard(Vector3 up, Vector3 position);
+        Vector3[] getQuadBillboard(Vector3 up, Vector3 cameraPosition);
         Vector3 getPosition();
         Texture2D getTexture();
     }

@@ -147,8 +147,15 @@ namespace HideAndSeek
                 numOfItems = 2;
                 numOfHiders = 1;
                 items = new Item[2];
-                items[0] = new Rock(Game, new Vector3(20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
-                items[1] = new Rock(Game, new Vector3(-20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 2);
+
+            //TODO: is this the right place for intialization?
+            //      if so, get the missing parameters to here,
+            //      or alternatively, put Tree & Billboard intialization elsewhere!
+
+                //BillboardSystem bbs = BillboardSystem.factory(2, graphicsDevice, BasicEffect);
+                items[0] = new /*Tree*/Rock(Game, new Vector3(20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
+                items[1] = new /*Tree*/Rock(Game, new Vector3(-20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 2);
+
                 hiders = new Hider[1];
                 hiders[0] = new VirtualHider(Game, new Vector3(10, 0, 0), 5, 10, 2);
                 seeker = new HumanSeeker(Game, new Vector3(0, 0, 0), 5, 10, 1, 0);

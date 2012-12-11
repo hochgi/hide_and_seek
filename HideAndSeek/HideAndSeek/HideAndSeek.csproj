@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlreadyInitializedException.cs" />
     <Compile Include="Billboard.cs" />
     <Compile Include="FieldMap.cs" />
     <Compile Include="FieldNode.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="KinectMe.cs" />
     <Compile Include="Me.cs" />
     <Compile Include="MyDrawable.cs" />
+    <Compile Include="NotInitializedException.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PrimitiveShape.cs" />
     <Compile Include="Seeker.cs" />

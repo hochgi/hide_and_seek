@@ -147,16 +147,19 @@ namespace HideAndSeek
     {
 
         List<PrimitiveShape> cage;
+        Texture2D tex;
 
         public Tree(Game Game, Vector3 position, Vector3 widthHeightDepth, int type, int id)
             : base(Game, position, widthHeightDepth, type, id)
         {
-            // TODO: Complete member initialization
+            // TODO: better caging
             cage = new List<PrimitiveShape>();
             cage.Add(new Sphere(widthHeightDepth.Length(), position));
 
             BillboardSystem bbs = BillboardSystem.getBillboardSystem();
             bbs.addBillboard(this);
+
+            tex = Game.Content.Load<Texture2D>("tree");
         }
 
         protected override List<PrimitiveShape> getCageShapes()
@@ -171,15 +174,41 @@ namespace HideAndSeek
         }
 
 
-        public Vector3[] getQuadBillboard(Vector3 up, Vector3 position)
+        public Vector3[] getQuadBillboard(Vector3 up, Vector3 cameraPosition)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            Vector3 z = Vector3.Subtract(cameraPosition, position);
+            Vector3 side = Vector3.Cross(up, z);
+            z.Normalize();
+            side.Normalize();
+            Vector3 treeUp = Vector3.Multiply(Vector3.UnitY, size.Y);
+            Vector3 treeSide = Vector3.Multiply(side, size.X / 2);
+
+            Vector3[] rv = new Vector3[4];
+
+            rv[0] = new Vector3(0);
+            Vector3.Add(ref treeUp, ref treeSide, out rv[0]);
+            Vector3.Add(rv[0], position);
+
+            rv[1] = new Vector3(0);
+            Vector3.Negate(treeSide);
+            Vector3.Add(ref treeUp, ref treeSide, out rv[1]);
+            Vector3.Add(rv[1], position);
+
+            rv[2] = new Vector3(2);
+            Vector3.Add(ref position, ref treeSide, out rv[0]);
+
+            rv[0] = new Vector3(0);
+            Vector3.Negate(treeSide);
+            Vector3.Add(ref position, ref treeSide, out rv[0]);
+
+            return rv;
         }
 
 
         public Texture2D getTexture()
         {
-            throw new NotImplementedException();
+            return tex;
         }
     }
 }
