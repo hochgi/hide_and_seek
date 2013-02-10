@@ -347,7 +347,7 @@ namespace HideAndSeek
             foreach (EffectPass pass in m_effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                
+
                 m_effect.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(
                     PrimitiveType.TriangleList, m_vertices, m_startIdx, m_numOfTriangles);
             }

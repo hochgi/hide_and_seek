@@ -17,10 +17,11 @@ namespace HideAndSeek
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
+        //variables for drawing objects
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public BasicEffect m_effect;//public??
+        public BasicEffect m_effect;
         Matrix m_CameraSettings;
         Matrix m_CameraState;
         Vector3 m_CameraTargetPosition;
@@ -28,8 +29,12 @@ namespace HideAndSeek
         Vector3 m_CameraUpDirection;
         RasterizerState m_RasterizerState;
 
-        World world;
+        //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+        Texture2D m_tree;
+        Rectangle m_spriteArea;
+        Vector3 m_treeLocation;
 
+        //constructor for Game1 class
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -44,25 +49,23 @@ namespace HideAndSeek
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            World.getWorld(this);
             m_CameraTargetPosition = new Vector3(0, 0, -100);
-            m_CameraLocation = new Vector3(0, 30, 10);//fix this, not good!  should be user's real location.
             m_CameraUpDirection = new Vector3(0, 1, 0);
 
             setCameraSettings();
             setCameraState();
 
-            world = new World(this);
-
             IsFixedTimeStep = false;//i'm not sure this should be the case, but it's the only way the graphics look ok for now
 
-            Console.WriteLine("Game Initialize Debugging:");
-            Console.WriteLine("IsFixedTimeStep " + IsFixedTimeStep);
-            Console.WriteLine("TargetElapsedTime " + TargetElapsedTime);
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            m_spriteArea = new Rectangle(GraphicsDevice.Viewport.X, GraphicsDevice.Viewport.Y, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            m_treeLocation = new Vector3(0, 0, -200);//currently not used
 
             base.Initialize(); 
         }
 
+        //basic definitions for the camera
         private void setCameraSettings()
         {
             float k_nearPlaneDistance = 0.5f;
@@ -73,15 +76,17 @@ namespace HideAndSeek
                 k_ViewAngle, GraphicsDevice.Viewport.AspectRatio, k_nearPlaneDistance, k_farPlaneDistance);
         }
 
+        //update camera's position with location of human player
         private void setCameraState()
         {
-            if (world != null && world.humanPlayer != null)
+            if (World.getWorld() != null && World.getWorld().humanPlayer != null)
             {
-                m_CameraLocation = world.humanPlayer.location + new Vector3(0, 20, 0);//change!!
-                m_CameraTargetPosition = m_CameraLocation;
-                m_CameraTargetPosition.Z -= 50;
+                m_CameraLocation = World.getWorld().humanPlayer.location + new Vector3(0, 20, 0);//change when we know the position of the human's eyes
             }
-            Console.WriteLine("m_CameraLocation " + m_CameraLocation);
+            else
+                m_CameraLocation = new Vector3(0, 0, 0);
+            m_CameraTargetPosition = m_CameraLocation;
+            m_CameraTargetPosition.Z -= 50;
             m_CameraState = Matrix.CreateLookAt(m_CameraLocation, m_CameraTargetPosition, m_CameraUpDirection);
         }
 
@@ -102,6 +107,9 @@ namespace HideAndSeek
             m_RasterizerState.CullMode = CullMode.None;
 
             // TODO: use this.Content to load your game content here
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            m_tree = this.Content.Load<Texture2D>("tree");
         }
 
         /// <summary>
@@ -120,17 +128,14 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            Console.WriteLine("Game Debugging: " + gameTime.ElapsedGameTime);
-            Console.WriteLine("IsFixedTimeStep " + IsFixedTimeStep);
-            Console.WriteLine("TargetElapsedTime " + TargetElapsedTime);
-            Console.WriteLine("IsRunningSlowly " + gameTime.IsRunningSlowly);
-
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
             // TODO: Add your update logic here
-            //m_CameraLocation = humanPlayer.location;
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            //TODO: make a billboard of the tree, that is perpendicular to the camera
 
             base.Update(gameTime);
         }
@@ -156,6 +161,11 @@ namespace HideAndSeek
             {
                 pass.Apply();
             }
+
+            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+            spriteBatch.Begin();
+            spriteBatch.Draw(m_tree, m_spriteArea, new Color(255, 255, 255, 255));
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

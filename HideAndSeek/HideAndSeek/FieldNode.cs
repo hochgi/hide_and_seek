@@ -5,23 +5,31 @@ using System.Text;
 
 namespace HideAndSeek
 {
-    // may be obselete?  just replace with vector2!
     //represents a node in the field map
     public class FieldNode
     {
         public int x;
         public int y;
 
+        //constructor for FieldNode class
         public FieldNode(int x, int y)
         {
             this.x = x;
             this.y = y;
         }
 
-        //public override bool Equals(FieldNode other)
-        //{
-        //    return (x == other.x && y == other.y);
-        //}
+        //calculate distance between to spaces
+        public double EuclideanDist(FieldNode other)
+        {
+            //return Math.Abs(x - other.x) + Math.Abs(y - other.y);
+            return Math.Sqrt((x-other.x)*(x-other.x)+(y-other.y)*(y-other.y));
+        }
+
+        //returns a string representation of the node
+        public override string ToString()
+        {
+            return "FieldNode: (" + x + "," + y + ")";
+        }
 
     }
 }

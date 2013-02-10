@@ -37,9 +37,13 @@ namespace HideAndSeek
         public override bool isBlockingLineOfSight(Vector3 a, Vector3 b) 
         {
             Vector3 pos = getPosition();
-            float u = ((pos.X - a.X) * (b.X - a.X) + (pos.Y - a.Y) * (b.Y - a.Y) + (pos.Z - a.Z) * (b.Z - a.Z)) / Vector3.DistanceSquared(a, b);
-            Vector3 plumbPoint = new Vector3(a.X + u * (b.X - a.X), a.Y + u * (b.Y - a.Y), a.Z + u * (b.Z - a.Z));
-            return Vector3.Distance(pos, plumbPoint) < radius;
+
+            Vector3 cross = Vector3.Cross(new Vector3(pos.X - a.X, pos.Y - a.Y, pos.Z - a.Z), new Vector3(pos.X - b.X, pos.Y - b.Y, pos.Z - b.Z));
+            float d = cross.Length() / Vector3.Distance(a, b);
+
+            //float u = -(Vector3.Dot(new Vector3(a.X - pos.X, a.Y - pos.Y, a.Z - pos.Z), new Vector3(b.X - a.X, b.Y - a.Y, b.Z - a.Z)) / Vector3.DistanceSquared(a, b));
+            //Vector3 plumbPoint = new Vector3(a.X + u * (b.X - a.X), a.Y + u * (b.Y - a.Y), a.Z + u * (b.Z - a.Z));
+            return d < radius;//Vector3.Distance(pos, plumbPoint) < radius;
         }
     }
 

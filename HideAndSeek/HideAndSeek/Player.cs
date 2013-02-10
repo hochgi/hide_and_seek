@@ -12,41 +12,34 @@ using Microsoft.Xna.Framework.Media;
 
 namespace HideAndSeek
 {
-    public enum PlayerPhase { Looking, Running, Other };
-
+    //class to represent any player in the game
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
     public abstract class Player : Microsoft.Xna.Framework.GameComponent
     {
-        public int id;
-
-        protected PlayerPhase pPhase;
-
-        protected World world;
-
-        public Vector3[] limbs; //0=head, 1=r.hand, 2=l.hand, 3=r.foot, 4=l.foot.  can add more if we want...
+        //player's location
         public Vector3 location;
+        //borders of square in map which player is currently in.  0 = bottom X, 1 = bottom Z, 2 = top X, 3 = top Z.
+        protected float[] prevSpace;
 
-        public Vector3 size = new Vector3(11, 11, 11);//change later!
+        //speed at which player walks
+        protected int walkSpeed;
+        //speed at which player runs
+        protected int runSpeed;
 
-        protected int runSpeed = 10;
-        protected int walkSpeed = 5;
+        //player's ID number
+        protected int id;
 
-        protected MyDrawable myDrawable = null;//may need to change level, protected may not be necessary or it may have to be public
-
-        protected float[] prevSpace;//square player is on now
-        protected float[] nextSpace;//next square player is going towards
-
-        public Player(Game game, World world, PlayerPhase phase, int id)
+        //constructor for Player class
+        public Player(Game game, Vector3 location, int walkSpeed, int runSpeed, int id)
             : base(game)
         {
-            Game.Components.Add(this);
-            this.world = world;
-            myDrawable = new MyDrawable(game, Color.PaleVioletRed, location, size);
-            this.pPhase = phase;
+            this.location = location;
+            this.walkSpeed = walkSpeed;
+            this.runSpeed = runSpeed;
             this.id = id;
-            // TODO: Construct any child components here;
+            Game.Components.Add(this);
         }
 
         /// <summary>
@@ -55,11 +48,9 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            // TODO: Add your initialization code here
-            //initialize limbs!!
-            location = new Vector3(0, 0, 0);//change this...
-            nextSpace = null; //0=lower x, 1=lower y, 2=upper x, 3=upper y
-            prevSpace = world.locSquare(location);
+            //initialize prevSpace to be the square in which player's location is located
+            prevSpace = World.getWorld().locSquare(location);
+
             base.Initialize();
         }
 
@@ -69,76 +60,17 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-            //Console.WriteLine(this + " updating");
-            //if (nextSpace != null)
-            //    Console.WriteLine("next space: " + nextSpace[0] + " " + nextSpace[1] + " " + nextSpace[2] + " " + nextSpace[3]);
-            //else
-            //    Console.WriteLine("next space is null!");
-            //// TODO: Add your update code here
-            if (pPhase == PlayerPhase.Looking)
-            {
-                if (nextSpace != null && nextSpace.Length == 4)
-                {
-                    // if player has reached the next square then:
-                    if (location.X >= nextSpace[0] && location.Z <= nextSpace[1] && location.X <= nextSpace[2] && location.Z >= nextSpace[3])
-                    {
-                        Console.WriteLine(this + " reached next square!");
-                        //update the player's location
-                        world.updateLocation(prevSpace, nextSpace);
-                        Console.WriteLine(world.map);
-                        // do what needs to be done, if need to keep moving then find next square
-                        if (!act())
-                        {
-                            Console.WriteLine(this + " action was not successful.  Going to keep looking.");
-                            prevSpace = nextSpace;
-                            nextSpace = getNextSpace();
-                        }
-                    }
-                    // move towards next square
-                    else
-                    {
-                        //adjust to be more realistic (don't walk in 2 directions at same speed..)
-                        if (location.X < nextSpace[0])
-                            location.X += walkSpeed;
-                        else if (location.X > nextSpace[2])
-                            location.X -= walkSpeed;
-                        if (location.Z < nextSpace[1])
-                            location.Z += walkSpeed;
-                        else if (location.Z > nextSpace[3])
-                            location.Z -= walkSpeed;
-                    }
-                }
-                else
-                    nextSpace = getNextSpace();
-            }
-            //runnning needs to be implemented!
-            else if (pPhase == PlayerPhase.Running)
-            {
-            }
-            myDrawable.updateLocation(location);
 
             base.Update(gameTime);
         }
 
-        // get next square player needs to move to
-        protected virtual float[] getNextSpace()
-        {
-            return world.getNextSpace(location);
-        }
+        //Player's reaction to winning the game
+        public abstract void win();
 
-        // do what needs to be done at certain place and check if need to keep moving
-        protected abstract bool act();
-
-        public void Win()
-        {
-            //victory dance and whatever
-            Console.WriteLine(this + " won!");
-        }
-
+        //string representation of player
         public override string ToString()
         {
             return id + " at " + location;
         }
-
     }
 }

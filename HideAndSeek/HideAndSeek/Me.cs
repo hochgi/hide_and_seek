@@ -7,7 +7,9 @@ using Microsoft.Xna.Framework;
 namespace HideAndSeek 
 {
     enum WalkingState { NotWalking, Forwards, Backwards };
-    abstract class Me : Microsoft.Xna.Framework.GameComponent
+    public enum FaceDirection { Forwards, Backwards };
+    public abstract class Me : Microsoft.Xna.Framework.GameComponent
+
     {
         internal Me(Game game) : base(game) 
         {
