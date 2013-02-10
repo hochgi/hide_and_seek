@@ -18,7 +18,6 @@ namespace HideAndSeek
     public class MeSeeker : Seeker
     {
         Me myInput;
-        FaceDirection faceDir = FaceDirection.Forwards;
         public Vector3 prevHead;
 
         public MeSeeker(Game game, World world, int countNum, int id)//is countnum necessary??
@@ -77,7 +76,6 @@ namespace HideAndSeek
                     finishWithHider();
                 }
             }
-            faceDir = myInput.getFaceDirection();
             //base.Update(gameTime);
         }
 

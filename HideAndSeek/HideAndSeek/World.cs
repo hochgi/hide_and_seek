@@ -34,6 +34,8 @@ namespace HideAndSeek
         MeSeeker meSeeker;//??
         public Player humanPlayer;
 
+        //public FaceDirection face;
+
         Vector3[] borders;
 
         int squareSize = 10;
@@ -59,7 +61,7 @@ namespace HideAndSeek
             borders[1] = new Vector3(-20, 0, 0);
             borders[2] = new Vector3(20, 0, -2000);
             borders[3] = new Vector3(-20, 0, -2000);
-
+            //face = FaceDirection.Forwards;
             map = new FieldMap((int)Math.Abs(borders[0].X - borders[3].X) / squareSize,
                 (int)(Math.Abs(borders[0].Z - borders[3].Z) / squareSize));
 

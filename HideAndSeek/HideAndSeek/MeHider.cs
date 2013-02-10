@@ -20,7 +20,7 @@ namespace HideAndSeek
     public class MeHider : Hider
     {
         Me myInput;
-        FaceDirection faceDir = FaceDirection.Forwards;
+        //public FaceDirection faceDir = FaceDirection.Forwards;
         public Vector3 prevHead;
 
         public MeHider(Game game, World world, int id)
@@ -70,7 +70,7 @@ namespace HideAndSeek
             //Basically the hider is a totally passive position.  All that happens is the location is updated, and we just hope
             //that at some point he'll make it back to the tree...
             //base.Update(gameTime);
-            faceDir = myInput.getFaceDirection();
+            //faceDir = myInput.getFaceDirection();
         }
 
         public override string ToString()
