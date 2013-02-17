@@ -19,15 +19,16 @@ namespace HideAndSeek
     public abstract class HumanPlayer : Player
     {
         //input class
-        protected Me myInput;
+        protected Input myInput;
 
         //last recorded location of player's head
         protected Vector3 prevHead;
         //direction player is facing
-        protected FaceDirection faceDir;//why?
+        //protected FaceDirection faceDir;//why?
 
         //whether or not player is counting (if playing Seeker)
         protected bool counting;
+
 
         //constructor for HumanPlayer class
         public HumanPlayer(Game game, Vector3 location, int walkSpeed, int runSpeed, int id, bool counting)
@@ -42,9 +43,9 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            myInput = new KeyboardMe(Game);
+            myInput = new KinectInput(Game);
             prevHead = myInput.getHeadPosition();
-            faceDir = myInput.getFaceDirection();
+            //faceDir = myInput.getFaceDirection();
 
             base.Initialize();
         }
@@ -84,7 +85,7 @@ namespace HideAndSeek
                         location.Z -= walkSpeed;
                 }
                 //update face direction
-                faceDir = myInput.getFaceDirection();
+                //faceDir = myInput.getFaceDirection();
                 //if player has passed into another square on map, update it
                 if (((prevSpace != null) && (location.X < prevSpace[0] || location.Z > prevSpace[1] || location.X >= prevSpace[2]
                     || location.Z <= prevSpace[3])) || (prevSpace == null && !World.getWorld().isOutOfBounds(location)))

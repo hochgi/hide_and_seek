@@ -50,14 +50,22 @@ namespace HideAndSeek
         //returns the locations of player's body parts
         public List<Vector3> getPartsPositions()
         {
-            List<Vector3> res = new List<Vector3>();
-            res.Add(new Vector3(Location.X, Location.Y, Location.Z));
-            return res;
+            if (myInput.GetType().FullName == "KinectMe")
+            {
+                return ((KinectInput)myInput).getPositions();
+            }
+            else 
+            {
+                List<Vector3> res = new List<Vector3>();
+                res.Add(new Vector3(Location.X, Location.Y, Location.Z));
+                return res;
+            }
         }
 
         //when found, do nothing.
         public void Found()
         {
+            Console.WriteLine("You should run now");
         }
 
         //returns a string representation of the human hider

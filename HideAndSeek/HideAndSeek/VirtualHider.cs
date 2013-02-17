@@ -93,6 +93,9 @@ namespace HideAndSeek
             {
                 Console.WriteLine(this + " found hiding spot " + spot);
                 phase = Phase.Hiding;
+                location.X = spot.position.X;
+                location.Y = spot.position.Y;
+                location.Z = spot.position.Z - 7;
                 return true;
             }
             return false;
