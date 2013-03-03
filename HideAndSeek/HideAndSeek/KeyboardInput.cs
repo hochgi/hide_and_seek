@@ -7,6 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace HideAndSeek
 {
+    /// <summary>
+    /// This class represents the input from the human player via keyboard.
+    /// It ment mainly for debugging.
+    /// </summary>
     class KeyboardInput : Input
     {
         Vector3 headPos;

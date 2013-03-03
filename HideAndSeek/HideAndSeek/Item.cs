@@ -42,11 +42,11 @@ namespace HideAndSeek
             : base(game)
         {
             // TODO: Construct any child components here
-            Game.Components.Add(this);
             this.position = loc;
-            this.size = size;
+            this.size = 10*size;
             this.id = id;
-            myDrawable = new MyDrawable(game, Color.ForestGreen, position, size);
+            Game.Components.Add(this);
+
         }
 
         //returns the position of the item
@@ -63,6 +63,7 @@ namespace HideAndSeek
         {
             // TODO: Add your initialization code here
             taken = false;
+            myDrawable = new MyDrawable(Game, Color.ForestGreen, this.position, this.size);
             base.Initialize();
         }
 
@@ -135,7 +136,7 @@ namespace HideAndSeek
         //return whether location is conflicting with location
         internal override bool isConflict(Vector3 location)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 
@@ -170,7 +171,8 @@ namespace HideAndSeek
         //return whether location is conflicting with location
         internal override bool isConflict(Vector3 location)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return false;
         }
 
 

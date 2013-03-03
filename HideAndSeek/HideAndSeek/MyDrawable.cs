@@ -19,10 +19,10 @@ namespace HideAndSeek
 
         public MyDrawable(Game game, Color color, Vector3 shapePosition, Vector3 shapeSize) : base(game) 
         {
-            Game.Components.Add(this);
             this.color = color;
             this.shapePosition = shapePosition;
             this.shapeSize = shapeSize;
+            Game.Components.Add(this);
         }
 
         //BasicEffect m_effect;//not sure!
@@ -109,22 +109,14 @@ namespace HideAndSeek
             m_numOfTriangles = 12;
             m_startIdx = 0;
 
-            Vector3 topLeftFront = shapePosition +
-                new Vector3(-1.0f, 1.0f, -1.0f) * shapeSize;
-            Vector3 bottomLeftFront = shapePosition +
-                new Vector3(-1.0f, -1.0f, -1.0f) * shapeSize;
-            Vector3 topRightFront = shapePosition +
-                new Vector3(1.0f, 1.0f, -1.0f) * shapeSize;
-            Vector3 bottomRightFront = shapePosition +
-                new Vector3(1.0f, -1.0f, -1.0f) * shapeSize;
-            Vector3 topLeftBack = shapePosition +
-                new Vector3(-1.0f, 1.0f, 1.0f) * shapeSize;
-            Vector3 topRightBack = shapePosition +
-                new Vector3(1.0f, 1.0f, 1.0f) * shapeSize;
-            Vector3 bottomLeftBack = shapePosition +
-                new Vector3(-1.0f, -1.0f, 1.0f) * shapeSize;
-            Vector3 bottomRightBack = shapePosition +
-                new Vector3(1.0f, -1.0f, 1.0f) * shapeSize;
+            Vector3 topLeftFront = shapePosition + new Vector3(-1.0f, 1.0f, -1.0f) * shapeSize;
+            Vector3 bottomLeftFront = shapePosition + new Vector3(-1.0f, -1.0f, -1.0f) * shapeSize;
+            Vector3 topRightFront = shapePosition + new Vector3(1.0f, 1.0f, -1.0f) * shapeSize;
+            Vector3 bottomRightFront = shapePosition + new Vector3(1.0f, -1.0f, -1.0f) * shapeSize;
+            Vector3 topLeftBack = shapePosition + new Vector3(-1.0f, 1.0f, 1.0f) * shapeSize;
+            Vector3 topRightBack = shapePosition + new Vector3(1.0f, 1.0f, 1.0f) * shapeSize;
+            Vector3 bottomLeftBack = shapePosition + new Vector3(-1.0f, -1.0f, 1.0f) * shapeSize;
+            Vector3 bottomRightBack = shapePosition + new Vector3(1.0f, -1.0f, 1.0f) * shapeSize;
 
             Vector3 frontNormal = new Vector3(0.0f, 0.0f, 1.0f) * shapeSize;
             Vector3 backNormal = new Vector3(0.0f, 0.0f, -1.0f) * shapeSize;
@@ -140,86 +132,51 @@ namespace HideAndSeek
 
             // Front face.
             m_vertices[0] = new VertexPositionColor(topLeftFront, color);
-            m_vertices[1] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[2] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[3] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[4] = new VertexPositionColor(
-                bottomRightFront, color);
-            m_vertices[5] = new VertexPositionColor(
-                topRightFront, color);
+            m_vertices[1] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[2] = new VertexPositionColor(topRightFront, color);
+            m_vertices[3] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[4] = new VertexPositionColor(bottomRightFront, color);
+            m_vertices[5] = new VertexPositionColor(topRightFront, color);
 
             // Back face.
-            m_vertices[6] = new VertexPositionColor(
-                topLeftBack, color);
-            m_vertices[7] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[8] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[9] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[10] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[11] = new VertexPositionColor(
-                bottomRightBack, color);
+            m_vertices[6] = new VertexPositionColor(topLeftBack, color);
+            m_vertices[7] = new VertexPositionColor(topRightBack, color);
+            m_vertices[8] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[9] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[10] = new VertexPositionColor(topRightBack, color);
+            m_vertices[11] = new VertexPositionColor(bottomRightBack, color);
 
             // Top face.
-            m_vertices[12] = new VertexPositionColor(
-                topLeftFront, color);
-            m_vertices[13] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[14] = new VertexPositionColor(
-                topLeftBack, color);
-            m_vertices[15] = new VertexPositionColor(
-                topLeftFront, color);
-            m_vertices[16] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[17] = new VertexPositionColor(
-                topRightBack, color);
+            m_vertices[12] = new VertexPositionColor(topLeftFront, color);
+            m_vertices[13] = new VertexPositionColor(topRightBack, color);
+            m_vertices[14] = new VertexPositionColor(topLeftBack, color);
+            m_vertices[15] = new VertexPositionColor(topLeftFront, color);
+            m_vertices[16] = new VertexPositionColor(topRightFront, color);
+            m_vertices[17] = new VertexPositionColor(topRightBack, color);
 
             // Bottom face. 
-            m_vertices[18] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[19] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[20] = new VertexPositionColor(
-                bottomRightBack, color);
-            m_vertices[21] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[22] = new VertexPositionColor(
-                bottomRightBack, color);
-            m_vertices[23] = new VertexPositionColor(
-                bottomRightFront, color);
+            m_vertices[18] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[19] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[20] = new VertexPositionColor(bottomRightBack, color);
+            m_vertices[21] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[22] = new VertexPositionColor(bottomRightBack, color);
+            m_vertices[23] = new VertexPositionColor(bottomRightFront, color);
 
             // Left face.
-            m_vertices[24] = new VertexPositionColor(
-                topLeftFront, color);
-            m_vertices[25] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[26] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[27] = new VertexPositionColor(
-                topLeftBack, color);
-            m_vertices[28] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[29] = new VertexPositionColor(
-                topLeftFront, color);
+            m_vertices[24] = new VertexPositionColor(topLeftFront, color);
+            m_vertices[25] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[26] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[27] = new VertexPositionColor(topLeftBack, color);
+            m_vertices[28] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[29] = new VertexPositionColor(topLeftFront, color);
 
             // Right face. 
-            m_vertices[30] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[31] = new VertexPositionColor(
-                bottomRightFront, color);
-            m_vertices[32] = new VertexPositionColor(
-                bottomRightBack, color);
-            m_vertices[33] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[34] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[35] = new VertexPositionColor(
-                bottomRightBack, color);
+            m_vertices[30] = new VertexPositionColor(topRightFront, color);
+            m_vertices[31] = new VertexPositionColor(bottomRightFront, color);
+            m_vertices[32] = new VertexPositionColor(bottomRightBack, color);
+            m_vertices[33] = new VertexPositionColor(topRightBack, color);
+            m_vertices[34] = new VertexPositionColor(topRightFront, color);
+            m_vertices[35] = new VertexPositionColor(bottomRightBack, color);
 
             base.Initialize();
         }
@@ -228,22 +185,14 @@ namespace HideAndSeek
         {
             shapePosition = location;
 
-            Vector3 topLeftFront = shapePosition +
-                new Vector3(-1.0f, 1.0f, -1.0f) * shapeSize;
-            Vector3 bottomLeftFront = shapePosition +
-                new Vector3(-1.0f, -1.0f, -1.0f) * shapeSize;
-            Vector3 topRightFront = shapePosition +
-                new Vector3(1.0f, 1.0f, -1.0f) * shapeSize;
-            Vector3 bottomRightFront = shapePosition +
-                new Vector3(1.0f, -1.0f, -1.0f) * shapeSize;
-            Vector3 topLeftBack = shapePosition +
-                new Vector3(-1.0f, 1.0f, 1.0f) * shapeSize;
-            Vector3 topRightBack = shapePosition +
-                new Vector3(1.0f, 1.0f, 1.0f) * shapeSize;
-            Vector3 bottomLeftBack = shapePosition +
-                new Vector3(-1.0f, -1.0f, 1.0f) * shapeSize;
-            Vector3 bottomRightBack = shapePosition +
-                new Vector3(1.0f, -1.0f, 1.0f) * shapeSize;
+            Vector3 topLeftFront = shapePosition + new Vector3(-1.0f, 1.0f, -1.0f) * shapeSize;
+            Vector3 bottomLeftFront = shapePosition + new Vector3(-1.0f, -1.0f, -1.0f) * shapeSize;
+            Vector3 topRightFront = shapePosition + new Vector3(1.0f, 1.0f, -1.0f) * shapeSize;
+            Vector3 bottomRightFront = shapePosition + new Vector3(1.0f, -1.0f, -1.0f) * shapeSize;
+            Vector3 topLeftBack = shapePosition + new Vector3(-1.0f, 1.0f, 1.0f) * shapeSize;
+            Vector3 topRightBack = shapePosition + new Vector3(1.0f, 1.0f, 1.0f) * shapeSize;
+            Vector3 bottomLeftBack = shapePosition + new Vector3(-1.0f, -1.0f, 1.0f) * shapeSize;
+            Vector3 bottomRightBack = shapePosition + new Vector3(1.0f, -1.0f, 1.0f) * shapeSize;
 
             Vector3 frontNormal = new Vector3(0.0f, 0.0f, 1.0f) * shapeSize;
             Vector3 backNormal = new Vector3(0.0f, 0.0f, -1.0f) * shapeSize;
@@ -259,86 +208,51 @@ namespace HideAndSeek
 
             // Front face.
             m_vertices[0] = new VertexPositionColor(topLeftFront, color);
-            m_vertices[1] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[2] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[3] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[4] = new VertexPositionColor(
-                bottomRightFront, color);
-            m_vertices[5] = new VertexPositionColor(
-                topRightFront, color);
+            m_vertices[1] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[2] = new VertexPositionColor(topRightFront, color);
+            m_vertices[3] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[4] = new VertexPositionColor(bottomRightFront, color);
+            m_vertices[5] = new VertexPositionColor(topRightFront, color);
 
             // Back face.
-            m_vertices[6] = new VertexPositionColor(
-                topLeftBack, color);
-            m_vertices[7] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[8] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[9] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[10] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[11] = new VertexPositionColor(
-                bottomRightBack, color);
+            m_vertices[6] = new VertexPositionColor(topLeftBack, color);
+            m_vertices[7] = new VertexPositionColor(topRightBack, color);
+            m_vertices[8] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[9] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[10] = new VertexPositionColor(topRightBack, color);
+            m_vertices[11] = new VertexPositionColor(bottomRightBack, color);
 
             // Top face.
-            m_vertices[12] = new VertexPositionColor(
-                topLeftFront, color);
-            m_vertices[13] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[14] = new VertexPositionColor(
-                topLeftBack, color);
-            m_vertices[15] = new VertexPositionColor(
-                topLeftFront, color);
-            m_vertices[16] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[17] = new VertexPositionColor(
-                topRightBack, color);
+            m_vertices[12] = new VertexPositionColor(topLeftFront, color);
+            m_vertices[13] = new VertexPositionColor(topRightBack, color);
+            m_vertices[14] = new VertexPositionColor(topLeftBack, color);
+            m_vertices[15] = new VertexPositionColor(topLeftFront, color);
+            m_vertices[16] = new VertexPositionColor(topRightFront, color);
+            m_vertices[17] = new VertexPositionColor(topRightBack, color);
 
             // Bottom face. 
-            m_vertices[18] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[19] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[20] = new VertexPositionColor(
-                bottomRightBack, color);
-            m_vertices[21] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[22] = new VertexPositionColor(
-                bottomRightBack, color);
-            m_vertices[23] = new VertexPositionColor(
-                bottomRightFront, color);
+            m_vertices[18] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[19] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[20] = new VertexPositionColor(bottomRightBack, color);
+            m_vertices[21] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[22] = new VertexPositionColor(bottomRightBack, color);
+            m_vertices[23] = new VertexPositionColor(bottomRightFront, color);
 
             // Left face.
-            m_vertices[24] = new VertexPositionColor(
-                topLeftFront, color);
-            m_vertices[25] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[26] = new VertexPositionColor(
-                bottomLeftFront, color);
-            m_vertices[27] = new VertexPositionColor(
-                topLeftBack, color);
-            m_vertices[28] = new VertexPositionColor(
-                bottomLeftBack, color);
-            m_vertices[29] = new VertexPositionColor(
-                topLeftFront, color);
+            m_vertices[24] = new VertexPositionColor(topLeftFront, color);
+            m_vertices[25] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[26] = new VertexPositionColor(bottomLeftFront, color);
+            m_vertices[27] = new VertexPositionColor(topLeftBack, color);
+            m_vertices[28] = new VertexPositionColor(bottomLeftBack, color);
+            m_vertices[29] = new VertexPositionColor(topLeftFront, color);
 
             // Right face. 
-            m_vertices[30] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[31] = new VertexPositionColor(
-                bottomRightFront, color);
-            m_vertices[32] = new VertexPositionColor(
-                bottomRightBack, color);
-            m_vertices[33] = new VertexPositionColor(
-                topRightBack, color);
-            m_vertices[34] = new VertexPositionColor(
-                topRightFront, color);
-            m_vertices[35] = new VertexPositionColor(
-                bottomRightBack, color);
+            m_vertices[30] = new VertexPositionColor(topRightFront, color);
+            m_vertices[31] = new VertexPositionColor(bottomRightFront, color);
+            m_vertices[32] = new VertexPositionColor(bottomRightBack, color);
+            m_vertices[33] = new VertexPositionColor(topRightBack, color);
+            m_vertices[34] = new VertexPositionColor(topRightFront, color);
+            m_vertices[35] = new VertexPositionColor(bottomRightBack, color);
         }
 
         public override void Draw(GameTime gameTime)

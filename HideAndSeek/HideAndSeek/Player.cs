@@ -48,9 +48,6 @@ namespace HideAndSeek
         /// </summary>
         public override void Initialize()
         {
-            //initialize prevSpace to be the square in which player's location is located
-            prevSpace = World.getWorld().locSquare(location);
-
             base.Initialize();
         }
 
@@ -60,7 +57,11 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         public override void Update(GameTime gameTime)
         {
-
+            if (prevSpace == null)
+            {
+                //initialize prevSpace to be the square in which player's location is located
+                prevSpace = World.getWorld().locSquare(location);
+            }
             base.Update(gameTime);
         }
 

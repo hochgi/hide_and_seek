@@ -34,6 +34,9 @@ namespace HideAndSeek
         Rectangle m_spriteArea;
         Vector3 m_treeLocation;
 
+        GameType currentGameType = GameType.MainMenu;
+        FlickeringButton btnPlay1, btnPlay2, btnPlay3, btnPlay4, btnPlay5;
+
         //constructor for Game1 class
         public Game1()
         {
@@ -49,13 +52,11 @@ namespace HideAndSeek
         /// </summary>
         protected override void Initialize()
         {
-            World.getWorld(this);
+            //World.getWorld(this);
             m_CameraTargetPosition = new Vector3(0, 0, -100);
             m_CameraUpDirection = new Vector3(0, 1, 0);
 
-            setCameraSettings();
-            setCameraState();
-
+            IsMouseVisible = true;
             IsFixedTimeStep = false;//i'm not sure this should be the case, but it's the only way the graphics look ok for now
 
             //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
@@ -107,9 +108,17 @@ namespace HideAndSeek
             m_RasterizerState.CullMode = CullMode.None;
 
             // TODO: use this.Content to load your game content here
-
+            //graphics.IsFullScreen = true;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1024;
+            graphics.ApplyChanges();
             //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
             m_tree = this.Content.Load<Texture2D>("tree");
+            btnPlay1 = new FlickeringButton(Content.Load<Texture2D>("btnSeek"), graphics.GraphicsDevice, 1);
+            btnPlay2 = new FlickeringButton(Content.Load<Texture2D>("btnHide"), graphics.GraphicsDevice, 2);
+            btnPlay3 = new FlickeringButton(Content.Load<Texture2D>("btnSeekPractice"), graphics.GraphicsDevice, 3);
+            btnPlay4 = new FlickeringButton(Content.Load<Texture2D>("btnHidePractice"), graphics.GraphicsDevice, 4);
+            btnPlay5 = new FlickeringButton(Content.Load<Texture2D>("btnExit"), graphics.GraphicsDevice, 5);
         }
 
         /// <summary>
@@ -132,7 +141,70 @@ namespace HideAndSeek
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+            KeyboardState keyboardState = Keyboard.GetState();
+            if (keyboardState.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
             // TODO: Add your update logic here
+            MouseState mouse = Mouse.GetState();
+            World w = World.getWorld();
+
+            switch (currentGameType)
+            {
+                case GameType.MainMenu:
+                    if (btnPlay1.isClicked) currentGameType = GameType.Seek;
+                    else if (btnPlay2.isClicked) currentGameType = GameType.Hide;
+                    else if (btnPlay3.isClicked) currentGameType = GameType.SeekPractice;
+                    else if (btnPlay4.isClicked) currentGameType = GameType.HidePractice;
+                    else if (btnPlay5.isClicked) currentGameType = GameType.Exit;
+                    btnPlay1.Update(mouse);
+                    btnPlay2.Update(mouse);
+                    btnPlay3.Update(mouse);
+                    btnPlay4.Update(mouse);
+                    btnPlay5.Update(mouse);
+                    break;
+                case GameType.Seek:
+                    if (w == null) 
+                    {
+                        setCameraSettings();
+                        setCameraState();
+                        IsMouseVisible = false;
+                        w = World.getWorld(this, GameType.Seek);
+                    }
+                    break;
+                case GameType.Hide:
+                    if (w == null) 
+                    {
+                        setCameraSettings();
+                        setCameraState();
+                        IsMouseVisible = false;
+                        w = World.getWorld(this, GameType.Hide);
+                    }
+                    break;
+                case GameType.SeekPractice:
+                    if (w == null)
+                    {
+                        setCameraSettings();
+                        setCameraState();
+                        IsMouseVisible = false;
+                        w = World.getWorld(this, GameType.SeekPractice);
+                    }
+                    break;
+                case GameType.HidePractice:
+                    if (w == null)
+                    {
+                        setCameraSettings();
+                        setCameraState();
+                        IsMouseVisible = false;
+                        w = World.getWorld(this, GameType.HidePractice);
+                    }
+                    break;
+                case GameType.Exit:
+                    Exit();
+                    break;
+            }
 
             //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
             //TODO: make a billboard of the tree, that is perpendicular to the camera
@@ -146,27 +218,44 @@ namespace HideAndSeek
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.SkyBlue);
-
-            // TODO: Add your drawing code here
-            m_effect.GraphicsDevice.RasterizerState = m_RasterizerState;
-
-            setCameraState();
-
-            m_effect.View = m_CameraState;
-            m_effect.Projection = m_CameraSettings;
-            m_effect.World = Matrix.Identity;
-
-            foreach (EffectPass pass in m_effect.CurrentTechnique.Passes)
+            if (currentGameType == GameType.MainMenu)
             {
-                pass.Apply();
+                GraphicsDevice.Clear(Color.White);
+
+                spriteBatch.Begin();
+                {
+                    btnPlay1.Draw(spriteBatch);
+                    btnPlay2.Draw(spriteBatch);
+                    btnPlay3.Draw(spriteBatch);
+                    btnPlay4.Draw(spriteBatch);
+                    btnPlay5.Draw(spriteBatch);
+                }
+                spriteBatch.End();
             }
+            else
+            {
 
-            //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
-            spriteBatch.Begin();
-            spriteBatch.Draw(m_tree, m_spriteArea, new Color(255, 255, 255, 255));
-            spriteBatch.End();
+                GraphicsDevice.Clear(Color.SkyBlue);
 
+                // TODO: Add your drawing code here
+                m_effect.GraphicsDevice.RasterizerState = m_RasterizerState;
+
+                setCameraState();
+
+                m_effect.View = m_CameraState;
+                m_effect.Projection = m_CameraSettings;
+                m_effect.World = Matrix.Identity;
+
+                foreach (EffectPass pass in m_effect.CurrentTechnique.Passes)
+                {
+                    pass.Apply();
+                }
+
+                //CHANGED - 2012.11.28 - Gilad (trying out a simple drawing of a tree)
+                //spriteBatch.Begin();
+                //spriteBatch.Draw(m_tree, m_spriteArea, new Color(255, 255, 255, 255));
+                //spriteBatch.End();
+            }
             base.Draw(gameTime);
         }
     }

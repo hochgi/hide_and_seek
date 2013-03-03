@@ -8,6 +8,9 @@ using Microsoft.Kinect.Toolkit.FaceTracking;
 
 namespace HideAndSeek
 {
+    /// <summary>
+    /// This class holds and interprets inputs from human player via Kinect
+    /// </summary>
     class KinectInput : Input
     {
 
@@ -26,14 +29,20 @@ namespace HideAndSeek
         short[] depthPixelData;
         Skeleton[] skeletonData;
         private bool pointing;
+        private int countPointing;
 
-
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="game"></param>
         internal KinectInput(Game game)
             : base(game)
         {
             head = new Vector3();
             pointing = false;
-            walkHistory = new Queue<FeetState>(20);
+            countPointing = 0;
+            //initializing the walk history
+            walkHistory = new Queue<FeetState>(12);
             for (int i = 0; i < 20; i++)
             {
                 walkHistory.Enqueue(new FeetState());
@@ -44,7 +53,6 @@ namespace HideAndSeek
             sensor.ColorStream.Enable();
             sensor.SkeletonStream.Enable();
             sensor.DepthStream.Enable();
-            //sensor.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(runtime_SkeletonFrameReady);
             // Listen to the AllFramesReady event to receive KinectSensor's data.
             sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(kinectSensor_AllFramesReady);
             sensor.Start();
@@ -74,7 +82,12 @@ namespace HideAndSeek
         }
 
 
-        //what about facing direction?? speed??
+        
+        /// <summary>
+        /// Computes the walking state of the player according to series of feet states
+        /// what about speed??
+        /// </summary>
+        /// <returns>the walking state of the player, i.e. forwards, backwards, not-walking</returns>
         internal override WalkingState getWalkingState()
         {
             int length = walkHistory.Count();
@@ -82,35 +95,32 @@ namespace HideAndSeek
             FeetState second = walkHistory.ElementAt(length - 2);
             FeetState third = walkHistory.ElementAt(length - 3);
             FeetState forth = walkHistory.ElementAt(length - 4);
-            /*
-            foreach (FeetState fs in walkHistory)
-            {
-                Console.Write(fs.ToString() + ",");
-            }
-            Console.Write("\n");
-            */
-            //Console.WriteLine("1:" + first + ",2:" + second + ",3:" + third + ",4:" + forth);
-
-            if (first.isBothDown()
+            //checking if the series of last four feet state represents walking
+            if (//(D,D),(U,D),(D,D),(D,U)
+                first.isBothDown()
                 && second.isLeftUp()
                 && third.isBothDown()
                 && forth.isRightUp()
                 ||
+                //(D,D),(D,U),(D,D),(U,D)
                 first.isBothDown()
                 && second.isRightUp()
                 && third.isBothDown()
                 && forth.isLeftUp()
                 ||
+                //(U,D),(D,D),(D,U),(D,D)
                 first.isLeftUp()
                 && second.isBothDown()
                 && third.isRightUp()
                 && forth.isBothDown()
                 ||
+                //(D,U),(D,D),(U,D),(D,D)
                 first.isRightUp()
                 && second.isBothDown()
                 && third.isLeftUp()
                 && forth.isBothDown())
             {
+                //getting face direction in order to know direction of walking
                 if (faceDirection == FaceDirection.Forwards)
                 {
                     Console.WriteLine("Walking forwards");
@@ -126,6 +136,7 @@ namespace HideAndSeek
                 return WalkingState.NotWalking;
         }
 
+        //create a vector3 from skeleton-point
         internal Vector3 getVectorFromPoint(SkeletonPoint p)
         {
             Vector3 v = new Vector3();
@@ -135,28 +146,39 @@ namespace HideAndSeek
             return v;
         }
 
-        //note that this function returns the position of the head including Z-coordinate
-        //this can be used to conbinate the virtual position with the actual position 
+        
+        /// <summary>
+        /// returns the position of the head of the player
+        /// </summary>
+        /// <returns>possition of the head of the player</returns>
         internal override Microsoft.Xna.Framework.Vector3 getHeadPosition()
         {
             return head;
-            // TODO: get the head position from skeleton-detecion
         }
 
+        /// <summary>
+        /// returns all the positions of the body-parts dtected by the Kinect
+        /// </summary>
+        /// <returns>list of positions of player's body-parts</returns>
         internal override List<Vector3> getPositions()
         {
             return positions;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>true if player is pointing and false otherwise</returns>
         internal override bool isPointing()
         {
             Console.WriteLine("POINTING=" + pointing);
             return pointing;
         }
 
-        /*
-         * class represents the feet-state 
-         */
+        /// <summary>
+        /// This class represents the feet-state of the player on a specific moment.
+        /// It contains each foot position i.e. Up or Down, and a timestamp.
+        /// </summary>
         private class FeetState
         {
             public enum footPosition { Up, Down };
@@ -195,11 +217,12 @@ namespace HideAndSeek
             }
         }
 
-        //internal void runtime_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
-        //{
-        //}
-
-
+        /// <summary>
+        /// Event handler for events from the Kinect.
+        /// Calculates player's position, pointing state, face direction.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         internal void kinectSensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
         {
             bool receivedData = false;
@@ -225,9 +248,6 @@ namespace HideAndSeek
                 skeletonFrame.CopySkeletonDataTo(skeletonData);
             }
 
-            //var skeleton = skeletonData.FirstOrDefault(s => s.TrackingState == SkeletonTrackingState.Tracked);
-            //if (skeleton == null)
-            //    return;
             using (SkeletonFrame SFrame = e.OpenSkeletonFrame())
             {
                 if (SFrame == null)
@@ -236,6 +256,7 @@ namespace HideAndSeek
                 }
                 else
                 {
+                    //get skeletons detected by kinect
                     skeletons = new Skeleton[SFrame.SkeletonArrayLength];
                     SFrame.CopySkeletonDataTo(skeletons);
                     receivedData = true;
@@ -244,43 +265,50 @@ namespace HideAndSeek
 
             if (receivedData && skeletons != null)
             {
+                //get the first skeleton detected by the kinect
                 Skeleton currentSkeleton = (from s in skeletons
                                             where s.TrackingState ==
                                             SkeletonTrackingState.Tracked
                                             select s).FirstOrDefault();
                 if (currentSkeleton != null)
                 {
+                    //get head position from the skeleton
                     SkeletonPoint skeletonHead = currentSkeleton.Joints[JointType.FootLeft].Position;
-                    //head.X = skeletonHead.X;
-                    //head.Y = skeletonHead.Y;
-                    //head.Z = skeletonHead.Z;
+                    //transform the head position to be vector
                     head = getVectorFromPoint(skeletonHead);
+                    //get feet positions and push to walking queue in order to detect walking or not
                     SkeletonPoint skeletonLeftFoot = currentSkeleton.Joints[JointType.FootLeft].Position;
                     SkeletonPoint skeletonRightFoot = currentSkeleton.Joints[JointType.FootRight].Position;
-
                     pushToWalkingQueue(skeletonLeftFoot.Y, skeletonRightFoot.Y);
-                    //Console.WriteLine("HEAD: " + head);
-
+                    //get right hand position in order to identify pointing (currently pointing is raising your right hand)
                     SkeletonPoint skeletonRightHand = currentSkeleton.Joints[JointType.HandRight].Position;
                     rightHand = getVectorFromPoint(skeletonRightHand);
+                    //count frames where right hand is raised in order to avoide flase detections
                     if (rightHand.Y > head.Y)
                     {
-                        pointing = true;
+                        countPointing++;
+                        if (countPointing > 3)
+                            pointing = true;
+                        else
+                            pointing = false;
                     }
                     else
                     {
+                        countPointing = 0;
                         pointing = false;
                     }
-
+                    //get all skeleton positions
                     positions = new List<Vector3>();
                     foreach (Joint j in currentSkeleton.Joints)
                     {
                         positions.Add(getVectorFromPoint(j.Position));
                     }
-
+                    //track face
                     FaceTrackFrame faceFrame = faceTracker.Track(sensor.ColorStream.Format, colorPixelData,
                                   sensor.DepthStream.Format, depthPixelData,
                                   currentSkeleton);
+                    //if face tracked successfully, player is facing the camera
+                    //and otherwise player is back to the camera
                     if (faceFrame.TrackSuccessful)
                     {
                         faceDirection = FaceDirection.Forwards;
@@ -289,6 +317,7 @@ namespace HideAndSeek
                     }
                     else //if (currentSkeleton != null)
                     {
+                        //avoiding false detections of backwards
                         if (prevFaceTracked)
                         {
                             faceDirection = FaceDirection.Forwards;
@@ -310,13 +339,22 @@ namespace HideAndSeek
 
         }
 
+        /// <summary>
+        /// calculate the feet-state and push to walking queue
+        /// </summary>
+        /// <param name="leftFootY">y-coordinate of left foot</param>
+        /// <param name="rightFootY">y-coordinate of right foot</param>
         internal void pushToWalkingQueue(float leftFootY, float rightFootY)
         {
+            //calc datetime of now
             DateTime timeStamp = DateTime.Now;
+
             FeetState.footPosition left, right;
+            //if the difference between the coordinates in greater than threshold,
+            //then one feet is considered up and the other is considered down.
+            //otherwise, both considered down
             if (leftFootY - rightFootY > 0.1)
             {
-                //Console.WriteLine("HORAY!!!");
                 left = FeetState.footPosition.Up;
                 right = FeetState.footPosition.Down;
             }
@@ -330,37 +368,13 @@ namespace HideAndSeek
                 left = FeetState.footPosition.Down;
                 right = FeetState.footPosition.Down;
             }
+
             FeetState last = walkHistory.Last();
-            //Console.WriteLine("time diff: " + (timeStamp - last.timeStamp).ToString());
+            //push the current feet-state to queue only if it is different from the last one pushed,
+            //or if the difference between the timestamps is greater than a certain threshold
             if (left != last.left || right != last.right || timeStamp - last.timeStamp >= TIME_DIFF)
             {
                 Console.WriteLine("l:" + leftFootY + "r:" + rightFootY + ",(" + left + "," + right + ")");
-                FeetState fs = new FeetState(left, right, timeStamp);
-                walkHistory.Enqueue(fs);
-            }
-        }
-
-
-        internal void pushToWalkingQueue2(float leftFootY, float rightFootY)
-        {
-            DateTime timeStamp = DateTime.Now;
-            FeetState.footPosition left, right;
-            if (leftFootY > FLOOR)
-            {
-                //Console.WriteLine("HORAY!!!");
-                left = FeetState.footPosition.Up;
-            }
-            else
-                left = FeetState.footPosition.Down;
-            if (rightFootY > FLOOR)
-                right = FeetState.footPosition.Up;
-            else
-                right = FeetState.footPosition.Down;
-            FeetState last = walkHistory.Last();
-            //Console.WriteLine("time diff: " + (timeStamp - last.timeStamp).ToString());
-            if (left != last.left || right != last.right || timeStamp - last.timeStamp >= TIME_DIFF)
-            {
-                Console.WriteLine("l:" + leftFootY + "r:" + rightFootY);
                 FeetState fs = new FeetState(left, right, timeStamp);
                 walkHistory.Enqueue(fs);
             }

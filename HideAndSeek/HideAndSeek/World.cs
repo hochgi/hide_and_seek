@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Media;
 namespace HideAndSeek
 {
     //type of game being played
-    public enum GameType { HidePractice, SeekPractice, Hide, Seek };
+    public enum GameType { HidePractice, SeekPractice, Hide, Seek, Exit, MainMenu };
 
     //represents the game state, which holds all of the information
     /// <summary>
@@ -22,13 +22,13 @@ namespace HideAndSeek
     public class World : Microsoft.Xna.Framework.GameComponent
     {
         //type of game being played
-        public GameType gameType = GameType.SeekPractice;
+        public GameType gameType;
         //number seeker needs to count to
         int countNum = 100;
         //number of hiders
         public int numOfHiders = 3;
         //number of items in playing space
-        public int numOfItems = 4;
+        public int numOfItems = 10;
 
         public Item[] items;
         public Hider[] hiders;
@@ -50,20 +50,25 @@ namespace HideAndSeek
             return singleWorld;
         }
 
-        public static World getWorld(Game game)
+        public static World getWorld(Game game, GameType gameType)
         {
             if (singleWorld == null)
-                singleWorld = new World(game);
+            {
+                singleWorld = new World(game, gameType);
+                game.Components.Add(singleWorld);
+            }
             return singleWorld;
         }
 
         //constructor for World class
-        private World(Game game)
+        private World(Game game, GameType gameType)
             : base(game)
         {
             // TODO: Construct any child components here
-            Game.Components.Add(this);
+            this.gameType = gameType;
         }
+
+
 
         /// <summary>
         /// Allows the game component to perform any initialization it needs to before starting
@@ -102,7 +107,7 @@ namespace HideAndSeek
                     } while (!map.isAvailable(node));
                     //find optimal location in space for item
                     Vector3 loc = Rock.findBestLoc(nodeToLoc(node), ItemType.Rock);
-                    items[i] = new Rock(Game, loc, new Vector3(0.25f, 0.25f, 0.25f), 0, i);
+                    items[i] = new Rock(Game, loc, new Vector3(0.4f, 0.4f, 0.4f), 0, i);
                     map.addItem(items[i], x, y);
                 }
             }
@@ -135,7 +140,7 @@ namespace HideAndSeek
                 numOfItems = 1;
                 numOfHiders = 1;
                 items = new Item[1];
-                items[0] = new Rock(Game, new Vector3(0, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
+                items[0] = new Rock(Game, new Vector3(0, 0, -20), new Vector3(1f, 1f, 1f), 0, 1);
                 Console.WriteLine("only item: " + items[0]);
                 hiders = new Hider[1];
                 humanPlayer = new HumanHider(Game, new Vector3(0, 0, 0), 5, 10, 0);
@@ -153,8 +158,8 @@ namespace HideAndSeek
             //      or alternatively, put Tree & Billboard intialization elsewhere!
 
                 //BillboardSystem bbs = BillboardSystem.factory(2, graphicsDevice, BasicEffect);
-                items[0] = new /*Tree*/Rock(Game, new Vector3(20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 1);
-                items[1] = new /*Tree*/Rock(Game, new Vector3(-20, 0, -20), new Vector3(2.5f, 2.5f, 2.5f), 0, 2);
+                items[0] = new /*Tree*/Rock(Game, new Vector3(20, 0, -20), new Vector3(0.4f, 0.4f, 0.4f), 0, 1);
+                items[1] = new /*Tree*/Rock(Game, new Vector3(-20, 0, -20), new Vector3(0.4f, 0.4f, 0.4f), 0, 2);
 
                 hiders = new Hider[1];
                 hiders[0] = new VirtualHider(Game, new Vector3(10, 0, 0), 5, 10, 2);
@@ -182,6 +187,7 @@ namespace HideAndSeek
         public override void Update(GameTime gameTime)
         {
             // TODO: Add your update code here
+
             //if player was hiding in practice mode, and can't be seen, game is over.
             if (gameType == GameType.HidePractice && SeekerImp.CanSee(hiders[0], Vector3.Zero) == 0)
             {
@@ -313,7 +319,13 @@ namespace HideAndSeek
 
         public bool isOutOfBounds(Vector3 location)
         {
-            return (location.X > borders[0].X || location.X < borders[1].X || location.Z > 0 || location.Z < borders[2].Z);
+            return (location.X > borders[0].X || location.X < borders[1].X 
+                || location.Z > 0 || location.Z < borders[2].Z);
+        }
+
+        internal void setGameType(GameType gameType)
+        {
+            this.gameType = gameType;
         }
     }
 }

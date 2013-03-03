@@ -8,8 +8,11 @@ namespace HideAndSeek
 {
     enum WalkingState { NotWalking, Forwards, Backwards };
     public enum FaceDirection { Forwards, Backwards };
-    public abstract class Input : Microsoft.Xna.Framework.GameComponent
 
+    /// <summary>
+    /// This is an abstract class that holds and interprets input from the human player
+    /// </summary>
+    public abstract class Input : Microsoft.Xna.Framework.GameComponent
     {
         internal Input(Game game) : base(game) 
         {
